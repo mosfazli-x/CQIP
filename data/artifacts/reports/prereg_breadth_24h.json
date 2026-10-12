@@ -1,0 +1,306 @@
+{
+  "preregistration": {
+    "feature": "breadth_24h",
+    "definition": "count_i(log(close_i[t]/close_i[t-24]) > 0) / count_i(eligible at t)",
+    "lookback": 24,
+    "horizon": 24,
+    "split_threshold": 0.5,
+    "split_rationale": "natural majority-advance vs majority-decline boundary; declared before evaluation and never searched",
+    "target": "equal-weight mean_i log(close_i[t+24]/close_i[t])",
+    "primary_hypothesis": "higher 24h breadth implies a higher probability of positive forward 24h equal-weight market return",
+    "oos_fraction": 0.25,
+    "oos_start": "2026-08-22 04:00:00+00:00",
+    "oos_end": "2026-09-29 03:00:00+00:00",
+    "n_oos_timestamps": 912,
+    "non_overlap_stride": 24,
+    "universe": 25,
+    "no_parameter_sweep": true,
+    "no_retraining": true,
+    "contamination_disclosure": "This OOS window has now been inspected by three consecutive experiments (feature audit, sma_fast_slow_spread, relative strength) and no clean holdout exists because the panel ends at the last available bar. Breadth itself had not been tested before this run, but the window, the universe and the target were all previously observed. Significance must be discounted; the design value is the pre-declared regime and cost accounting, not the p-value.",
+    "architecture_note": "production consumes 46 of the 64 originally declared features; sentiment and on-chain columns remain unactivated and were not used or activated here"
+  },
+  "integrity_checks": {
+    "prefix_invariance": {
+      "probes": 40,
+      "max_abs_difference": 0.0,
+      "passed": true,
+      "method": "recompute breadth from closes physically truncated at t, then compare the value at t against the full-sample value"
+    },
+    "breadth_matches_same_row_returns": {
+      "max_abs_difference": 0.0,
+      "passed": true
+    },
+    "timestamp_alignment": {
+      "breadth_index_equals_target_index": true,
+      "duplicate_timestamps": 0,
+      "passed": true
+    },
+    "no_universe_drift": {
+      "min_eligible": 25,
+      "max_eligible": 25,
+      "mean_eligible": 25.0,
+      "timestamps_below_min_cross_section": 0,
+      "silent_row_deletions": 0,
+      "missing_coin_substitution": "none: missing coins are excluded from both numerator and denominator, never replaced",
+      "passed": true
+    },
+    "breadth_uses_no_future": {
+      "inputs": "close[t] and close[t-24] only",
+      "target_uses_close_t_plus_24": true,
+      "normalisation": "none; breadth is a ratio of counts at the same t",
+      "passed": true
+    },
+    "forward_return_independent_recompute": {
+      "formula": "mean_i log(close_i[t+24] / close_i[t])",
+      "max_abs_difference": 0.0,
+      "passed": true
+    },
+    "non_overlap_grid": {
+      "stride": 24,
+      "n": 37,
+      "min_gap_hours": 24.0,
+      "median_gap_hours": 24.0,
+      "passed": true
+    }
+  },
+  "regime_statistics": {
+    "primary_sample": "non-overlapping 24h observations",
+    "n": 37,
+    "oos_timestamps_dropped_no_forward_return": 24,
+    "drop_reason": "the final 24 panel timestamps have no close[t+24], so the forward target is undefined by construction; dropped explicitly and counted, never silently",
+    "breadth_range": [
+      0.04,
+      1.0
+    ],
+    "breadth_mean": 0.5394594594594594,
+    "spearman_breadth_vs_market_fwd": -0.2581420756582685,
+    "spearman_block_bootstrap_ci": {
+      "ci95_low": -0.4881270449564528,
+      "ci95_high": 0.08714353313102637,
+      "se": 0.15244903945866325,
+      "block_days": 7
+    },
+    "spearman_naive_se": 0.05230131278668924,
+    "pearson_secondary_descriptive": -0.24922916950329713,
+    "unconditional": {
+      "n": 37,
+      "mean_bps": 43.46895653016744,
+      "median_bps": 41.57380188191979,
+      "std_bps": 344.3450432696306,
+      "hit_rate": 0.5135135135135135
+    },
+    "high_breadth_state": {
+      "condition": "breadth > 0.5",
+      "n": 20,
+      "mean_bps": -15.758666998293148,
+      "median_bps": -30.434514807317804,
+      "std_bps": 414.95467085612427,
+      "hit_rate": 0.45
+    },
+    "low_breadth_state": {
+      "condition": "breadth <= 0.5",
+      "n": 17,
+      "mean_bps": 113.148513622474,
+      "median_bps": 128.24206031588378,
+      "std_bps": 229.726576602175,
+      "hit_rate": 0.5882352941176471
+    },
+    "difference_high_minus_low_bps": -128.90718062076715,
+    "difference_block_bootstrap_ci": {
+      "ci95_low": -258.5154891352187,
+      "ci95_high": 100.76409529567997,
+      "se": 89.62818270381031,
+      "block_days": 7,
+      "n_valid": 2000
+    },
+    "regime_frequency": {
+      "high_breadth_fraction": 0.5405405405405406,
+      "low_breadth_fraction": 0.4594594594594595,
+      "n_high": 20,
+      "n_low": 17
+    },
+    "pct_positive_forward_by_state": {
+      "high_breadth": 0.45,
+      "low_breadth": 0.5882352941176471
+    }
+  },
+  "regime_strategy": {
+    "definition": "breadth > 0.5 -> long equal-weight market, else short",
+    "cost_model": {
+      "fee_bps": 10.0,
+      "slippage_bps": 5.0,
+      "spread_bps": 3.0,
+      "cost_per_fill_bps": 18.0,
+      "cost_per_round_trip_bps": 36.0,
+      "note": "the 120bps two-sided spread hurdle from the cross-sectional experiments does NOT apply; cost is built from the realised flip count"
+    },
+    "actual_turnover": {
+      "n_periods": 37,
+      "n_flips": 23,
+      "n_runs": 24,
+      "n_fills": 47,
+      "cost_per_fill_bps": 18.0,
+      "cost_per_flip_bps": 36.0,
+      "total_cost_bps": 846.0,
+      "mean_run_periods": 1.5416666666666667,
+      "mean_holding_hours": 37.0,
+      "turnover_one_way_multiple": 23.0,
+      "turnover_note": "one-way turnover as a multiple of the book; a flip closes 100% and opens 100%"
+    },
+    "gross_expectancy_bps": -60.50535328507896,
+    "net_expectancy_bps": -83.37021814994382,
+    "gross_total_bps": -2238.6980715479217,
+    "net_total_bps": -3084.6980715479217,
+    "gross_sharpe": -3.383033424853191,
+    "net_sharpe": -4.682836035348726,
+    "gross_max_drawdown_bps": -2272.0018816180564,
+    "net_max_drawdown_bps": -2776.001881618056,
+    "gross_hit_rate": 0.43243243243243246,
+    "net_hit_rate": 0.3783783783783784,
+    "net_annualized_bps": -30430.1296247295,
+    "trades_per_day": 0.6216216216216216,
+    "breakeven_bps_per_period": 83.37021814994382
+  },
+  "baselines": {
+    "breadth_regime_net_expectancy_bps": -83.37021814994382,
+    "long_only_equal_weight": {
+      "gross_expectancy_bps": 43.46895653016744,
+      "net_expectancy_bps": 42.49598355719447,
+      "net_sharpe": 2.346739617493421,
+      "total_cost_bps": 36.0
+    },
+    "always_short_equal_weight": {
+      "gross_expectancy_bps": -43.46895653016744,
+      "net_expectancy_bps": -44.441929503140415,
+      "net_sharpe": -2.4770649467961747
+    },
+    "random_regime_matched_turnover": {
+      "method": "run lengths shuffled, so flip count and total cost match the observed strategy exactly; isolates timing skill from turnover",
+      "draws": 2000,
+      "null_mean_net_bps": -51.69948585385067,
+      "null_sd_bps": 49.385729831190346,
+      "p_value": 0.7315,
+      "observed_pctile": 26.85
+    },
+    "value_added_over_long_only_bps": -125.86620170713829
+  },
+  "dispersion_control": {
+    "control": "cross_sectional_iqr_of_24h_returns",
+    "rationale": "extreme cross-sectional behaviour in prior experiments looked volatility-related, so breadth is checked as a possible proxy",
+    "correlation_breadth_vs_dispersion_spearman": 0.23306473773750672,
+    "dispersion_median_split": {
+      "high_dispersion_spearman": -0.3317213783242994,
+      "low_dispersion_spearman": -0.35610937774183926,
+      "high_dispersion_mean_market_bps": 26.42187163066883,
+      "low_dispersion_mean_market_bps": 61.463101701860424
+    },
+    "breadth_forward_return_by_dispersion_regime": {
+      "high_dispersion_high_breadth_bps": -29.834942500055185,
+      "high_dispersion_low_breadth_bps": 148.31163558057085,
+      "low_dispersion_high_breadth_bps": 10.382987504979187,
+      "low_dispersion_low_breadth_bps": 93.96862891805759
+    },
+    "counts": {
+      "high_disp_high_breadth": 13,
+      "high_disp_low_breadth": 6,
+      "low_disp_high_breadth": 7,
+      "low_disp_low_breadth": 11
+    },
+    "direction_consistent_after_conditioning": true
+  },
+  "robustness": {
+    "halves_and_months": {
+      "first_half": {
+        "n": 18,
+        "spearman": -0.5850136229961835,
+        "unconditional_mean_bps": 2.803351795306201,
+        "high_breadth_mean_bps": -155.02752162666766,
+        "low_breadth_mean_bps": 160.63422521728003,
+        "difference_bps": -315.66174684394764
+      },
+      "second_half": {
+        "n": 19,
+        "spearman": 0.032585020303383776,
+        "unconditional_mean_bps": 81.99426627898336,
+        "high_breadth_mean_bps": 98.18857769764959,
+        "low_breadth_mean_bps": 59.72708807831729,
+        "difference_bps": 38.4614896193323
+      },
+      "month_2026-08": {
+        "n": 10,
+        "unconditional_mean_bps": -86.38250139692022
+      },
+      "month_2026-09": {
+        "n": 27,
+        "unconditional_mean_bps": 91.56208909575545
+      }
+    },
+    "raw_mean_bps": 43.46895653016744,
+    "winsorized_mean_bps": 45.25764355323754,
+    "raw_median_bps": 41.57380188191979,
+    "mean_vs_median_ratio": 1.0455853100380468,
+    "symbol_contribution_to_market_return_bps": {
+      "NEAR_USDT": 276.4662411551003,
+      "ZEC_USDT": 275.9773404731528,
+      "UNI_USDT": 251.08697963184574,
+      "ENA_USDT": 203.5718218161242,
+      "SUI_USDT": 115.03774794236199,
+      "AAVE_USDT": 114.3233000017702,
+      "LTC_USDT": 104.03780812988775,
+      "TAO_USDT": 102.24837266852053,
+      "WLD_USDT": 89.16585598137567,
+      "SOL_USDT": 79.79896805118815,
+      "PEPE_USDT": 70.58941839155335,
+      "LINK_USDT": 68.23103697865774,
+      "HYPE_USDT": 66.79108893998341,
+      "ADA_USDT": 50.27242036430657,
+      "XPL_USDT": 42.06067719740566,
+      "BNB_USDT": 41.69741748759338,
+      "DOGE_USDT": 40.218763891921306,
+      "XRP_USDT": 36.96698049643943,
+      "ETH_USDT": 36.29571919949221,
+      "BTC_USDT": 31.60308307116573,
+      "PUMP_USDT": 28.9966755588141,
+      "FARTCOIN_USDT": 28.938600753431253,
+      "ASTER_USDT": 24.314687594280485,
+      "TRX_USDT": -3.7868309484974643,
+      "H_USDT": -15.374271684157048
+    },
+    "top5_symbol_contributors": {
+      "NEAR_USDT": 276.4662411551003,
+      "ZEC_USDT": 275.9773404731528,
+      "UNI_USDT": 251.08697963184574,
+      "ENA_USDT": 203.5718218161242,
+      "SUI_USDT": 115.03774794236199
+    },
+    "breadth_distribution_oos": {
+      "mean": 0.5175877192982455,
+      "min": 0.0,
+      "max": 1.0,
+      "fraction_above_split": 0.5219298245614035,
+      "distinct_values_observed": 26
+    }
+  },
+  "decision": {
+    "verdict": "FAIL",
+    "gates": {
+      "expected_sign": false,
+      "conditional_effect_meaningful": false,
+      "net_expectancy_after_actual_cost_positive": false,
+      "beats_matched_turnover_random": false,
+      "adds_value_over_long_only": false,
+      "not_confined_to_one_half": false,
+      "survives_winsorization": true,
+      "ci_informative_excludes_zero": false
+    },
+    "failed_gates": [
+      "expected_sign",
+      "conditional_effect_meaningful",
+      "net_expectancy_after_actual_cost_positive",
+      "beats_matched_turnover_random",
+      "adds_value_over_long_only",
+      "not_confined_to_one_half",
+      "ci_informative_excludes_zero"
+    ]
+  }
+}

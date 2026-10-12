@@ -1,0 +1,63 @@
+{
+  "symbols": [
+    "BTC_USDT",
+    "ETH_USDT"
+  ],
+  "intervals": [
+    "1d"
+  ],
+  "kinds": [
+    "mlp"
+  ],
+  "folds": 2,
+  "epochs": 1,
+  "started_at": "2026-09-29T20:31:45.376897+00:00",
+  "finished_at": "2026-09-29T20:32:15.637472+00:00",
+  "duration_seconds": 30.260557999950834,
+  "cells": [
+    {
+      "interval": "1d",
+      "kind": "mlp",
+      "symbol": "BTC_USDT",
+      "status": "ok",
+      "verdict": "no-edge",
+      "reason": "dir_acc 0.535 < 0.55",
+      "model_id": "btc-usdt-mlp-h12-e0ec166f",
+      "rows": 4930,
+      "direction_accuracy": 0.5348148148148149,
+      "correlation": 0.22782476457387224,
+      "interval_coverage": 0.917037037037037,
+      "sharpe": 6.761027558672439,
+      "total_return": 1.479411813985732,
+      "max_drawdown": -0.22132364652888542,
+      "trades": 42,
+      "consistency": 1.0,
+      "excess_vs_buy_and_hold": 0.5590643974611877,
+      "buy_and_hold_sharpe": 6.201963161211252,
+      "buy_and_hold_return": 1.7803856165985614,
+      "duration_seconds": 17.331183100002818
+    },
+    {
+      "interval": "1d",
+      "kind": "mlp",
+      "symbol": "ETH_USDT",
+      "status": "ok",
+      "verdict": "passes",
+      "reason": "all gates cleared",
+      "model_id": "eth-usdt-mlp-h12-919a5379",
+      "rows": 3856,
+      "direction_accuracy": 0.5758754863813229,
+      "correlation": 0.30421223491894556,
+      "interval_coverage": 0.7470817120622568,
+      "sharpe": 5.163684655358174,
+      "total_return": 0.5516092955079912,
+      "max_drawdown": -0.2484869340631921,
+      "trades": 41,
+      "consistency": 1.0,
+      "excess_vs_buy_and_hold": 2.6014080144619625,
+      "buy_and_hold_sharpe": 2.5622766408962114,
+      "buy_and_hold_return": 0.23999101368441234,
+      "duration_seconds": 12.926626400032546
+    }
+  ]
+}

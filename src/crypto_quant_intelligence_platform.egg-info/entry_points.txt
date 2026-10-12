@@ -1,0 +1,2 @@
+[console_scripts]
+cqip = cqip.cli:app

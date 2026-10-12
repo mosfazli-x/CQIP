@@ -1,0 +1,1996 @@
+{
+  "config": {
+    "interval": "1h",
+    "cutoff": 5100,
+    "seed": 7,
+    "epochs": 12,
+    "aux_weight": 1.0,
+    "val_ratio": 0.25,
+    "seq_len": 64,
+    "vol_window": 64,
+    "tb_vol_window": 32,
+    "max_hold": 3,
+    "tp_vol": 1.0,
+    "sl_vol": 1.0,
+    "symbols": "",
+    "arms": "raw,vol_scaled,triple_bar",
+    "economic_arm": "",
+    "capital": 1000.0,
+    "top_k": 3,
+    "prob_bar": 0.0,
+    "fee_bps": 10.0,
+    "slippage_bps": 5.0,
+    "spread_bps": 3.0,
+    "rebalance_band_bps": 0.0,
+    "min_hold_bars": 0,
+    "max_fills_per_day": null,
+    "gate_mode": "flat",
+    "out_predictions": "data\\artifacts\\reports\\label_ablation",
+    "out_report": "data\\artifacts\\reports\\label_ablation.json"
+  },
+  "split": {
+    "purge": 3,
+    "embargo": 0,
+    "gap": 3,
+    "seq_len": 64,
+    "val_ratio": 0.25
+  },
+  "label_detail": {
+    "AAVE_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.649933528171088,
+        "regression_std_bps": 91.05178688891402,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8679,
+        "direction_base_rate": 0.49406613665168797,
+        "n_censored_direction": 41
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -96.73515239553872,
+        "regression_std_bps": 10753.018890125835,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8679,
+        "direction_base_rate": 0.49406613665168797,
+        "n_censored_direction": 41
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.28160695480504,
+        "regression_std_bps": 133.37700052740973,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4617,
+        "direction_base_rate": 0.4894953432965129,
+        "n_censored_direction": 4103,
+        "time_exit_rate": 0.47041995651676394,
+        "mean_exit_bars": 2.4238532110091744,
+        "censored_direction_rate": 0.4705275229357798
+      }
+    },
+    "ADA_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -1.4086457523629925,
+        "regression_std_bps": 84.40307407841483,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8575,
+        "direction_base_rate": 0.4875801749271137,
+        "n_censored_direction": 145
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -212.31218519958975,
+        "regression_std_bps": 10926.194106496272,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8575,
+        "direction_base_rate": 0.4875801749271137,
+        "n_censored_direction": 145
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -3.575751731768232,
+        "regression_std_bps": 119.6050596479414,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4693,
+        "direction_base_rate": 0.4749627104197741,
+        "n_censored_direction": 4027,
+        "time_exit_rate": 0.46172330930312394,
+        "mean_exit_bars": 2.396330275229358,
+        "censored_direction_rate": 0.4618119266055046
+      }
+    },
+    "ASTER_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.9200313170021258,
+        "regression_std_bps": 109.35764757633402,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8601,
+        "direction_base_rate": 0.5059876758516452,
+        "n_censored_direction": 119
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -19.850378069202574,
+        "regression_std_bps": 11140.838597092177,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8601,
+        "direction_base_rate": 0.5059876758516452,
+        "n_censored_direction": 119
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -3.0855072374847,
+        "regression_std_bps": 158.3842859453669,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4624,
+        "direction_base_rate": 0.4731833910034602,
+        "n_censored_direction": 4096,
+        "time_exit_rate": 0.4695045199679597,
+        "mean_exit_bars": 2.414908256880734,
+        "censored_direction_rate": 0.46972477064220186
+      }
+    },
+    "BNB_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.3388947930181494,
+        "regression_std_bps": 53.52438444885686,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8572,
+        "direction_base_rate": 0.5061829211385908,
+        "n_censored_direction": 148
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -10.506458984232735,
+        "regression_std_bps": 10859.230712837349,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8572,
+        "direction_base_rate": 0.5061829211385908,
+        "n_censored_direction": 148
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -1.1377067372974292,
+        "regression_std_bps": 77.700469851882,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4572,
+        "direction_base_rate": 0.47331583552055995,
+        "n_censored_direction": 4148,
+        "time_exit_rate": 0.47545485753518707,
+        "mean_exit_bars": 2.4184633027522935,
+        "censored_direction_rate": 0.4756880733944954
+      }
+    },
+    "BTC_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.39278904207167875,
+        "regression_std_bps": 46.84342055896056,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8718,
+        "direction_base_rate": 0.49839412709337005,
+        "n_censored_direction": 2
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -99.46642667428841,
+        "regression_std_bps": 11209.800275169335,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8718,
+        "direction_base_rate": 0.49839412709337005,
+        "n_censored_direction": 2
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -1.342280611249065,
+        "regression_std_bps": 67.53600004473968,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4483,
+        "direction_base_rate": 0.4706669640865492,
+        "n_censored_direction": 4237,
+        "time_exit_rate": 0.48541023000343286,
+        "mean_exit_bars": 2.4134174311926606,
+        "censored_direction_rate": 0.485894495412844
+      }
+    },
+    "DOGE_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -1.1016996721290826,
+        "regression_std_bps": 77.58578542211522,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8627,
+        "direction_base_rate": 0.49831923032340325,
+        "n_censored_direction": 93
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -163.9392682916781,
+        "regression_std_bps": 11082.287773781656,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8627,
+        "direction_base_rate": 0.49831923032340325,
+        "n_censored_direction": 93
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.5352317898340755,
+        "regression_std_bps": 111.37120134647981,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4541,
+        "direction_base_rate": 0.4666373045584673,
+        "n_censored_direction": 4179,
+        "time_exit_rate": 0.47911660373040393,
+        "mean_exit_bars": 2.4123853211009174,
+        "censored_direction_rate": 0.47924311926605506
+      }
+    },
+    "ENA_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.9788308641888926,
+        "regression_std_bps": 118.77341300933398,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8612,
+        "direction_base_rate": 0.48815606130980027,
+        "n_censored_direction": 108
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -106.98470771345059,
+        "regression_std_bps": 10709.133756454139,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8612,
+        "direction_base_rate": 0.48815606130980027,
+        "n_censored_direction": 108
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.546754098001459,
+        "regression_std_bps": 173.45243885534958,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4812,
+        "direction_base_rate": 0.4941812136325852,
+        "n_censored_direction": 3908,
+        "time_exit_rate": 0.4481061906396613,
+        "mean_exit_bars": 2.385321100917431,
+        "censored_direction_rate": 0.4481651376146789
+      }
+    },
+    "ETH_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.5520130895296373,
+        "regression_std_bps": 64.50828837653609,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8719,
+        "direction_base_rate": 0.4991398096111939,
+        "n_censored_direction": 1
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -50.97999249592274,
+        "regression_std_bps": 11251.972243004193,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8719,
+        "direction_base_rate": 0.4991398096111939,
+        "n_censored_direction": 1
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.0689948842834154,
+        "regression_std_bps": 93.9381265518591,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4472,
+        "direction_base_rate": 0.4693649373881932,
+        "n_censored_direction": 4248,
+        "time_exit_rate": 0.48701224396384024,
+        "mean_exit_bars": 2.410321100917431,
+        "censored_direction_rate": 0.4871559633027523
+      }
+    },
+    "FARTCOIN_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -1.4648603025062117,
+        "regression_std_bps": 153.68492204619588,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8672,
+        "direction_base_rate": 0.4959640221402214,
+        "n_censored_direction": 48
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -112.0514364928834,
+        "regression_std_bps": 10918.620897695468,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8672,
+        "direction_base_rate": 0.4959640221402214,
+        "n_censored_direction": 48
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -3.3706395874079824,
+        "regression_std_bps": 219.4505173764961,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4919,
+        "direction_base_rate": 0.4801788981500305,
+        "n_censored_direction": 3801,
+        "time_exit_rate": 0.4357477972308044,
+        "mean_exit_bars": 2.3631880733944954,
+        "censored_direction_rate": 0.43589449541284403
+      }
+    },
+    "HYPE_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 0.6892101885345137,
+        "regression_std_bps": 103.21986376961522,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8698,
+        "direction_base_rate": 0.5072430443780179,
+        "n_censored_direction": 22
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 56.64478289524118,
+        "regression_std_bps": 10665.217512938752,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8698,
+        "direction_base_rate": 0.5072430443780179,
+        "n_censored_direction": 22
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 1.618733990362833,
+        "regression_std_bps": 150.7604225830444,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4964,
+        "direction_base_rate": 0.49536663980660756,
+        "n_censored_direction": 3756,
+        "time_exit_rate": 0.43059846664378076,
+        "mean_exit_bars": 2.3811926605504588,
+        "censored_direction_rate": 0.4307339449541284
+      }
+    },
+    "H_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 0.11320452747948571,
+        "regression_std_bps": 294.29069568746166,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8694,
+        "direction_base_rate": 0.4890729238555325,
+        "n_censored_direction": 26
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 96.57846423803096,
+        "regression_std_bps": 11524.306351781413,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8694,
+        "direction_base_rate": 0.4890729238555325,
+        "n_censored_direction": 26
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 1.0625274232259687,
+        "regression_std_bps": 403.53235381527844,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4656,
+        "direction_base_rate": 0.5304982817869416,
+        "n_censored_direction": 4064,
+        "time_exit_rate": 0.4652706259297402,
+        "mean_exit_bars": 2.3801605504587156,
+        "censored_direction_rate": 0.46605504587155966
+      }
+    },
+    "LINK_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.49991589905204903,
+        "regression_std_bps": 77.5295019008834,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8647,
+        "direction_base_rate": 0.4960101769399792,
+        "n_censored_direction": 73
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -18.42778710086365,
+        "regression_std_bps": 10914.65440111378,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8647,
+        "direction_base_rate": 0.4960101769399792,
+        "n_censored_direction": 73
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -1.9270259996799572,
+        "regression_std_bps": 111.53469596633722,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4473,
+        "direction_base_rate": 0.4826738207019897,
+        "n_censored_direction": 4247,
+        "time_exit_rate": 0.4868978143952397,
+        "mean_exit_bars": 2.4354357798165136,
+        "censored_direction_rate": 0.4870412844036697
+      }
+    },
+    "LTC_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.5852274203217903,
+        "regression_std_bps": 72.02069290184778,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8584,
+        "direction_base_rate": 0.5074557315936626,
+        "n_censored_direction": 136
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -70.85346191601181,
+        "regression_std_bps": 10908.598670030573,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8584,
+        "direction_base_rate": 0.5074557315936626,
+        "n_censored_direction": 136
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -0.9208541720380874,
+        "regression_std_bps": 102.2014073668072,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4550,
+        "direction_base_rate": 0.47956043956043953,
+        "n_censored_direction": 4170,
+        "time_exit_rate": 0.4780867376129992,
+        "mean_exit_bars": 2.428211009174312,
+        "censored_direction_rate": 0.4782110091743119
+      }
+    },
+    "NEAR_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 0.6568806102164602,
+        "regression_std_bps": 110.28572556977795,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8549,
+        "direction_base_rate": 0.49420984910515847,
+        "n_censored_direction": 171
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 22.08945525757959,
+        "regression_std_bps": 10713.483885440533,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8549,
+        "direction_base_rate": 0.49420984910515847,
+        "n_censored_direction": 171
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 1.0601424132271282,
+        "regression_std_bps": 160.10439604170188,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4877,
+        "direction_base_rate": 0.4988722575353701,
+        "n_censored_direction": 3843,
+        "time_exit_rate": 0.4406682686806271,
+        "mean_exit_bars": 2.387270642201835,
+        "censored_direction_rate": 0.44071100917431194
+      }
+    },
+    "PEPE_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.9432353983220522,
+        "regression_std_bps": 98.44570778273304,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8533,
+        "direction_base_rate": 0.4922067268252666,
+        "n_censored_direction": 187
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -96.71141015588601,
+        "regression_std_bps": 11022.301266061353,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8533,
+        "direction_base_rate": 0.4922067268252666,
+        "n_censored_direction": 187
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.85119363395727,
+        "regression_std_bps": 141.11064679951826,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4669,
+        "direction_base_rate": 0.47954594131505673,
+        "n_censored_direction": 4051,
+        "time_exit_rate": 0.46446961894953653,
+        "mean_exit_bars": 2.393348623853211,
+        "censored_direction_rate": 0.46456422018348625
+      }
+    },
+    "PUMP_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.18538372977323087,
+        "regression_std_bps": 135.8081436687069,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8635,
+        "direction_base_rate": 0.489171974522293,
+        "n_censored_direction": 85
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 16.499495023878968,
+        "regression_std_bps": 10620.344913634672,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8635,
+        "direction_base_rate": 0.489171974522293,
+        "n_censored_direction": 85
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 0.04682654392961778,
+        "regression_std_bps": 201.2460369534272,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4848,
+        "direction_base_rate": 0.5082508250825083,
+        "n_censored_direction": 3872,
+        "time_exit_rate": 0.44352900789564026,
+        "mean_exit_bars": 2.3910550458715596,
+        "censored_direction_rate": 0.44403669724770645
+      }
+    },
+    "SOL_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.7005838184103383,
+        "regression_std_bps": 71.63241734610166,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8624,
+        "direction_base_rate": 0.5030148423005566,
+        "n_censored_direction": 96
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -101.55533342004387,
+        "regression_std_bps": 10804.923321255801,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8624,
+        "direction_base_rate": 0.5030148423005566,
+        "n_censored_direction": 96
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.7548750110439033,
+        "regression_std_bps": 105.02508271061119,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4609,
+        "direction_base_rate": 0.47255369928400953,
+        "n_censored_direction": 4111,
+        "time_exit_rate": 0.47133539306556815,
+        "mean_exit_bars": 2.4097477064220185,
+        "censored_direction_rate": 0.47144495412844034
+      }
+    },
+    "SUI_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -1.2641351788099653,
+        "regression_std_bps": 94.79456416422097,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8650,
+        "direction_base_rate": 0.49283236994219654,
+        "n_censored_direction": 70
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -175.84493295205894,
+        "regression_std_bps": 11018.01078548289,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8650,
+        "direction_base_rate": 0.49283236994219654,
+        "n_censored_direction": 70
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -3.871094948064551,
+        "regression_std_bps": 136.2917537621826,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4648,
+        "direction_base_rate": 0.47611876075731496,
+        "n_censored_direction": 4072,
+        "time_exit_rate": 0.46664378075294655,
+        "mean_exit_bars": 2.4073394495412845,
+        "censored_direction_rate": 0.4669724770642202
+      }
+    },
+    "TAO_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.06196360876025964,
+        "regression_std_bps": 109.08715959895527,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8565,
+        "direction_base_rate": 0.4920023350846468,
+        "n_censored_direction": 155
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 11.40808965333634,
+        "regression_std_bps": 10646.769360252834,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8565,
+        "direction_base_rate": 0.4920023350846468,
+        "n_censored_direction": 155
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -0.8481900014733065,
+        "regression_std_bps": 158.64055186432518,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4937,
+        "direction_base_rate": 0.49524002430625885,
+        "n_censored_direction": 3783,
+        "time_exit_rate": 0.43345920585879394,
+        "mean_exit_bars": 2.3787844036697248,
+        "censored_direction_rate": 0.4338302752293578
+      }
+    },
+    "TRX_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.02104010126914636,
+        "regression_std_bps": 24.616556449411203,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8503,
+        "direction_base_rate": 0.5169940021168999,
+        "n_censored_direction": 217
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 118.86483592400396,
+        "regression_std_bps": 10920.194932571718,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8503,
+        "direction_base_rate": 0.5169940021168999,
+        "n_censored_direction": 217
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 0.22162677046515966,
+        "regression_std_bps": 37.33606344030208,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4537,
+        "direction_base_rate": 0.5201675115715231,
+        "n_censored_direction": 4183,
+        "time_exit_rate": 0.4788877445932029,
+        "mean_exit_bars": 2.457454128440367,
+        "censored_direction_rate": 0.4797018348623853
+      }
+    },
+    "UNI_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 0.11708475121009156,
+        "regression_std_bps": 106.91741410450673,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8609,
+        "direction_base_rate": 0.4979672435822976,
+        "n_censored_direction": 111
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -28.009974437724075,
+        "regression_std_bps": 11146.673193186,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8609,
+        "direction_base_rate": 0.4979672435822976,
+        "n_censored_direction": 111
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -0.3079826133272442,
+        "regression_std_bps": 154.45902504464485,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4572,
+        "direction_base_rate": 0.48512685914260717,
+        "n_censored_direction": 4148,
+        "time_exit_rate": 0.4755692871037876,
+        "mean_exit_bars": 2.4272935779816516,
+        "censored_direction_rate": 0.4756880733944954
+      }
+    },
+    "WLD_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -1.1224033272225273,
+        "regression_std_bps": 127.34779310622214,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8608,
+        "direction_base_rate": 0.4871050185873606,
+        "n_censored_direction": 112
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -111.94522194907904,
+        "regression_std_bps": 11073.158373021563,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8608,
+        "direction_base_rate": 0.4871050185873606,
+        "n_censored_direction": 112
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -2.455620238949581,
+        "regression_std_bps": 182.4730166933909,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4706,
+        "direction_base_rate": 0.48555036124096895,
+        "n_censored_direction": 4014,
+        "time_exit_rate": 0.4602357249113171,
+        "mean_exit_bars": 2.3982798165137615,
+        "censored_direction_rate": 0.46032110091743117
+      }
+    },
+    "XPL_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -2.5879583096895993,
+        "regression_std_bps": 151.52148906779658,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8649,
+        "direction_base_rate": 0.48814891895016765,
+        "n_censored_direction": 71
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -129.05759090197282,
+        "regression_std_bps": 10743.577267743842,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8649,
+        "direction_base_rate": 0.48814891895016765,
+        "n_censored_direction": 71
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -7.387555050847048,
+        "regression_std_bps": 221.01889763204585,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4831,
+        "direction_base_rate": 0.493065617884496,
+        "n_censored_direction": 3889,
+        "time_exit_rate": 0.44547431056184916,
+        "mean_exit_bars": 2.389908256880734,
+        "censored_direction_rate": 0.4459862385321101
+      }
+    },
+    "XRP_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -0.7763029052920124,
+        "regression_std_bps": 70.53219970018344,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8374,
+        "direction_base_rate": 0.48937186529734894,
+        "n_censored_direction": 346
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": -150.19493504793064,
+        "regression_std_bps": 11100.791939603678,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8374,
+        "direction_base_rate": 0.48937186529734894,
+        "n_censored_direction": 346
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": -1.8277295517152228,
+        "regression_std_bps": 101.41506525770143,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4656,
+        "direction_base_rate": 0.47014604810996563,
+        "n_censored_direction": 4064,
+        "time_exit_rate": 0.4659572033413434,
+        "mean_exit_bars": 2.3930045871559633,
+        "censored_direction_rate": 0.46605504587155966
+      }
+    },
+    "ZEC_USDT": {
+      "rows_before_mask": 8739,
+      "rows_dropped_by_mask": 19,
+      "mask_reason": "union of per-label warm-ups: target_volatility needs 24 bars, the vol scaler needs its window, and the barrier needs vol_window + max_hold bars of future",
+      "rows_after_mask": 8720,
+      "raw": {
+        "regression_column": "target_return",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 3.1026272034480282,
+        "regression_std_bps": 168.97224569647682,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8656,
+        "direction_base_rate": 0.4942236598890943,
+        "n_censored_direction": 64
+      },
+      "vol_scaled": {
+        "regression_column": "target_scaled",
+        "direction_column": "lab_dir_raw",
+        "regression_mean_bps": 190.70014718631825,
+        "regression_std_bps": 10697.183004955637,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 8656,
+        "direction_base_rate": 0.4942236598890943,
+        "n_censored_direction": 64
+      },
+      "triple_bar": {
+        "regression_column": "tb_return",
+        "direction_column": "lab_dir_tb",
+        "regression_mean_bps": 6.466964935603201,
+        "regression_std_bps": 245.91105977901893,
+        "n_valid_regression": 8720,
+        "n_valid_direction": 4613,
+        "direction_base_rate": 0.5172339041838283,
+        "n_censored_direction": 4107,
+        "time_exit_rate": 0.47041995651676394,
+        "mean_exit_bars": 2.4221330275229356,
+        "censored_direction_rate": 0.4709862385321101
+      }
+    }
+  },
+  "errors": [],
+  "raw": {
+    "label": "label_ablation::raw",
+    "corr_pred_target": -0.005826748770403831,
+    "pred_mean_bps": -4.363505211187074,
+    "pred_std_bps": 56.39917872299951,
+    "pred_p05_bps": -75.78232139348984,
+    "pred_p95_bps": 75.30897855758668,
+    "target_mean_bps": 0.9422223802798404,
+    "target_std_bps": 116.48546637773568,
+    "pred_vs_realised_drift_bps": -5.305727591466915,
+    "rank_corr_score": 0.00014625849020248876,
+    "rank_corr_se_score": 0.0024344635699129337,
+    "perm_score": {
+      "observed_bps": -0.6382633913364741,
+      "null_bps": -0.3295082323071833,
+      "diff_bps": -0.308755159029291,
+      "ci_lo": -3.236119468057099,
+      "ci_hi": 2.2974506556162444,
+      "p": 0.8005,
+      "n_days": 3623
+    },
+    "rank_corr_predicted_return": 0.0007058410037856874,
+    "rank_corr_se_predicted_return": 0.002870680480687077,
+    "perm_predicted_return": {
+      "observed_bps": -0.9326748611946288,
+      "null_bps": 3.044826025445563,
+      "diff_bps": -3.9775008866401897,
+      "ci_lo": -9.251838621348613,
+      "ci_hi": 0.7483490266980806,
+      "p": 0.104,
+      "n_days": 3623
+    },
+    "directional_accuracy": 0.5001159260281535,
+    "balanced_accuracy": 0.49978329168040764,
+    "ece": 0.22292021662357353,
+    "oos_nll_shared_sigma": -2.880732348678265,
+    "oos_nll_own_predicted_sigma": -3.056617492281938,
+    "predicted_vol_median": 0.013998454268319941,
+    "oos_z_abs_mean": 0.5363799196924215,
+    "direction_prob_source": "aux_head",
+    "oos_direction_bce": 0.6941759840971155,
+    "oos_direction_auc": 0.5039185699318761,
+    "arm": "raw",
+    "title": "raw next-bar log return",
+    "regression_target": "target_return",
+    "direction_target": "lab_dir_raw",
+    "n_rows": 90575,
+    "n_timestamps": 3623,
+    "n_symbols": 25,
+    "n_valid_own_label": 89444,
+    "own_label_base_rate": 0.502191315236349,
+    "n_censored_own_label": 1131,
+    "next_bar_base_rate": 0.49592050786640907,
+    "head_output_mean": -0.0004363505211187074,
+    "head_output_std": 0.0056399490065233765,
+    "own_auc": 0.506089856048298,
+    "own_brier": 0.2506309536859098,
+    "own_ece": 0.020350861358414934,
+    "own_balanced_accuracy": 0.5025548113063469,
+    "own_directional_accuracy": 0.5024260990116721,
+    "own_bce": 0.6944171321490045,
+    "fwd_auc_score": 0.49977402124733133,
+    "fwd_brier_score": 0.3206146107169452,
+    "fwd_ece_score": 0.22292021662357353,
+    "fwd_bce_score": 0.9662159116526396,
+    "null_control": {
+      "rank_corr_mean": 5.234137283890178e-05,
+      "rank_corr_sd": 0.0030718770190592826,
+      "fwd_auc_mean": 0.4997597225649021,
+      "fwd_auc_sd": 0.001789536014683582,
+      "draws": 25
+    },
+    "deciles_next_bar": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 0.876647782807865,
+          "median_bps": 0.0,
+          "win_rate": 0.4953632148377125,
+          "mean_score": -1.7678235754824034
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 0.7874389530295356,
+          "median_bps": 0.0,
+          "win_rate": 0.4958595561444187,
+          "mean_score": -0.910876465989695
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 1.0691946642342383,
+          "median_bps": 0.0,
+          "win_rate": 0.4980128063590197,
+          "mean_score": -0.5542339386964649
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 1.532496384098811,
+          "median_bps": 0.0,
+          "win_rate": 0.4997239704096279,
+          "mean_score": -0.3338657801462987
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": 0.7152291076276954,
+          "median_bps": 0.0,
+          "win_rate": 0.49475543778293035,
+          "mean_score": -0.1578334320365785
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": -1.4153368332748573,
+          "median_bps": -1.0396327259114118,
+          "win_rate": 0.4884080370942813,
+          "mean_score": 0.02320137582616603
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 2.7478573708897187,
+          "median_bps": 0.4819625516049108,
+          "win_rate": 0.5002760295903721,
+          "mean_score": 0.2582540499773342
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 1.7230043723620887,
+          "median_bps": 0.0,
+          "win_rate": 0.4947008169573857,
+          "mean_score": 0.5374316872413807
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 0.7497421935694065,
+          "median_bps": 0.0,
+          "win_rate": 0.4971844981782047,
+          "mean_score": 0.8854443258578849
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 0.6361510007717383,
+          "median_bps": 0.0,
+          "win_rate": 0.494921616250828,
+          "mean_score": 1.651860654480377
+        }
+      ],
+      "monotonicity": -0.17575757575757575,
+      "top_minus_bottom_bps": -0.2404967820361265,
+      "top_minus_bottom_p": 0.76
+    },
+    "deciles_native": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 0.8766481402579872,
+          "median_bps": 0.0,
+          "win_rate": 0.4953632148377125,
+          "mean_score": -1.7678235754824034
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 0.7874364094639842,
+          "median_bps": 0.0,
+          "win_rate": 0.4958595561444187,
+          "mean_score": -0.910876465989695
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 1.0691960094643813,
+          "median_bps": 0.0,
+          "win_rate": 0.4980128063590197,
+          "mean_score": -0.5542339386964649
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 1.5324997760623553,
+          "median_bps": 0.0,
+          "win_rate": 0.4997239704096279,
+          "mean_score": -0.3338657801462987
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": 0.7152258964247655,
+          "median_bps": 0.0,
+          "win_rate": 0.49475543778293035,
+          "mean_score": -0.1578334320365785
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": -1.4153396307355466,
+          "median_bps": -1.0400486126712627,
+          "win_rate": 0.4884080370942813,
+          "mean_score": 0.02320137582616603
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 2.747860138862106,
+          "median_bps": 0.4825272940253243,
+          "win_rate": 0.5002760295903721,
+          "mean_score": 0.2582540499773342
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 1.7230056337076067,
+          "median_bps": 0.0,
+          "win_rate": 0.4947008169573857,
+          "mean_score": 0.5374316872413807
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 0.7497394864941656,
+          "median_bps": 0.0,
+          "win_rate": 0.4971844981782047,
+          "mean_score": 0.8854443258578849
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 0.6361530522916204,
+          "median_bps": 0.0,
+          "win_rate": 0.494921616250828,
+          "mean_score": 1.651860654480377
+        }
+      ],
+      "monotonicity": -0.17575757575757575,
+      "top_minus_bottom_bps": -0.24049508796636646,
+      "top_minus_bottom_p": 0.76
+    },
+    "deciles_tb_return": null,
+    "invariants": {
+      "rows": 90575,
+      "duplicate_ts_symbol": 0,
+      "monotonic_per_symbol": true,
+      "oos_starts_after_train": true,
+      "last_train_ts": "2026-05-02 00:00:00+00:00",
+      "oos_start_ts": "2026-05-02 01:00:00+00:00",
+      "max_target_vs_realised_gap": 1.1548645052376428e-07,
+      "score_consistent": true,
+      "rows_per_symbol_min": 3623,
+      "rows_per_symbol_max": 3623,
+      "ties_in_score": 0,
+      "ties_at_selection_boundary": 0,
+      "regression_column": "target_return",
+      "no_nan_regression_target": true,
+      "no_silent_deletion": true,
+      "censored_direction_present": 1131,
+      "score_is_finite": true,
+      "pred_vol_positive": true,
+      "direction_prob_in_range": true,
+      "min_cross_section": 25,
+      "cross_section_at_least_2_topn": true,
+      "n_fit_errors": 0
+    }
+  },
+  "vol_scaled": {
+    "label": "label_ablation::vol_scaled",
+    "corr_pred_target": -0.014317191462902756,
+    "pred_mean_bps": -2.523759777444379,
+    "pred_std_bps": 17.104643952499373,
+    "pred_p05_bps": -27.47073651994073,
+    "pred_p95_bps": 16.07593152592238,
+    "target_mean_bps": 0.9422223802798404,
+    "target_std_bps": 116.48546637773568,
+    "pred_vs_realised_drift_bps": -3.46598215772422,
+    "rank_corr_score": 0.008573333120246154,
+    "rank_corr_se_score": 0.0036062261087591303,
+    "perm_score": {
+      "observed_bps": 0.20369302528666128,
+      "null_bps": 0.8534516039443648,
+      "diff_bps": -0.6497585786577031,
+      "ci_lo": -4.649003049383745,
+      "ci_hi": 3.3089624548931833,
+      "p": 0.802,
+      "n_days": 3623
+    },
+    "rank_corr_predicted_return": 0.009005604789674524,
+    "rank_corr_se_predicted_return": 0.003803020704966037,
+    "perm_predicted_return": {
+      "observed_bps": -0.6597946481016492,
+      "null_bps": -1.1856403075372126,
+      "diff_bps": 0.5258456594355628,
+      "ci_lo": -5.4650652549901,
+      "ci_hi": 6.273767376113699,
+      "p": 0.79,
+      "n_days": 3623
+    },
+    "directional_accuracy": 0.5004692243996688,
+    "balanced_accuracy": 0.5000694095151427,
+    "ece": 0.037619100862360845,
+    "oos_nll_shared_sigma": -3.406600939408749,
+    "oos_nll_own_predicted_sigma": 0.9546364950919759,
+    "predicted_vol_median": 1.0472028168216285,
+    "oos_z_abs_mean": 0.006722018452967474,
+    "direction_prob_source": "aux_head",
+    "oos_direction_bce": 0.7001864455704951,
+    "oos_direction_auc": 0.5049392676775069,
+    "arm": "vol_scaled",
+    "title": "forward return / trailing volatility",
+    "regression_target": "target_scaled",
+    "direction_target": "lab_dir_raw",
+    "n_rows": 90575,
+    "n_timestamps": 3623,
+    "n_symbols": 25,
+    "n_valid_own_label": 89444,
+    "own_label_base_rate": 0.502191315236349,
+    "n_censored_own_label": 1131,
+    "next_bar_base_rate": 0.49592050786640907,
+    "head_output_mean": -0.021155690037880093,
+    "head_output_std": 0.12404636446886384,
+    "own_auc": 0.5058489698208187,
+    "own_brier": 0.253479954183308,
+    "own_ece": 0.045642947963239734,
+    "own_balanced_accuracy": 0.5051294846569666,
+    "own_directional_accuracy": 0.5052882250346585,
+    "own_bce": 0.70033490463097,
+    "fwd_auc_score": 0.5005520174264091,
+    "fwd_brier_score": 0.2525190397297148,
+    "fwd_ece_score": 0.037619100862360845,
+    "fwd_bce_score": 0.6983446094911355,
+    "null_control": {
+      "rank_corr_mean": 5.234137283890178e-05,
+      "rank_corr_sd": 0.0030718770190592826,
+      "fwd_auc_mean": 0.4997597225649021,
+      "fwd_auc_sd": 0.001789536014683582,
+      "draws": 25
+    },
+    "deciles_next_bar": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 1.9245976087959709,
+          "median_bps": 0.0,
+          "win_rate": 0.493265621550011,
+          "mean_score": -0.2800084767825197
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 0.5127331933631787,
+          "median_bps": 0.0,
+          "win_rate": 0.49398255492988846,
+          "mean_score": -0.13562154937190443
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 2.6182746249311206,
+          "median_bps": 0.0,
+          "win_rate": 0.49768160741885625,
+          "mean_score": -0.0872232058931321
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 1.574520384470768,
+          "median_bps": 0.0,
+          "win_rate": 0.4990614993927349,
+          "mean_score": -0.05337543755908684
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": -1.1507330726016987,
+          "median_bps": 0.0,
+          "win_rate": 0.49574914430826983,
+          "mean_score": -0.025125760850329398
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": 0.5401284664909058,
+          "median_bps": 0.0,
+          "win_rate": 0.4933760211967322,
+          "mean_score": 0.0002719283197279445
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 2.151004030274652,
+          "median_bps": 0.0,
+          "win_rate": 0.4990614993927349,
+          "mean_score": 0.02583304794284068
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 0.8526616301132715,
+          "median_bps": 0.0,
+          "win_rate": 0.4928240229631265,
+          "mean_score": 0.055144342649059305
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 1.331392365144995,
+          "median_bps": 1.2889089403687017,
+          "win_rate": 0.5045820912001766,
+          "mean_score": 0.09653305671848379
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": -0.9323876028409314,
+          "median_bps": 0.0,
+          "win_rate": 0.48962243320821375,
+          "mean_score": 0.1910515970215204
+        }
+      ],
+      "monotonicity": -0.29696969696969694,
+      "top_minus_bottom_bps": -2.856985211636904,
+      "top_minus_bottom_p": 0.2065
+    },
+    "deciles_native": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 249.4840859686534,
+          "median_bps": 0.0,
+          "win_rate": 0.493265621550011,
+          "mean_score": -0.2800084767825197
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 161.49525469557432,
+          "median_bps": 0.0,
+          "win_rate": 0.49398255492988846,
+          "mean_score": -0.13562154937190443
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 210.89474555552678,
+          "median_bps": 0.0,
+          "win_rate": 0.49768160741885625,
+          "mean_score": -0.0872232058931321
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 127.27398462052008,
+          "median_bps": 0.0,
+          "win_rate": 0.4990614993927349,
+          "mean_score": -0.05337543755908684
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": 111.41522582239558,
+          "median_bps": 0.0,
+          "win_rate": 0.49574914430826983,
+          "mean_score": -0.025125760850329398
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": -52.692697521464105,
+          "median_bps": 0.0,
+          "win_rate": 0.4933760211967322,
+          "mean_score": 0.0002719283197279445
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 289.86263218524607,
+          "median_bps": 0.0,
+          "win_rate": 0.4990614993927349,
+          "mean_score": 0.02583304794284068
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 19.16521611674786,
+          "median_bps": 0.0,
+          "win_rate": 0.4928240229631265,
+          "mean_score": 0.055144342649059305
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 212.3609673941664,
+          "median_bps": 181.66322484244304,
+          "win_rate": 0.5045820912001766,
+          "mean_score": 0.09653305671848379
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 43.42357344480553,
+          "median_bps": 0.0,
+          "win_rate": 0.48962243320821375,
+          "mean_score": 0.1910515970215204
+        }
+      ],
+      "monotonicity": -0.32121212121212117,
+      "top_minus_bottom_bps": -206.06051252384793,
+      "top_minus_bottom_p": 0.197
+    },
+    "deciles_tb_return": null,
+    "invariants": {
+      "rows": 90575,
+      "duplicate_ts_symbol": 0,
+      "monotonic_per_symbol": true,
+      "oos_starts_after_train": true,
+      "last_train_ts": "2026-05-02 00:00:00+00:00",
+      "oos_start_ts": "2026-05-02 01:00:00+00:00",
+      "max_target_vs_realised_gap": 1.1548645052376428e-07,
+      "score_consistent": true,
+      "rows_per_symbol_min": 3623,
+      "rows_per_symbol_max": 3623,
+      "ties_in_score": 0,
+      "ties_at_selection_boundary": 0,
+      "regression_column": "target_scaled",
+      "no_nan_regression_target": true,
+      "no_silent_deletion": true,
+      "censored_direction_present": 1131,
+      "score_is_finite": true,
+      "pred_vol_positive": true,
+      "direction_prob_in_range": true,
+      "min_cross_section": 25,
+      "cross_section_at_least_2_topn": true,
+      "n_fit_errors": 0
+    }
+  },
+  "triple_bar": {
+    "label": "label_ablation::triple_bar",
+    "corr_pred_target": -0.00010578799397973563,
+    "pred_mean_bps": -9.926347092324582,
+    "pred_std_bps": 76.92171813461795,
+    "pred_p05_bps": -129.1206181049347,
+    "pred_p95_bps": 82.2938680648804,
+    "target_mean_bps": 0.9422223802798404,
+    "target_std_bps": 116.48546637773568,
+    "pred_vs_realised_drift_bps": -10.868569472604422,
+    "rank_corr_score": 0.00244313067519624,
+    "rank_corr_se_score": 0.0025963218571241602,
+    "perm_score": {
+      "observed_bps": -0.3944320875953524,
+      "null_bps": -2.128966592880189,
+      "diff_bps": 1.7345345052848362,
+      "ci_lo": -0.9672622431715608,
+      "ci_hi": 4.637594851932035,
+      "p": 0.1995,
+      "n_days": 3623
+    },
+    "rank_corr_predicted_return": 0.002873455145163337,
+    "rank_corr_se_predicted_return": 0.002916785565405925,
+    "perm_predicted_return": {
+      "observed_bps": 1.7094307822329606,
+      "null_bps": -2.346354584562014,
+      "diff_bps": 4.055785366794974,
+      "ci_lo": -0.7036019831408704,
+      "ci_hi": 9.651247447517719,
+      "p": 0.109,
+      "n_days": 3623
+    },
+    "directional_accuracy": 0.50264421749931,
+    "balanced_accuracy": 0.5024822840156368,
+    "ece": 0.23770043591236628,
+    "oos_nll_shared_sigma": -2.428689258643543,
+    "oos_nll_own_predicted_sigma": -2.8938549824227313,
+    "predicted_vol_median": 0.01874912346171159,
+    "oos_z_abs_mean": 0.4533057762267851,
+    "direction_prob_source": "aux_head",
+    "oos_direction_bce": 0.6962440251984641,
+    "oos_direction_auc": 0.4986323624403701,
+    "arm": "triple_bar",
+    "title": "vol-scaled triple barrier, censored time exits",
+    "regression_target": "tb_return",
+    "direction_target": "lab_dir_tb",
+    "n_rows": 90575,
+    "n_timestamps": 3623,
+    "n_symbols": 25,
+    "n_valid_own_label": 49131,
+    "own_label_base_rate": 0.4935987462091144,
+    "n_censored_own_label": 41444,
+    "next_bar_base_rate": 0.49592050786640907,
+    "head_output_mean": -0.0009926347092324582,
+    "head_output_std": 0.0076922142768098955,
+    "own_auc": 0.5123854540555957,
+    "own_brier": 0.2507546743677796,
+    "own_ece": 0.02732410225873987,
+    "own_balanced_accuracy": 0.5041498092575534,
+    "own_directional_accuracy": 0.5112250921007103,
+    "own_bce": 0.6946694933182256,
+    "fwd_auc_score": 0.5019142439826807,
+    "fwd_brier_score": 0.3309521626089879,
+    "fwd_ece_score": 0.23770043591236628,
+    "fwd_bce_score": 1.1320912400244802,
+    "null_control": {
+      "rank_corr_mean": 5.234137283890178e-05,
+      "rank_corr_sd": 0.0030718770190592826,
+      "fwd_auc_mean": 0.4997597225649021,
+      "fwd_auc_sd": 0.001789536014683582,
+      "draws": 25
+    },
+    "deciles_next_bar": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 1.301432112049521,
+          "median_bps": 0.0,
+          "win_rate": 0.4939280194303378,
+          "mean_score": -2.35700413837025
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 0.46869246000611775,
+          "median_bps": 0.0,
+          "win_rate": 0.49166390637076296,
+          "mean_score": -1.0926868325671866
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 1.8833742027470852,
+          "median_bps": 0.0,
+          "win_rate": 0.4967984102450872,
+          "mean_score": -0.6612056909590399
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 1.0892915277073718,
+          "median_bps": 0.0,
+          "win_rate": 0.4935409075852931,
+          "mean_score": -0.371663606301329
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": -2.229646384234592,
+          "median_bps": 0.0,
+          "win_rate": 0.494976261455228,
+          "mean_score": -0.14333105887205355
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": 2.4756323303220045,
+          "median_bps": 0.0,
+          "win_rate": 0.49845440494590415,
+          "mean_score": 0.053812123784870686
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 1.7747410207885885,
+          "median_bps": 0.0,
+          "win_rate": 0.49795738103124654,
+          "mean_score": 0.2569695038834581
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 1.0867725196551075,
+          "median_bps": 0.0,
+          "win_rate": 0.49558401413115477,
+          "mean_score": 0.5284246828659857
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 0.3081779549008146,
+          "median_bps": 0.0,
+          "win_rate": 0.49983438224577675,
+          "mean_score": 0.9608596624096994
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 1.2633918395632646,
+          "median_bps": 0.0,
+          "win_rate": 0.49646721130492383,
+          "mean_score": 2.216986701386525
+        }
+      ],
+      "monotonicity": -0.13939393939393938,
+      "top_minus_bottom_bps": -0.038040272486256056,
+      "top_minus_bottom_p": 0.887
+    },
+    "deciles_native": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 2.0431722863366564,
+          "median_bps": 1.1124521800831126,
+          "win_rate": 0.5048575844557297,
+          "mean_score": -2.35700413837025
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 1.4872733533142786,
+          "median_bps": 0.0,
+          "win_rate": 0.4944242022744838,
+          "mean_score": -1.0926868325671866
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 2.2568421608131537,
+          "median_bps": 0.0,
+          "win_rate": 0.497460808125414,
+          "mean_score": -0.6612056909590399
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 2.030271173803646,
+          "median_bps": -0.850485632024623,
+          "win_rate": 0.492988848404549,
+          "mean_score": -0.371663606301329
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": -4.856068082298935,
+          "median_bps": -2.456181763454789,
+          "win_rate": 0.48912443413933976,
+          "mean_score": -0.14333105887205355
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": 3.604442856428839,
+          "median_bps": 0.8739060938578121,
+          "win_rate": 0.5004415985868845,
+          "mean_score": 0.053812123784870686
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 3.9706145431434203,
+          "median_bps": 0.0,
+          "win_rate": 0.4959699679805675,
+          "mean_score": 0.2569695038834581
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 0.5006142017916866,
+          "median_bps": -1.7650955081922721,
+          "win_rate": 0.4920512254360786,
+          "mean_score": 0.5284246828659857
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 0.01865953784793287,
+          "median_bps": 0.0,
+          "win_rate": 0.4946450259467815,
+          "mean_score": 0.9608596624096994
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 2.7735346158976375,
+          "median_bps": 2.8190541545979304,
+          "win_rate": 0.5163391477147273,
+          "mean_score": 2.216986701386525
+        }
+      ],
+      "monotonicity": 0.04242424242424241,
+      "top_minus_bottom_bps": 0.7303623295609816,
+      "top_minus_bottom_p": 0.791
+    },
+    "deciles_tb_return": {
+      "buckets": [
+        {
+          "bucket": 0,
+          "n": 9058,
+          "mean_bps": 2.0431722863366564,
+          "median_bps": 1.1124521800831126,
+          "win_rate": 0.5048575844557297,
+          "mean_score": -2.35700413837025
+        },
+        {
+          "bucket": 1,
+          "n": 9057,
+          "mean_bps": 1.4872733533142786,
+          "median_bps": 0.0,
+          "win_rate": 0.4944242022744838,
+          "mean_score": -1.0926868325671866
+        },
+        {
+          "bucket": 2,
+          "n": 9058,
+          "mean_bps": 2.2568421608131537,
+          "median_bps": 0.0,
+          "win_rate": 0.497460808125414,
+          "mean_score": -0.6612056909590399
+        },
+        {
+          "bucket": 3,
+          "n": 9057,
+          "mean_bps": 2.030271173803646,
+          "median_bps": -0.850485632024623,
+          "win_rate": 0.492988848404549,
+          "mean_score": -0.371663606301329
+        },
+        {
+          "bucket": 4,
+          "n": 9057,
+          "mean_bps": -4.856068082298935,
+          "median_bps": -2.456181763454789,
+          "win_rate": 0.48912443413933976,
+          "mean_score": -0.14333105887205355
+        },
+        {
+          "bucket": 5,
+          "n": 9058,
+          "mean_bps": 3.604442856428839,
+          "median_bps": 0.8739060938578121,
+          "win_rate": 0.5004415985868845,
+          "mean_score": 0.053812123784870686
+        },
+        {
+          "bucket": 6,
+          "n": 9057,
+          "mean_bps": 3.9706145431434203,
+          "median_bps": 0.0,
+          "win_rate": 0.4959699679805675,
+          "mean_score": 0.2569695038834581
+        },
+        {
+          "bucket": 7,
+          "n": 9058,
+          "mean_bps": 0.5006142017916866,
+          "median_bps": -1.7650955081922721,
+          "win_rate": 0.4920512254360786,
+          "mean_score": 0.5284246828659857
+        },
+        {
+          "bucket": 8,
+          "n": 9057,
+          "mean_bps": 0.01865953784793287,
+          "median_bps": 0.0,
+          "win_rate": 0.4946450259467815,
+          "mean_score": 0.9608596624096994
+        },
+        {
+          "bucket": 9,
+          "n": 9058,
+          "mean_bps": 2.7735346158976375,
+          "median_bps": 2.8190541545979304,
+          "win_rate": 0.5163391477147273,
+          "mean_score": 2.216986701386525
+        }
+      ],
+      "monotonicity": 0.04242424242424241,
+      "top_minus_bottom_bps": 0.7303623295609816,
+      "top_minus_bottom_p": 0.791
+    },
+    "invariants": {
+      "rows": 90575,
+      "duplicate_ts_symbol": 0,
+      "monotonic_per_symbol": true,
+      "oos_starts_after_train": true,
+      "last_train_ts": "2026-05-02 00:00:00+00:00",
+      "oos_start_ts": "2026-05-02 01:00:00+00:00",
+      "max_target_vs_realised_gap": 1.1548645052376428e-07,
+      "score_consistent": true,
+      "rows_per_symbol_min": 3623,
+      "rows_per_symbol_max": 3623,
+      "ties_in_score": 0,
+      "ties_at_selection_boundary": 0,
+      "regression_column": "tb_return",
+      "no_nan_regression_target": true,
+      "no_silent_deletion": true,
+      "censored_direction_present": 41444,
+      "score_is_finite": true,
+      "pred_vol_positive": true,
+      "direction_prob_in_range": true,
+      "min_cross_section": 25,
+      "cross_section_at_least_2_topn": true,
+      "n_fit_errors": 0
+    }
+  },
+  "alignment": {
+    "identical_across_arms": true,
+    "rows_per_arm": {
+      "raw": 90575,
+      "vol_scaled": 90575,
+      "triple_bar": 90575
+    },
+    "pairwise_symmetric_difference": {
+      "vol_scaled": 0,
+      "triple_bar": 0
+    }
+  },
+  "ranking_by_evidence": [
+    {
+      "arm": "vol_scaled",
+      "rank_corr": 0.008573333120246154,
+      "perm_p": 0.802,
+      "own_auc": 0.5058489698208187,
+      "fwd_auc": 0.5049392676775069
+    },
+    {
+      "arm": "triple_bar",
+      "rank_corr": 0.00244313067519624,
+      "perm_p": 0.1995,
+      "own_auc": 0.5123854540555957,
+      "fwd_auc": 0.4986323624403701
+    },
+    {
+      "arm": "raw",
+      "rank_corr": 0.00014625849020248876,
+      "perm_p": 0.8005,
+      "own_auc": 0.506089856048298,
+      "fwd_auc": 0.5039185699318761
+    }
+  ],
+  "evidence_caveat": "arms share one seed and one split, so a rank ordering on a single fold is a screening result, not a selection: a gap smaller than its own standard error does not separate the arms",
+  "economic_diagnostic": {
+    "arm": "vol_scaled",
+    "net": {
+      "total_return": -0.9359931633457207,
+      "sharpe": -15.606123901669148,
+      "max_drawdown": -0.9360661369475051,
+      "win_rate": 0.4021529119514215,
+      "profit_factor": 0.5906662981189728,
+      "n_round_trips": 4570,
+      "total_cost": 989.8393761385418,
+      "turnover_x_initial": 549.9107456331734
+    },
+    "gross": {
+      "total_return": 0.041308862048495154,
+      "sharpe": 0.4439429920594192,
+      "max_drawdown": -0.2539230689047249,
+      "win_rate": 0.5175269113993928,
+      "profit_factor": 1.0152048681701233,
+      "n_round_trips": 4570,
+      "total_cost": 0.0,
+      "turnover_x_initial": 1701.7691531915943
+    },
+    "double_cost": {
+      "total_return": -0.9960930020636756,
+      "sharpe": -31.09941806938747,
+      "max_drawdown": -0.9960930020636756,
+      "win_rate": 0.30830803201766493,
+      "profit_factor": 0.3594865077452045,
+      "n_round_trips": 4570,
+      "total_cost": 1019.5899188651929,
+      "turnover_x_initial": 283.2194052294825
+    },
+    "cost_drag": 0.9773020253942158,
+    "all_in_cost_bps_per_fill": 18.0,
+    "all_in_cost_bps_round_trip": 36.0,
+    "cost_per_round_trip": 0.21659504948326952,
+    "net_bps_per_round_trip": -2.048125083907485,
+    "gross_bps_per_round_trip": 0.09039138303828262,
+    "round_trips_per_day": 30.273254209218877,
+    "mean_gross_exposure": 0.9999999999999999,
+    "note": "diagnostic only; no parameter was searched"
+  }
+}

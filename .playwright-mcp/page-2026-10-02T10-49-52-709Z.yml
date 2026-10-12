@@ -1,0 +1,65 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "CQIP · Crypto Probability Workbench" [level=1] [ref=e4]
+    - generic [ref=e5]: loading registry
+    - generic [ref=e8]: —
+    - button "Reload models" [ref=e9] [cursor=pointer]
+    - link "Research Monitor →" [ref=e10] [cursor=pointer]:
+      - /url: /dashboard
+  - generic [ref=e11]:
+    - complementary [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: Select cryptocurrencies
+          - generic [ref=e16]: "0"
+        - searchbox "filter symbols…" [ref=e17]
+        - combobox [ref=e19]:
+          - 'option "Sort: probability" [selected]'
+          - 'option "Sort: name"'
+          - 'option "Sort: model count"'
+          - 'option "Sort: data depth"'
+        - generic [ref=e20]:
+          - combobox [ref=e21]:
+            - option "Have a model" [selected]
+            - option "All ingested"
+            - option "No model yet"
+          - button "Clear" [ref=e22] [cursor=pointer]
+          - button "All+" [ref=e23] [cursor=pointer]
+    - main [ref=e25]:
+      - generic [ref=e26]:
+        - 'heading "Analysis scope — the probability below comes from one model per symbol 1h Model: best accuracy Analyse selection" [level=2] [ref=e27]':
+          - text: Analysis scope
+          - generic [ref=e28]: — the probability below comes from one model per symbol
+          - generic [ref=e29]:
+            - combobox [ref=e30]:
+              - option "1h" [selected]
+              - option "4h"
+              - option "1d"
+            - combobox [ref=e31]:
+              - 'option "Model: best accuracy" [selected]'
+              - 'option "Model: newest"'
+              - 'option "Model: lstm"'
+              - 'option "Model: mlp"'
+              - 'option "Model: transformer"'
+            - button "Analyse selection" [ref=e32] [cursor=pointer]
+        - generic [ref=e33]: No symbols selected. Pick one on the left.
+      - generic [ref=e36]:
+        - heading "Training & backtests — queued against the selected symbols" [level=2] [ref=e37]:
+          - text: Training & backtests
+          - generic [ref=e38]: — queued against the selected symbols
+        - generic [ref=e40]:
+          - generic [ref=e41]: Architecture
+          - combobox [ref=e42]:
+            - option "lstm" [selected]
+            - option "mlp"
+            - option "transformer"
+          - generic [ref=e43]: Epochs
+          - spinbutton [ref=e44]: "8"
+          - generic [ref=e45]: Horizon
+          - spinbutton [ref=e46]: "1"
+          - generic [ref=e47]: Folds
+          - spinbutton [ref=e48]: "3"
+          - button "Train forecaster" [ref=e49] [cursor=pointer]
+          - button "Backtest models" [ref=e50] [cursor=pointer]
+        - generic [ref=e51]: No jobs submitted from this session.
+  - contentinfo [ref=e53]: Probabilities are model outputs, not advice. P(up) assumes the forecaster's Gaussian head is calibrated; the gates above test whether it is. Read the quality verdict before reading the number.

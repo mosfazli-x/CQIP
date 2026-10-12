@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CQIP Research Monitor</title>
+<style>
+  /* Deliberately no webfonts and no external requests: this dashboard has to
+     render identically on a machine with no network access to a CDN. */
+  :root {
+    --bg:        #0b0e14;
+    --panel:     #131722;
+    --panel-2:   #1a1f2e;
+    --line:      #232a3b;
+    --line-soft: #1c2231;
+    --text:      #dfe4f0;
+    --text-dim:  #8b93a8;
+    --text-mute: #5c6479;
+    --accent:    #4a9eff;
+    --pass:      #2ecc8f;
+    --noedge:    #e8a33d;
+    --fail:      #ef5f6b;
+    --missing:   #4a5468;
+    --holdout:   #b47cff;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  header {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 14px 22px; background: rgba(11,14,20,.92);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 15px; margin: 0; letter-spacing: .3px; font-weight: 650; }
+  header .sub { color: var(--text-mute); font-size: 12px; }
+  .spacer { flex: 1; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; border-radius: 999px; font-size: 12px;
+    background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--missing); }
+  .dot.ok { background: var(--pass); }
+  .dot.bad { background: var(--fail); }
+  button {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover { border-color: var(--accent); color: #fff; }
+  button.on { background: var(--accent); border-color: var(--accent); color: #05121f; font-weight: 600; }
+  main { padding: 22px; max-width: 1700px; margin: 0 auto; }
+  section { margin-bottom: 30px; }
+  h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: .9px;
+    color: var(--text-dim); margin: 0 0 12px; font-weight: 650;
+  }
+  h2 .note { text-transform: none; letter-spacing: 0; color: var(--text-mute); font-weight: 400; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; }
+  .card .value { font-size: 26px; font-weight: 640; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .card .foot { font-size: 11px; color: var(--text-mute); margin-top: 4px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 16px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; overflow: hidden;
+  }
+  .banner {
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 18px;
+    border: 1px solid var(--line); background: var(--panel);
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .banner.warn { border-left: 3px solid var(--noedge); }
+  .banner.bad  { border-left: 3px solid var(--fail); }
+  .banner.good { border-left: 3px solid var(--pass); }
+  .banner b { display: block; margin-bottom: 3px; }
+  .banner p { margin: 0; color: var(--text-dim); font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+  th {
+    color: var(--text-dim); font-weight: 600; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .4px; position: sticky; top: 0; background: var(--panel);
+    cursor: pointer; user-select: none; z-index: 2;
+  }
+  th:hover { color: var(--text); }
+  th.sorted::after { content: " ▾"; color: var(--accent); }
+  th.sorted.asc::after { content: " ▴"; }
+  th.l, td.l { text-align: left; }
+  tbody tr:hover { background: var(--panel-2); }
+  td.num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .nil { color: var(--text-mute); font-style: italic; font-family: inherit; }
+  .tag {
+    display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px;
+    font-weight: 600; letter-spacing: .2px;
+  }
+  .tag.passes { background: rgba(46,204,143,.15); color: var(--pass); }
+  .tag.no-edge { background: rgba(232,163,61,.15); color: var(--noedge); }
+  .tag.failed { background: rgba(239,95,107,.15); color: var(--fail); }
+  .tag.insufficient_data { background: rgba(74,84,104,.25); color: var(--text-dim); }
+  .tag.holdout { background: rgba(180,124,255,.15); color: var(--holdout); }
+  .tag.carry { background: rgba(232,163,61,.1); color: var(--noedge); font-weight: 400; }
+  .wrap { overflow: auto; max-height: 520px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  input[type=search], select {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 6px; padding: 6px 10px; font-size: 12px; font-family: inherit;
+  }
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-dim); margin-bottom: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .err { color: var(--fail); font-family: var(--mono); font-size: 12px; }
+  svg text { font-family: var(--mono); }
+  .reason { color: var(--text-mute); font-size: 11px; max-width: 460px; white-space: normal; text-align: left; line-height: 1.4; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 12.5px; }
+  .kv dt { color: var(--text-dim); }
+  .kv dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  footer { color: var(--text-mute); font-size: 11.5px; padding: 8px 22px 30px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>CQIP Research Monitor</h1>
+    <div class="sub">purged splits &middot; embargoed windows &middot; holdout read once</div>
+  </div>
+  <div class="spacer"></div>
+  <span class="pill"><span class="dot" id="dbdot"></span><span id="dbtext">connecting</span></span>
+  <span class="pill" id="stamp">never loaded</span>
+  <a class="pill" href="/analysis" style="text-decoration:none">Probability Workbench &rarr;</a>
+  <button id="auto" class="on">Auto 15s</button>
+  <button id="refresh">Refresh</button>
+</header>
+
+<main>
+  <div id="banner"></div>
+
+  <section>
+    <h2>Coverage</h2>
+    <div class="cards" id="kpis"></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Validation directional accuracy <span class="note">&mdash; every evaluated cell, with 95% interval</span></h2>
+      <div class="legend">
+        <span><i style="background:var(--pass)"></i>passes gate</span>
+        <span><i style="background:var(--noedge)"></i>no edge</span>
+        <span><i style="background:var(--fail)"></i>failed</span>
+        <span><i style="background:var(--missing)"></i>insufficient data</span>
+        <span>vertical bar = 95% CI; horizontal lines at 50% (chance) and 55% (gate)</span>
+      </div>
+      <div id="accchart"></div>
+    </div>
+    <div class="panel">
+      <h2>Outcomes &amp; inventory</h2>
+      <div id="verdicts"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Per-symbol assessment <span class="note">&mdash; the actionable table</span></h2>
+    <div class="toolbar">
+      <input type="search" id="symfilter" placeholder="filter symbol, model or reason&hellip;" size="34" />
+      <select id="verdictfilter">
+        <option value="">all verdicts</option>
+        <option value="passes">passes</option>
+        <option value="no-edge">no-edge</option>
+        <option value="insufficient_data">insufficient data</option>
+        <option value="failed">failed</option>
+      </select>
+      <select id="intfilter">
+        <option value="">all intervals</option>
+      </select>
+      <span class="sub" id="rowcount"></span>
+    </div>
+    <div class="wrap"><table id="symtable">
+      <thead><tr>
+        <th class="l" data-k="symbol">symbol</th>
+        <th class="l" data-k="interval">int</th>
+        <th class="l" data-k="kind">model</th>
+        <th class="l" data-k="status">status</th>
+        <th class="l" data-k="verdict">verdict</th>
+        <th class="l" data-k="holdout_scored">holdout</th>
+        <th data-k="rows">rows</th>
+        <th data-k="val_accuracy">val acc</th>
+        <th class="l" data-k="val_accuracy_ci">val 95% CI</th>
+        <th data-k="val_correlation">val corr</th>
+        <th data-k="test_accuracy">test acc</th>
+        <th class="l" data-k="test_accuracy_ci">test 95% CI</th>
+        <th data-k="test_excess">excess</th>
+        <th data-k="test_trades">trades</th>
+        <th data-k="test_max_drawdown">max DD</th>
+        <th class="l" data-k="reason">reason</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Event studies <span class="note">&mdash; validation only; holdout untouched</span></h2>
+    <div id="events"></div>
+  </section>
+
+  <section>
+    <h2>Recent runs</h2>
+    <div class="wrap"><table id="runtable">
+      <thead><tr>
+        <th class="l">run</th><th class="l">kind</th><th class="l">status</th>
+        <th>duration</th><th>val acc</th><th>test acc</th><th class="l">started</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Model inventory</h2>
+      <div id="models"></div>
+    </div>
+    <div class="panel">
+      <h2>Stored datasets</h2>
+      <div id="datasets"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Numbers shown are exactly what the run reports contain. A metric that was never
+  measured renders as <span class="nil">not measured</span> and is never shown as zero.
+</footer>
+
+<script>
+"use strict";
+
+/* ---------------------------------------------------------------- utilities */
+const $ = (sel, root) => (root || document).querySelector(sel);
+const SVGNS = "http://www.w3.org/2000/svg";
+
+function el(tag, attrs, kids) {
+  const node = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    if (k === "class") node.className = attrs[k];
+    else if (k === "text") node.textContent = attrs[k];
+    else node.setAttribute(k, attrs[k]);
+  }
+  for (const kid of [].concat(kids || [])) {
+    if (kid === null || kid === undefined) continue;
+    node.appendChild(typeof kid === "string" ? document.createTextNode(kid) : kid);
+  }
+  return node;
+}
+function svg(tag, attrs, kids) {
+  const node = document.createElementNS(SVGNS, tag);
+  for (const k in (attrs || {})) {
+    if (k === "text") node.textContent = attrs[k];
+    else node.setAttribute(k, attrs[k]);
+  }
+  for (const kid of [].concat(kids || [])) {
+    if (kid === null || kid === undefined) continue;
+    node.appendChild(kid);
+  }
+  return node;
+}
+
+/* A missing number must never render as 0. `nil` is a first-class display
+   value precisely because a clean 0 in this domain reads as "measured, and it
+   was zero", which is a very different claim from "never ran". */
+function isNil(v) { return v === null || v === undefined || Number.isNaN(v); }
+function num(v, dp) {
+  if (isNil(v)) return null;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return null;
+  return n.toFixed(dp === undefined ? 2 : dp);
+}
+function pct(v, dp) {
+  if (isNil(v)) return null;
+  return (100 * Number(v)).toFixed(dp === undefined ? 1 : dp) + "%";
+}
+function int(v) {
+  if (isNil(v)) return null;
+  return Math.round(Number(v)).toLocaleString();
+}
+function ciText(ci) {
+  if (!ci || isNil(ci.lower) || isNil(ci.upper)) return null;
+  return num(ci.lower, 3) + " – " + num(ci.upper, 3);
+}
+function td(value, cls) {
+  // `value` may be a pre-formatted string or null; null becomes an explicit
+  // "not measured" cell rather than a blank or a zero.
+  if (isNil(value) || value === "") {
+    return el("td", { class: "nil" + (cls ? " " + cls : ""), title: "not measured" }, "not measured");
+  }
+  return el("td", { class: (cls || "num") }, String(value));
+}
+function verdictTag(v) {
+  if (isNil(v) || v === "missing") return el("span", { class: "tag insufficient_data" }, "missing");
+  return el("span", { class: "tag " + v }, String(v).replace(/_/g, " "));
+}
+function shortTime(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return isNaN(d) ? String(iso) : d.toLocaleString();
+}
+function shortDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return isNaN(d) ? String(iso).slice(0, 10) : d.toISOString().slice(0, 10);
+}
+function seconds(s) {
+  if (isNil(s)) return null;
+  const n = Number(s);
+  if (n < 60) return n.toFixed(0) + "s";
+  if (n < 3600) return (n / 60).toFixed(1) + "m";
+  return (n / 3600).toFixed(2) + "h";
+}
+
+let DATA = null;
+let sortKey = "verdict", sortAsc = true;
+
+/* -------------------------------------------------------------- data access */
+async function getJSON(path) {
+  const res = await fetch(path, { headers: { Accept: "application/json" } });
+  if (!res.ok) {
+    let detail = res.status + " " + res.statusText;
+    // The API returns two different error shapes: {error,detail,status_code}
+    // for handled exceptions and {detail} for HTTPException. Both are read.
+    try {
+      const body = await res.json();
+      detail = body.detail || body.error || detail;
+    } catch (_) { /* non-JSON error body */ }
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
+async function load() {
+  const dot = $("#dbdot"), text = $("#dbtext");
+  try {
+    const data = await getJSON("/research/overview");
+    DATA = data;
+    dot.className = "dot " + (data.health && data.health.database_readable ? "ok" : "bad");
+    text.textContent = data.health && data.health.database_readable
+      ? "database reachable" : "database unreadable";
+    render(data);
+    $("#stamp").textContent = "updated " + new Date().toLocaleTimeString();
+  } catch (err) {
+    dot.className = "dot bad";
+    text.textContent = "API unreachable";
+    $("#banner").innerHTML = "";
+    $("#banner").appendChild(el("div", { class: "banner bad" }, [
+      el("div", {}, [
+        el("b", {}, "Cannot reach the API"),
+        el("p", {}, String(err.message || err) + " — start it with: cqip serve"),
+      ]),
+    ]));
+  }
+}
+
+/* ------------------------------------------------------------------ banner */
+function renderBanner(d) {
+  const box = $("#banner");
+  box.innerHTML = "";
+  const total = d.cells_total || 0;
+  const passed = d.cells_passed || 0;
+  const scored = d.holdout_scored_cells || 0;
+  const edge = d.event_studies.filter(s => String(s.verdict || "").startsWith("candidate-edge")).length;
+
+  if (total === 0) {
+    box.appendChild(el("div", { class: "banner warn" }, [
+      el("div", {}, [
+        el("b", {}, "No research cells yet"),
+        el("p", {}, "Run a sweep to populate this monitor: cqip research BTC_USDT --staged"),
+      ]),
+    ]));
+    return;
+  }
+  if (passed === 0) {
+    box.appendChild(el("div", { class: "banner warn" }, [
+      el("div", {}, [
+        el("b", {}, "No cell has demonstrated an edge"),
+        el("p", {}, passed + " of " + total + " evaluated cells passed the quality gate. "
+          + "Accuracy intervals overlapping 50% mean the models are indistinguishable from coin-flipping. "
+          + "This is a negative result, reported as such — do not deploy on it."),
+      ]),
+    ]));
+  } else {
+    box.appendChild(el("div", { class: "banner good" }, [
+      el("div", {}, [
+        el("b", {}, passed + " of " + total + " cells passed the gate"),
+        el("p", {}, "Check the per-symbol table below: a validation pass still requires an "
+          + "independent holdout read before it counts as evidence."),
+      ]),
+    ]));
+  }
+  if (scored === 0 && total > 0) {
+    box.appendChild(el("div", { class: "banner" }, [
+      el("div", {}, [
+        el("b", {}, "Holdout has not been scored on any cell"),
+        el("p", {}, "Validation metrics alone are selection output, not evidence. "
+          + "A holdout reading is deliberately left until a model and strategy are frozen."),
+      ]),
+    ]));
+  }
+  if (edge > 0) {
+    box.appendChild(el("div", { class: "banner good" }, [
+      el("div", {}, [
+        el("b", {}, edge + " event study/studies show a candidate selective edge"),
+        el("p", {}, "These are validation-window findings and require a holdout read before being believed."),
+      ]),
+    ]));
+  }
+}
+
+/* -------------------------------------------------------------------- KPIs */
+function renderKPIs(d) {
+  const box = $("#kpis");
+  box.innerHTML = "";
+  const models = d.architecture_counts || {};
+  const modelBits = Object.keys(models).sort()
+    .map(k => k + " " + models[k]).join(" · ") || "none";
+  const cards = [
+    { label: "symbols evaluated", value: d.symbols, foot: "distinct symbols in non-screening reports" },
+    { label: "cells evaluated", value: d.cells_total, foot: "symbol × interval × architecture" },
+    { label: "passed gate", value: d.cells_passed, foot: d.cells_no_edge + " found no edge", tone: d.cells_passed ? "pass" : "warn" },
+    { label: "holdout scored", value: d.holdout_scored_cells, foot: scoredFoot(d), tone: d.holdout_scored_cells ? "pass" : "warn" },
+    { label: "insufficient data", value: d.cells_insufficient, foot: "too little history to judge" },
+    { label: "failed", value: d.cells_failed, foot: "error during training" },
+    { label: "models registered", value: d.models, foot: modelBits },
+    { label: "event studies", value: d.event_studies.length, foot: "validation-window selectivity tests" },
+  ];
+  for (const c of cards) {
+    const colour = c.tone === "pass" ? "var(--pass)" : c.tone === "warn" ? "var(--noedge)" : "var(--text)";
+    box.appendChild(el("div", { class: "card" }, [
+      el("div", { class: "label" }, c.label),
+      el("div", { class: "value", style: "color:" + colour }, int(c.value)),
+      el("div", { class: "foot" }, c.foot),
+    ]));
+  }
+}
+function scoredFoot(d) {
+  if (d.holdout_scored_cells > 0) return "independent evidence exists";
+  return "holdout still unspent";
+}
+
+/* ------------------------------------------------- accuracy-with-CI scatter */
+function renderAccuracyChart(d) {
+  const host = $("#accchart");
+  host.innerHTML = "";
+  const rows = (d.symbol_table || []).filter(r => !isNil(r.val_accuracy));
+  if (rows.length === 0) {
+    host.appendChild(el("p", { class: "nil" }, "no cell produced a validation accuracy"));
+    return;
+  }
+  const W = 720, H = 300, mL = 46, mR = 14, mT = 12, mB = 34;
+  const iw = W - mL - mR, ih = H - mT - mB;
+  const xs = rows.map(r => Math.log10(Math.max(10, Number(r.rows) || 10)));
+  const x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs);
+  const xr = x1 - x0 || 1;
+  // The y-domain always spans 0.40–0.60. A tighter auto-fit would zoom in until
+  // a 0.51 accuracy looks like a breakthrough, which is the single most
+  // misleading thing a chart of this kind can do.
+  const yLo = 0.40, yHi = 0.60;
+  const sx = v => mL + ((Math.log10(Math.max(10, Number(v) || 10)) - x0) / xr) * iw;
+  const sy = v => mT + ih - ((Number(v) - yLo) / (yHi - yLo)) * ih;
+
+  const root = svg("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", role: "img",
+    "aria-label": "Validation directional accuracy by symbol, with 95% intervals" });
+
+  for (let g = 0.40; g <= 0.601; g += 0.05) {
+    const y = sy(g);
+    root.appendChild(svg("line", { x1: mL, x2: mL + iw, y1: y, y2: y, stroke: "var(--line-soft)", "stroke-width": 1 }));
+    root.appendChild(svg("text", { x: mL - 7, y: y + 3.5, "text-anchor": "end", "font-size": 10, fill: "var(--text-mute)", text: (g * 100).toFixed(0) + "%" }));
+  }
+  // Chance line is visually dominant: nothing here is meaningful against it.
+  root.appendChild(svg("line", { x1: mL, x2: mL + iw, y1: sy(0.5), y2: sy(0.5), stroke: "var(--fail)", "stroke-width": 1.2, "stroke-dasharray": "5 3", opacity: .75 }));
+  root.appendChild(svg("text", { x: mL + iw, y: sy(0.5) - 4, "text-anchor": "end", "font-size": 9.5, fill: "var(--fail)", text: "50% chance" }));
+  root.appendChild(svg("line", { x1: mL, x2: mL + iw, y1: sy(0.55), y2: sy(0.55), stroke: "var(--pass)", "stroke-width": 1, "stroke-dasharray": "2 4", opacity: .6 }));
+  root.appendChild(svg("text", { x: mL + iw, y: sy(0.55) - 4, "text-anchor": "end", "font-size": 9.5, fill: "var(--pass)", text: "55% gate" }));
+
+  for (const label of [100, 500, 1000, 2000, 5000]) {
+    const x = sx(label);
+    if (x < mL - 1 || x > mL + iw + 1) continue;
+    root.appendChild(svg("line", { x1: x, x2: x, y1: mT + ih, y2: mT + ih + 4, stroke: "var(--line)" }));
+    root.appendChild(svg("text", { x: x, y: mT + ih + 16, "text-anchor": "middle", "font-size": 10, fill: "var(--text-mute)", text: label.toLocaleString() }));
+  }
+  root.appendChild(svg("text", { x: mL + iw / 2, y: H - 2, "text-anchor": "middle", "font-size": 10.5, fill: "var(--text-dim)", text: "training rows (log scale)" }));
+
+  const colour = v => v === "passes" ? "var(--pass)" : v === "failed" ? "var(--fail)" : v === "no-edge" ? "var(--noedge)" : "var(--missing)";
+
+  // A cell whose interval straddles 50% is exactly the claim that must not be
+  // mistaken for skill, so those marks are drawn hollow.
+  for (const r of rows) {
+    const acc = Number(r.val_accuracy);
+    const ci = r.val_accuracy_ci;
+    const straddles = ci && !isNil(ci.lower) && ci.lower <= 0.5 && ci.upper >= 0.5;
+    const c = colour(r.verdict);
+    if (ci && !isNil(ci.lower) && !isNil(ci.upper)) {
+      const yTop = sy(Math.min(yHi, ci.upper)), yBot = sy(Math.max(yLo, ci.lower));
+      root.appendChild(svg("line", { x1: sx(r.rows), x2: sx(r.rows), y1: yTop, y2: yBot, stroke: c, "stroke-width": 2, opacity: .55 }));
+      root.appendChild(svg("line", { x1: sx(r.rows) - 3, x2: sx(r.rows) + 3, y1: yTop, y2: yTop, stroke: c, "stroke-width": 1.4, opacity: .55 }));
+      root.appendChild(svg("line", { x1: sx(r.rows) - 3, x2: sx(r.rows) + 3, y1: yBot, y2: yBot, stroke: c, "stroke-width": 1.4, opacity: .55 }));
+    }
+    root.appendChild(svg("circle", {
+      cx: sx(r.rows), cy: sy(acc), r: 3.4, fill: straddles ? "var(--panel)" : c,
+      stroke: c, "stroke-width": 1.4, opacity: .95,
+    }));
+    const tip = r.symbol + " " + r.interval + " " + r.kind + "\nval acc " + (100 * acc).toFixed(2) + "%"
+      + (ci ? "\n95% CI " + (100 * ci.lower).toFixed(2) + "% – " + (100 * ci.upper).toFixed(2) + "%" : "\nno interval")
+      + "\nrows " + int(r.rows) + "\n" + (straddles ? "interval includes 50% — indistinguishable from chance" : "interval clears chance")
+      + "\n" + (r.verdict || "") + (r.reason ? "\n" + r.reason : "");
+    const dot = root.lastChild;
+    dot.appendChild(svg("title", { text: tip }));
+  }
+  host.appendChild(root);
+}
+
+/* -------------------------------------------------- outcome + inventory mix */
+function renderVerdicts(d) {
+  const host = $("#verdicts");
+  host.innerHTML = "";
+  const cells = d.symbol_table || [];
+  const tally = {};
+  for (const r of cells) tally[r.verdict || "missing"] = (tally[r.verdict || "missing"] || 0) + 1;
+  const total = cells.length || 1;
+  const colour = v => v === "passes" ? "var(--pass)" : v === "no-edge" ? "var(--noedge)" : v === "failed" ? "var(--fail)" : "var(--missing)";
+
+  const W = 400, H = 26, rowH = 30;
+  const root = svg("svg", { viewBox: "0 0 " + W + " " + (H * Object.keys(tally).length), width: "100%" });
+  let y = 0;
+  for (const key of Object.keys(tally).sort((a, b) => tally[b] - tally[a])) {
+    const w = (tally[key] / total) * W;
+    root.appendChild(svg("rect", { x: 0, y: y + 3, width: Math.max(w, 2), height: H - 6, fill: colour(key), opacity: .8, rx: 2 }));
+    root.appendChild(svg("text", { x: 6, y: y + H / 2 + 4, "font-size": 11, fill: "#0b0e14", "font-weight": 700, text: tally[key] + " " + key.replace(/_/g, " ") }));
+    y += rowH;
+  }
+  host.appendChild(root);
+
+  const runs = d.runs || {};
+  const dl = el("dl", { class: "kv", style: "margin-top:14px" });
+  const add = (k, v) => { dl.appendChild(el("dt", {}, k)); dl.appendChild(el("dd", {}, v)); };
+  add("run outcomes", Object.keys(runs).sort().map(k => k + " " + runs[k]).join(" · ") || "none");
+  add("intervals modelled", Object.entries(d.interval_counts || {}).map(([k, v]) => k + " " + v).join(" · ") || "none");
+  add("sweep reports", int((d.reports || []).length));
+  add("screening reports", int((d.reports || []).filter(r => r.is_screen).length));
+  add("active jobs", int((d.jobs || []).filter(j => j.status === "running" || j.status === "queued").length));
+  host.appendChild(dl);
+}
+
+/* --------------------------------------------------------- per-symbol table */
+function filteredRows() {
+  const q = ($("#symfilter").value || "").toLowerCase();
+  const v = $("#verdictfilter").value;
+  const iv = $("#intfilter").value;
+  let rows = (DATA.symbol_table || []).slice();
+  if (q) rows = rows.filter(r => [r.symbol, r.kind, r.reason, r.model_id, r.status].join(" ").toLowerCase().includes(q));
+  if (v) rows = rows.filter(r => r.verdict === v);
+  if (iv) rows = rows.filter(r => r.interval === iv);
+
+  const dir = sortAsc ? 1 : -1;
+  rows.sort((a, b) => {
+    const x = a[sortKey], y = b[sortKey];
+    if (x === y) return 0;
+    // "not measured" always sorts last regardless of direction: burying the
+    // gaps keeps them from being mistaken for the strongest or weakest result.
+    if (isNil(x) && isNil(y)) return 0;
+    if (isNil(x)) return 1;
+    if (isNil(y)) return -1;
+    if (typeof x === "string") return String(x).localeCompare(String(y)) * dir;
+    return (Number(x) - Number(y)) * dir;
+  });
+  return rows;
+}
+
+function renderSymbolTable() {
+  const body = $("#symtable tbody");
+  body.innerHTML = "";
+  const rows = filteredRows();
+  $("#rowcount").textContent = rows.length + " of " + (DATA.symbol_table || []).length + " cells";
+  for (const r of rows) {
+    const tr = el("tr");
+    tr.appendChild(el("td", { class: "l" }, String(r.symbol || "—")));
+    tr.appendChild(el("td", { class: "l" }, String(r.interval || "—")));
+    tr.appendChild(el("td", { class: "l" }, String(r.kind || "—")));
+    tr.appendChild(el("td", { class: "l" }, String(r.status || "missing")));
+    const vd = el("td", { class: "l" });
+    vd.appendChild(verdictTag(r.verdict));
+    tr.appendChild(vd);
+
+    const ho = el("td", { class: "l" });
+    if (r.holdout_scored) {
+      ho.appendChild(el("span", { class: "tag holdout" }, "scored"));
+      if (r.holdout_source) {
+        ho.appendChild(el("span", { class: "tag carry", title: "carried forward from " + r.holdout_source, style: "margin-left:4px" }, "earlier run"));
+      }
+    } else {
+      ho.appendChild(el("span", { class: "nil" }, "unspent"));
+    }
+    tr.appendChild(ho);
+
+    tr.appendChild(td(int(r.rows)));
+    tr.appendChild(td(pct(r.val_accuracy, 2)));
+    tr.appendChild(td(ciText(r.val_accuracy_ci), "l"));
+    tr.appendChild(td(num(r.val_correlation, 4)));
+    tr.appendChild(td(pct(r.test_accuracy, 2)));
+    tr.appendChild(td(ciText(r.test_accuracy_ci), "l"));
+    tr.appendChild(td(isNil(r.test_excess) ? null : pct(r.test_excess, 1)));
+    tr.appendChild(td(int(r.test_trades)));
+    tr.appendChild(td(isNil(r.test_max_drawdown) ? null : pct(r.test_max_drawdown, 1)));
+    tr.appendChild(el("td", { class: "reason" }, r.reason ? String(r.reason) : "—"));
+    body.appendChild(tr);
+  }
+}
+
+/* ------------------------------------------------------------ event studies */
+function renderEvents(d) {
+  const host = $("#events");
+  host.innerHTML = "";
+  const studies = d.event_studies || [];
+  if (studies.length === 0) {
+    host.appendChild(el("p", { class: "nil" }, "no event studies recorded — run: python tools/event_study.py BTC_USDT --interval 1d"));
+    return;
+  }
+  const grid = el("div", { class: "grid2" });
+  for (const s of studies) {
+    const panel = el("div", { class: "panel" });
+    const title = el("div", { style: "display:flex;align-items:center;gap:8px;margin-bottom:8px" });
+    title.appendChild(el("b", {}, String(s.symbol || "?") + " " + (s.interval || "") + " · " + (s.model_kind || "")));
+    const edge = String(s.verdict || "").startsWith("candidate-edge");
+    title.appendChild(el("span", { class: "tag " + (edge ? "passes" : "no-edge") }, edge ? "candidate edge" : "no edge"));
+    panel.appendChild(title);
+
+    const split = s.split || {};
+    const dl = el("dl", { class: "kv" });
+    const add = (k, v) => { dl.appendChild(el("dt", {}, k)); dl.appendChild(el("dd", {}, v)); };
+    add("event definition", isNil(s.k) ? (isNil(s.threshold) ? "—" : "±" + (100 * s.threshold).toFixed(1) + "%") : s.k + "σ");
+    add("scorable bars", int(s.n) + "  (" + int(s.n_events) + " events)");
+    add("holdout rows untouched", int(split.holdout_rows_untouched));
+    if (!isNil(s.best_lift)) add("best lift", num(s.best_lift) + "× at k=" + num(s.best_k, 2));
+    panel.appendChild(dl);
+
+    // Selectivity curve: precision against coverage, with the base rate as the
+    // "predict yes always" reference. A curve flat on the base rate is no edge.
+    const curve = (s.conviction || []);
+    const byK = s.by_k || [];
+    const pts = byK.filter(p => !isNil(p.precision));
+    if (pts.length) {
+      panel.appendChild(el("div", { class: "legend", style: "margin-top:12px" }, [
+        el("span", {}, "event precision by coverage — the curve is only worth anything if it rises away from the base rate"),
+      ]));
+      panel.appendChild(precisionChart(pts, s.event_rate));
+    }
+    const t = el("table", { style: "margin-top:10px" });
+    const head = el("tr");
+    ["conviction bar", "coverage", "trades", "sharpe", "sortino", "return", "vs buy & hold"].forEach((h, i) =>
+      head.appendChild(el("th", { class: i === 0 ? "l" : "" }, h)));
+    t.appendChild(el("thead", {}, head));
+    const tb = el("tbody");
+    for (const r of curve) {
+      const tr = el("tr");
+      tr.appendChild(el("td", { class: "l num" }, num(r.threshold, 2)));
+      tr.appendChild(td(pct(r.coverage, 1)));
+      tr.appendChild(td(int(r.trades)));
+      tr.appendChild(td(num(r.sharpe)));
+      tr.appendChild(td(num(r.sortino)));
+      tr.appendChild(td(pct(r.total_return, 1)));
+      tr.appendChild(td(pct(r.excess_return, 1)));
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+    panel.appendChild(t);
+    grid.appendChild(panel);
+  }
+  host.appendChild(grid);
+}
+
+function precisionChart(pts, baseRate) {
+  const W = 380, H = 170, mL = 34, mR = 8, mT = 8, mB = 26;
+  const iw = W - mL - mR, ih = H - mT - mB;
+  const maxK = Math.max.apply(null, pts.map(p => p.k)) || 1;
+  const sx = k => mL + (k / maxK) * iw;
+  const sy = p => mT + ih - (Math.max(0, Math.min(1, p)) / 1) * ih;
+  const root = svg("svg", { viewBox: "0 0 " + W + " " + H, width: "100%" });
+  for (const g of [0, 0.5, 1]) {
+    const y = sy(g);
+    root.appendChild(svg("line", { x1: mL, x2: mL + iw, y1: y, y2: y, stroke: "var(--line-soft)" }));
+    root.appendChild(svg("text", { x: mL - 5, y: y + 3, "text-anchor": "end", "font-size": 9, fill: "var(--text-mute)", text: (g * 100).toFixed(0) + "%" }));
+  }
+  if (!isNil(baseRate)) {
+    const y = sy(baseRate);
+    root.appendChild(svg("line", { x1: mL, x2: mL + iw, y1: y, y2: y, stroke: "var(--fail)", "stroke-dasharray": "4 3", "stroke-width": 1, opacity: .7 }));
+    root.appendChild(svg("text", { x: mL + iw, y: y - 3, "text-anchor": "end", "font-size": 8.5, fill: "var(--fail)", text: "base rate " + (100 * baseRate).toFixed(0) + "%" }));
+  }
+  const path = pts.map((p, i) => (i ? "L" : "M") + sx(p.k) + " " + sy(p.precision)).join(" ");
+  root.appendChild(svg("path", { d: path, fill: "none", stroke: "var(--accent)", "stroke-width": 1.8 }));
+  for (const p of pts) {
+    const c = p.significant ? "var(--pass)" : "var(--accent)";
+    const dot = svg("circle", { cx: sx(p.k), cy: sy(p.precision), r: 3, fill: c });
+    dot.appendChild(svg("title", { text: "k=" + p.k.toFixed(2) + "  precision " + (100 * p.precision).toFixed(1) + "%"
+      + (isNil(p.precision_ci_low) ? "" : "  CI " + (100 * p.precision_ci_low).toFixed(1) + "–" + (100 * p.precision_ci_high).toFixed(1) + "%")
+      + "  n=" + p.n_taken + (p.significant ? "\nsignificant" : "\nnot distinguishable from base rate") }));
+    root.appendChild(dot);
+    if (!isNil(p.precision_ci_low)) {
+      root.appendChild(svg("line", { x1: sx(p.k), x2: sx(p.k), y1: sy(p.precision_ci_low), y2: sy(p.precision_ci_high), stroke: c, "stroke-width": 1.4, opacity: .5 }));
+    }
+  }
+  root.appendChild(svg("text", { x: mL + iw / 2, y: H - 2, "text-anchor": "middle", "font-size": 9.5, fill: "var(--text-dim)", text: "coverage k" }));
+  return root;
+}
+
+/* ------------------------------------------------------- runs & inventory */
+function renderRuns(d) {
+  const body = $("#runtable tbody");
+  body.innerHTML = "";
+  for (const r of (d.recent_runs || [])) {
+    const m = r.metrics || {};
+    const val = (m.val || {}), test = (m.test || {});
+    const tr = el("tr");
+    tr.appendChild(el("td", { class: "l mono" }, String(r.run_id || "").slice(0, 22)));
+    tr.appendChild(el("td", { class: "l" }, String(r.kind || "")));
+    const st = el("td", { class: "l" });
+    st.appendChild(el("span", { class: "tag " + (r.status === "succeeded" ? "passes" : r.status === "failed" ? "failed" : "insufficient_data") }, String(r.status || "")));
+    tr.appendChild(st);
+    tr.appendChild(td(seconds(r.duration_seconds)));
+    tr.appendChild(td(pct(val.directional_accuracy, 2)));
+    tr.appendChild(td(pct(test.directional_accuracy, 2)));
+    tr.appendChild(el("td", { class: "l" }, shortTime(r.started_at) || "—"));
+    body.appendChild(tr);
+  }
+  if (!(d.recent_runs || []).length) {
+    const tr = el("tr");
+    tr.appendChild(el("td", { class: "nil", colspan: "7" }, "no runs recorded"));
+    body.appendChild(tr);
+  }
+}
+
+function renderModels(d) {
+  const host = $("#models");
+  host.innerHTML = "";
+  const models = d.architecture_counts || {};
+  const total = Object.values(models).reduce((a, b) => a + b, 0) || 1;
+  const dl = el("dl", { class: "kv" });
+  const add = (k, v) => { dl.appendChild(el("dt", {}, k)); dl.appendChild(el("dd", {}, v)); };
+  add("registered", int(d.models));
+  add("active", int(d.active_models));
+  for (const k of Object.keys(models).sort()) {
+    add(k, int(models[k]) + "  (" + (100 * models[k] / total).toFixed(0) + "%)");
+  }
+  add("by interval", Object.entries(d.interval_counts || {}).map(([k, v]) => k + " " + v).join(" · ") || "none");
+  host.appendChild(dl);
+
+  if ((d.reports || []).length) {
+    const t = el("table", { style: "margin-top:14px" });
+    const head = el("tr");
+    ["report", "cells", "pass", "folds", "epochs", "duration"].forEach((h, i) =>
+      head.appendChild(el("th", { class: i === 0 ? "l" : "" }, h)));
+    t.appendChild(el("thead", {}, head));
+    const tb = el("tbody");
+    for (const r of d.reports.slice(0, 12)) {
+      const tr = el("tr");
+      const name = el("td", { class: "l mono", title: r.name });
+      name.appendChild(document.createTextNode(r.name.replace("sweep-", "").replace(".json", "")));
+      if (r.is_screen) name.appendChild(el("span", { class: "tag carry", style: "margin-left:5px" }, "screen"));
+      tr.appendChild(name);
+      tr.appendChild(td(int(r.cell_count)));
+      tr.appendChild(td(int(r.passed)));
+      tr.appendChild(td(int(r.folds)));
+      tr.appendChild(td(int(r.epochs)));
+      tr.appendChild(td(seconds(r.duration_seconds)));
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+    host.appendChild(t);
+  }
+}
+
+function renderDatasets(d) {
+  const host = $("#datasets");
+  host.innerHTML = "";
+  const dl = el("dl", { class: "kv" });
+  for (const ds of (d.datasets || [])) {
+    const label = el("dt", {}, ds.dataset);
+    dl.appendChild(label);
+    dl.appendChild(el("dd", {}, isNil(ds.rows) ? "absent" : int(ds.rows) + " rows" + (isNil(ds.symbols) ? "" : " · " + int(ds.symbols) + " symbols")));
+  }
+  host.appendChild(dl);
+}
+
+/* ------------------------------------------------------------------ render */
+function render(d) {
+  renderBanner(d);
+  renderKPIs(d);
+  renderAccuracyChart(d);
+  renderVerdicts(d);
+  renderEvents(d);
+  renderRuns(d);
+  renderModels(d);
+  renderDatasets(d);
+  const iv = $("#intfilter");
+  const seen = Array.from(new Set((d.symbol_table || []).map(r => r.interval).filter(Boolean))).sort();
+  if (iv.options.length - 1 !== seen.length) {
+    const cur = iv.value;
+    iv.innerHTML = "";
+    iv.appendChild(el("option", { value: "" }, "all intervals"));
+    for (const s of seen) iv.appendChild(el("option", { value: s }, s));
+    iv.value = cur;
+  }
+  renderSymbolTable();
+}
+
+/* ------------------------------------------------------------------- wiring */
+for (const th of document.querySelectorAll("#symtable th[data-k]")) {
+  th.addEventListener("click", () => {
+    const key = th.dataset.k;
+    if (sortKey === key) sortAsc = !sortAsc; else { sortKey = key; sortAsc = true; }
+    for (const other of document.querySelectorAll("#symtable th")) other.classList.remove("sorted", "asc");
+    th.classList.add("sorted");
+    if (sortAsc) th.classList.add("asc");
+    renderSymbolTable();
+  });
+}
+$("#symfilter").addEventListener("input", renderSymbolTable);
+$("#verdictfilter").addEventListener("change", renderSymbolTable);
+$("#intfilter").addEventListener("change", renderSymbolTable);
+$("#refresh").addEventListener("click", load);
+
+let timer = null;
+function setAuto(on) {
+  if (timer) clearInterval(timer);
+  timer = null;
+  if (on) timer = setInterval(load, 15000);
+  $("#auto").classList.toggle("on", on);
+  $("#auto").textContent = on ? "Auto 15s" : "Auto off";
+}
+$("#auto").addEventListener("click", () => setAuto(timer === null));
+document.addEventListener("visibilitychange", () => {
+  // A backgrounded tab polling a local server is wasted work; pause and resume.
+  if (document.hidden && timer) setAuto(false);
+});
+load();
+setAuto(true);
+</script>
+</body>
+</html>

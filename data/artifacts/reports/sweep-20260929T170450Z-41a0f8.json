@@ -1,0 +1,39 @@
+{
+  "symbols": [
+    "BTC_USDT"
+  ],
+  "intervals": [
+    "4h"
+  ],
+  "kinds": [
+    "mlp"
+  ],
+  "folds": 2,
+  "epochs": 2,
+  "started_at": "2026-09-29T17:04:34.370063+00:00",
+  "finished_at": "2026-09-29T17:04:50.777354+00:00",
+  "duration_seconds": 16.40726360003464,
+  "cells": [
+    {
+      "interval": "4h",
+      "kind": "mlp",
+      "symbol": "BTC_USDT",
+      "status": "ok",
+      "verdict": "passes",
+      "reason": "all gates cleared",
+      "model_id": "btc-usdt-mlp-h1-cca897c4",
+      "rows": 2189,
+      "direction_accuracy": null,
+      "correlation": null,
+      "interval_coverage": null,
+      "sharpe": -6.305557681114208,
+      "total_return": -0.058336666824095995,
+      "max_drawdown": -0.07174545016514403,
+      "trades": null,
+      "consistency": 0.0,
+      "buy_and_hold_sharpe": 1.0434990443621448,
+      "buy_and_hold_return": 0.018698365247928894,
+      "duration_seconds": 16.402056100021582
+    }
+  ]
+}

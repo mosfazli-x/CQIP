@@ -1,0 +1,40 @@
+{
+  "symbols": [
+    "BTC_USDT"
+  ],
+  "intervals": [
+    "1d"
+  ],
+  "kinds": [
+    "mlp"
+  ],
+  "folds": 2,
+  "epochs": 1,
+  "started_at": "2026-09-29T18:35:40.481986+00:00",
+  "finished_at": "2026-09-29T18:35:40.512931+00:00",
+  "duration_seconds": 0.0309267999837175,
+  "cells": [
+    {
+      "interval": "1d",
+      "kind": "mlp",
+      "symbol": "BTC_USDT",
+      "status": "insufficient_data",
+      "verdict": "no-edge",
+      "reason": "364 1d bars cannot support training: about 1405 are needed after feature lookback, the chronological split and a 64-bar window; ingest more history",
+      "model_id": null,
+      "rows": 364,
+      "direction_accuracy": null,
+      "correlation": null,
+      "interval_coverage": null,
+      "sharpe": null,
+      "total_return": null,
+      "max_drawdown": null,
+      "trades": null,
+      "consistency": null,
+      "excess_vs_buy_and_hold": null,
+      "buy_and_hold_sharpe": null,
+      "buy_and_hold_return": null,
+      "duration_seconds": 0.028677200025413185
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "checks": [
+    {
+      "gate": "oos_auc",
+      "value": 0.5035697956094535,
+      "threshold": 0.53,
+      "passes": false,
+      "rationale": "ranking power; 0.53 is a common floor but is only meaningful if it maps to more edge per trade than the spread"
+    },
+    {
+      "gate": "auc_ci_excludes_0.5",
+      "value": 0.5010585587056812,
+      "threshold": 0.5,
+      "passes": true,
+      "rationale": "an interval straddling 0.50 means the ranking is not distinguishable from a coin flip"
+    },
+    {
+      "gate": "calibration_error",
+      "value": 0.21872646010830604,
+      "threshold": 0.05,
+      "passes": false,
+      "rationale": "mean gap between claimed and observed probability; above this the headline 'probability of profit' cannot be sized against"
+    },
+    {
+      "gate": "excess_vs_equal_weight",
+      "value": -0.2695672233897853,
+      "threshold": 0.0,
+      "passes": false,
+      "rationale": "beating the thing you could have simply bought, net of costs"
+    },
+    {
+      "gate": "sharpe_net",
+      "value": -0.0737574247773871,
+      "threshold": 0.0,
+      "passes": false,
+      "rationale": "positive risk-adjusted return after realistic costs"
+    },
+    {
+      "gate": "max_drawdown",
+      "value": -0.2191200813016476,
+      "threshold": -0.25,
+      "passes": true,
+      "rationale": "a return that needs more than a quarter of the account to stay invested is not deployable at any size"
+    },
+    {
+      "gate": "edge_per_turnover_ratio",
+      "value": 0.8978789765057418,
+      "threshold": 1.0,
+      "passes": false,
+      "rationale": "gross edge per unit turnover must exceed the 15.00% round trip; this is the binding economic constraint and it is not a round number"
+    }
+  ],
+  "n_checks": 7,
+  "n_passed": 2,
+  "all_pass": false,
+  "statistical_power": {
+    "independent_bars": 36195,
+    "auc_half_width_at_null": 0.005151192558132196,
+    "resolvable_auc_difference": 0.005151192558132196,
+    "auc_0.53_is_resolvable": true,
+    "note": "With this many independent bars a 0.53 AUC is comfortably resolvable, so failing it is informative rather than a power problem. The binding limits are economic and the length of the P&L record, not the size of the sample."
+  }
+}

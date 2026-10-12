@@ -1,0 +1,70 @@
+{
+  "symbols": [
+    "BTC_USDT"
+  ],
+  "intervals": [
+    "1d"
+  ],
+  "kinds": [
+    "mlp"
+  ],
+  "folds": 2,
+  "epochs": 6,
+  "started_at": "2026-09-30T07:12:55.837241+00:00",
+  "finished_at": "2026-09-30T07:13:00.495452+00:00",
+  "duration_seconds": 4.658195000025444,
+  "cells": [
+    {
+      "interval": "1d",
+      "kind": "mlp",
+      "symbol": "BTC_USDT",
+      "status": "ok",
+      "verdict": "no-edge",
+      "reason": "dir_acc 0.500 < 0.55; 7 trades < 30 (not significant); drawdown -53.0% worse than -50%; underperforms buy-and-hold by 0.48 Sharpe; dir_acc 95% CI [0.464, 0.531] includes 0.50 (indistinguishable from chance); dir_acc CI lower 0.464 < 0.55",
+      "model_id": "btc-usdt-mlp-h1-61854fcd",
+      "rows": 4931,
+      "direction_accuracy": 0.5131147540983606,
+      "correlation": -0.024081536169193573,
+      "interval_coverage": 0.8524590163934426,
+      "sharpe": null,
+      "total_return": null,
+      "max_drawdown": null,
+      "trades": null,
+      "consistency": null,
+      "excess_vs_buy_and_hold": null,
+      "buy_and_hold_sharpe": null,
+      "buy_and_hold_return": null,
+      "duration_seconds": 4.657409300038125,
+      "val_directional_accuracy": 0.5131147540983606,
+      "val_correlation": -0.024081536169193573,
+      "val_mae": 0.022571078838569146,
+      "val_directional_accuracy_ci": {
+        "lower": 0.47704918032786886,
+        "upper": 0.5491803278688525
+      },
+      "val_correlation_ci": {
+        "lower": -0.0870910424124445,
+        "upper": 0.03546110159152999
+      },
+      "val_ensemble_spread": null,
+      "val_trades": null,
+      "val_max_drawdown": null,
+      "val_excess_vs_buy_and_hold": null,
+      "test_directional_accuracy": 0.5,
+      "test_correlation": 0.07002804777807016,
+      "test_mae": 0.02413880660942514,
+      "test_directional_accuracy_ci": {
+        "lower": 0.46449704142011833,
+        "upper": 0.5310650887573964
+      },
+      "test_correlation_ci": {
+        "lower": 0.0013948530640084406,
+        "upper": 0.12633755702287716
+      },
+      "test_trades": 7,
+      "test_max_drawdown": -0.5296577191774826,
+      "test_excess_vs_buy_and_hold": -0.4824040443784816,
+      "holdout_scored": true
+    }
+  ]
+}

@@ -1,0 +1,438 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "CQIP · Crypto Probability Workbench" [level=1] [ref=e4]
+    - generic [ref=e5]: api ok
+    - generic [ref=e8]: updated 2:20:07 PM
+    - button "Reload models" [ref=e9] [cursor=pointer]
+    - link "Research Monitor →" [ref=e10] [cursor=pointer]:
+      - /url: /dashboard
+  - generic [ref=e11]:
+    - complementary [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: Select cryptocurrencies
+          - generic [ref=e16]: 6 selected
+        - searchbox "filter symbols…" [ref=e17]
+        - combobox [ref=e19]:
+          - 'option "Sort: probability" [selected]'
+          - 'option "Sort: name"'
+          - 'option "Sort: model count"'
+          - 'option "Sort: data depth"'
+        - generic [ref=e20]:
+          - combobox [ref=e21]:
+            - option "Have a model" [selected]
+            - option "All ingested"
+            - option "No model yet"
+          - button "Clear" [ref=e22] [cursor=pointer]
+          - button "All+" [ref=e23] [cursor=pointer]
+      - generic [ref=e24]:
+        - generic [ref=e54] [cursor=pointer]:
+          - checkbox [checked] [ref=e55]
+          - generic [ref=e56]: AVAX_USDT
+          - generic [ref=e57]: 1%
+        - generic [ref=e58] [cursor=pointer]:
+          - checkbox [checked] [ref=e59]
+          - generic [ref=e60]: ATOM_USDT
+          - generic [ref=e61]: 1%
+        - generic [ref=e62] [cursor=pointer]:
+          - checkbox [checked] [ref=e63]
+          - generic [ref=e64]: ARB_USDT
+          - generic [ref=e65]: 1%
+        - generic [ref=e66] [cursor=pointer]:
+          - checkbox [checked] [ref=e67]
+          - generic [ref=e68]: APT_USDT
+          - generic [ref=e69]: 1%
+        - generic [ref=e70] [cursor=pointer]:
+          - checkbox [checked] [ref=e71]
+          - generic [ref=e72]: ADA_USDT
+          - generic [ref=e73]: 1%
+        - generic [ref=e74] [cursor=pointer]:
+          - checkbox [checked] [ref=e75]
+          - generic [ref=e76]: BCH_USDT
+          - generic [ref=e77]: 1%
+        - generic [ref=e78] [cursor=pointer]:
+          - checkbox [ref=e79]
+          - generic [ref=e80]: BNB_USDT
+          - generic [ref=e81]: "8"
+        - generic [ref=e82] [cursor=pointer]:
+          - checkbox [ref=e83]
+          - generic [ref=e84]: BTC_USDT
+          - generic [ref=e85]: "49"
+        - generic [ref=e86] [cursor=pointer]:
+          - checkbox [ref=e87]
+          - generic [ref=e88]: DOGE_USDT
+          - generic [ref=e89]: "12"
+        - generic [ref=e90] [cursor=pointer]:
+          - checkbox [ref=e91]
+          - generic [ref=e92]: DOT_USDT
+          - generic [ref=e93]: "19"
+        - generic [ref=e94] [cursor=pointer]:
+          - checkbox [ref=e95]
+          - generic [ref=e96]: ETH_USDT
+          - generic [ref=e97]: "29"
+        - generic [ref=e98] [cursor=pointer]:
+          - checkbox [ref=e99]
+          - generic [ref=e100]: FIL_USDT
+          - generic [ref=e101]: "8"
+        - generic [ref=e102] [cursor=pointer]:
+          - checkbox [ref=e103]
+          - generic [ref=e104]: HBAR_USDT
+          - generic [ref=e105]: "8"
+        - generic [ref=e106] [cursor=pointer]:
+          - checkbox [ref=e107]
+          - generic [ref=e108]: ICP_USDT
+          - generic [ref=e109]: "10"
+        - generic [ref=e110] [cursor=pointer]:
+          - checkbox [ref=e111]
+          - generic [ref=e112]: INJ_USDT
+          - generic [ref=e113]: "10"
+        - generic [ref=e114] [cursor=pointer]:
+          - checkbox [ref=e115]
+          - generic [ref=e116]: LINK_USDT
+          - generic [ref=e117]: "8"
+        - generic [ref=e118] [cursor=pointer]:
+          - checkbox [ref=e119]
+          - generic [ref=e120]: LTC_USDT
+          - generic [ref=e121]: "8"
+        - generic [ref=e122] [cursor=pointer]:
+          - checkbox [ref=e123]
+          - generic [ref=e124]: NEAR_USDT
+          - generic [ref=e125]: "8"
+        - generic [ref=e126] [cursor=pointer]:
+          - checkbox [ref=e127]
+          - generic [ref=e128]: OP_USDT
+          - generic [ref=e129]: "8"
+        - generic [ref=e130] [cursor=pointer]:
+          - checkbox [ref=e131]
+          - generic [ref=e132]: PEPE_USDT
+          - generic [ref=e133]: "7"
+        - generic [ref=e134] [cursor=pointer]:
+          - checkbox [ref=e135]
+          - generic [ref=e136]: SHIB_USDT
+          - generic [ref=e137]: "8"
+        - generic [ref=e138] [cursor=pointer]:
+          - checkbox [ref=e139]
+          - generic [ref=e140]: SOL_USDT
+          - generic [ref=e141]: "12"
+        - generic [ref=e142] [cursor=pointer]:
+          - checkbox [ref=e143]
+          - generic [ref=e144]: SUI_USDT
+          - generic [ref=e145]: "8"
+        - generic [ref=e146] [cursor=pointer]:
+          - checkbox [ref=e147]
+          - generic [ref=e148]: TIA_USDT
+          - generic [ref=e149]: "8"
+        - generic [ref=e150] [cursor=pointer]:
+          - checkbox [ref=e151]
+          - generic [ref=e152]: TRX_USDT
+          - generic [ref=e153]: "8"
+        - generic [ref=e154] [cursor=pointer]:
+          - checkbox [ref=e155]
+          - generic [ref=e156]: UNI_USDT
+          - generic [ref=e157]: "8"
+        - generic [ref=e158] [cursor=pointer]:
+          - checkbox [ref=e159]
+          - generic [ref=e160]: VET_USDT
+          - generic [ref=e161]: "13"
+        - generic [ref=e162] [cursor=pointer]:
+          - checkbox [ref=e163]
+          - generic [ref=e164]: XLM_USDT
+          - generic [ref=e165]: "8"
+        - generic [ref=e166] [cursor=pointer]:
+          - checkbox [ref=e167]
+          - generic [ref=e168]: XRP_USDT
+          - generic [ref=e169]: "14"
+    - main [ref=e25]:
+      - generic [ref=e26]:
+        - 'heading "Analysis scope — the probability below comes from one model per symbol 1h Model: best accuracy Analyse selection" [level=2] [ref=e27]':
+          - text: Analysis scope
+          - generic [ref=e28]: — the probability below comes from one model per symbol
+          - generic [ref=e29]:
+            - combobox [ref=e30]:
+              - option "1h" [selected]
+              - option "4h"
+              - option "1d"
+            - combobox [ref=e31]:
+              - 'option "Model: best accuracy" [selected]'
+              - 'option "Model: newest"'
+              - 'option "Model: lstm"'
+              - 'option "Model: mlp"'
+              - 'option "Model: transformer"'
+            - button "Analyse selection" [ref=e32] [cursor=pointer]
+        - generic [ref=e34]:
+          - generic [ref=e170]:
+            - text: ADA_USDT
+            - button "×" [ref=e171] [cursor=pointer]
+          - generic [ref=e172]:
+            - text: APT_USDT
+            - button "×" [ref=e173] [cursor=pointer]
+          - generic [ref=e174]:
+            - text: ARB_USDT
+            - button "×" [ref=e175] [cursor=pointer]
+          - generic [ref=e176]:
+            - text: ATOM_USDT
+            - button "×" [ref=e177] [cursor=pointer]
+          - generic [ref=e178]:
+            - text: AVAX_USDT
+            - button "×" [ref=e179] [cursor=pointer]
+          - generic [ref=e180]:
+            - text: BCH_USDT
+            - button "×" [ref=e181] [cursor=pointer]
+          - button "analyse →" [ref=e182] [cursor=pointer]
+      - generic [ref=e183]:
+        - heading "Directional probabilities — P(up) from the model's own Gaussian head, next bar 6/6 measured · 6 on models failing their gates" [level=2] [ref=e184]:
+          - text: Directional probabilities
+          - generic [ref=e185]: — P(up) from the model's own Gaussian head, next bar
+          - generic [ref=e186]: 6/6 measured · 6 on models failing their gates
+        - generic [ref=e188]:
+          - generic [ref=e189] [cursor=pointer]:
+            - generic [ref=e190]:
+              - generic [ref=e191]: AVAX
+              - generic "avax-usdt-mlp-h12-1038f8c8" [ref=e192]: mlp · 1h · h12
+            - generic [ref=e193]:
+              - generic [ref=e194]: 0.8%
+              - generic [ref=e195]: P(up) next bar
+              - generic [ref=e196]: up
+            - generic [ref=e201]:
+              - generic [ref=e202]: 0%
+              - generic [ref=e203]: 50%
+              - generic [ref=e204]: 100%
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - generic [ref=e207]: last
+                - generic [ref=e208]: "11.22"
+              - generic [ref=e209]:
+                - generic [ref=e210]: pred
+                - generic [ref=e211]: "12.12"
+              - generic [ref=e212]:
+                - generic [ref=e213]: 68% lo
+                - generic [ref=e214]: "11.12"
+              - generic [ref=e215]:
+                - generic [ref=e216]: 68% hi
+                - generic [ref=e217]: "13.2"
+              - generic [ref=e218]:
+                - generic [ref=e219]: σ return
+                - generic [ref=e220]: 0.09%
+              - generic [ref=e221]:
+                - generic [ref=e222]: z
+                - generic [ref=e223]: "0.90"
+            - generic [ref=e224]:
+              - generic [ref=e225]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e226]: 2.8d old
+              - generic "model-reported confidence" [ref=e227]: conf 0.1%
+          - generic [ref=e228] [cursor=pointer]:
+            - generic [ref=e229]:
+              - generic [ref=e230]: ATOM
+              - generic "atom-usdt-mlp-h12-0dcd4873" [ref=e231]: mlp · 1h · h12
+            - generic [ref=e232]:
+              - generic [ref=e233]: 0.8%
+              - generic [ref=e234]: P(up) next bar
+              - generic [ref=e235]: up
+            - generic [ref=e240]:
+              - generic [ref=e241]: 0%
+              - generic [ref=e242]: 50%
+              - generic [ref=e243]: 100%
+            - generic [ref=e244]:
+              - generic [ref=e245]:
+                - generic [ref=e246]: last
+                - generic [ref=e247]: "1.73"
+              - generic [ref=e248]:
+                - generic [ref=e249]: pred
+                - generic [ref=e250]: "1.85"
+              - generic [ref=e251]:
+                - generic [ref=e252]: 68% lo
+                - generic [ref=e253]: "1.68"
+              - generic [ref=e254]:
+                - generic [ref=e255]: 68% hi
+                - generic [ref=e256]: "2.03"
+              - generic [ref=e257]:
+                - generic [ref=e258]: σ return
+                - generic [ref=e259]: 0.09%
+              - generic [ref=e260]:
+                - generic [ref=e261]: z
+                - generic [ref=e262]: "0.69"
+            - generic [ref=e263]:
+              - generic [ref=e264]: 1/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e265]: 2.8d old
+              - generic "model-reported confidence" [ref=e266]: conf 0.1%
+          - generic [ref=e267] [cursor=pointer]:
+            - generic [ref=e268]:
+              - generic [ref=e269]: ARB
+              - generic "arb-usdt-lstm-h12-1b3e16f5" [ref=e270]: lstm · 1h · h12
+            - generic [ref=e271]:
+              - generic [ref=e272]: 0.7%
+              - generic [ref=e273]: P(up) next bar
+              - generic [ref=e274]: up
+            - generic [ref=e279]:
+              - generic [ref=e280]: 0%
+              - generic [ref=e281]: 50%
+              - generic [ref=e282]: 100%
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - generic [ref=e285]: last
+                - generic [ref=e286]: "0.21"
+              - generic [ref=e287]:
+                - generic [ref=e288]: pred
+                - generic [ref=e289]: "0.25"
+              - generic [ref=e290]:
+                - generic [ref=e291]: 68% lo
+                - generic [ref=e292]: "0.18"
+              - generic [ref=e293]:
+                - generic [ref=e294]: 68% hi
+                - generic [ref=e295]: "0.34"
+              - generic [ref=e296]:
+                - generic [ref=e297]: σ return
+                - generic [ref=e298]: 0.31%
+              - generic [ref=e299]:
+                - generic [ref=e300]: z
+                - generic [ref=e301]: "0.60"
+            - generic [ref=e302]:
+              - generic [ref=e303]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e304]: 2.8d old
+              - generic "model-reported confidence" [ref=e305]: conf 0.0%
+          - generic [ref=e306] [cursor=pointer]:
+            - generic [ref=e307]:
+              - generic [ref=e308]: APT
+              - generic "apt-usdt-mlp-h12-981d4f03" [ref=e309]: mlp · 1h · h12
+            - generic [ref=e310]:
+              - generic [ref=e311]: 0.7%
+              - generic [ref=e312]: P(up) next bar
+              - generic [ref=e313]: up
+            - generic [ref=e318]:
+              - generic [ref=e319]: 0%
+              - generic [ref=e320]: 50%
+              - generic [ref=e321]: 100%
+            - generic [ref=e322]:
+              - generic [ref=e323]:
+                - generic [ref=e324]: last
+                - generic [ref=e325]: "0.81"
+              - generic [ref=e326]:
+                - generic [ref=e327]: pred
+                - generic [ref=e328]: "0.84"
+              - generic [ref=e329]:
+                - generic [ref=e330]: 68% lo
+                - generic [ref=e331]: "0.77"
+              - generic [ref=e332]:
+                - generic [ref=e333]: 68% hi
+                - generic [ref=e334]: "0.93"
+              - generic [ref=e335]:
+                - generic [ref=e336]: σ return
+                - generic [ref=e337]: 0.10%
+              - generic [ref=e338]:
+                - generic [ref=e339]: z
+                - generic [ref=e340]: "0.44"
+            - generic [ref=e341]:
+              - generic [ref=e342]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e343]: 2.8d old
+              - generic "model-reported confidence" [ref=e344]: conf 0.1%
+          - generic [ref=e345] [cursor=pointer]:
+            - generic [ref=e346]:
+              - generic [ref=e347]: ADA
+              - generic "ada-usdt-lstm-h12-b5077785" [ref=e348]: lstm · 1h · h12
+            - generic [ref=e349]:
+              - generic [ref=e350]: 0.6%
+              - generic [ref=e351]: P(up) next bar
+              - generic [ref=e352]: up
+            - generic [ref=e357]:
+              - generic [ref=e358]: 0%
+              - generic [ref=e359]: 50%
+              - generic [ref=e360]: 100%
+            - generic [ref=e361]:
+              - generic [ref=e362]:
+                - generic [ref=e363]: last
+                - generic [ref=e364]: "0.24"
+              - generic [ref=e365]:
+                - generic [ref=e366]: pred
+                - generic [ref=e367]: "0.27"
+              - generic [ref=e368]:
+                - generic [ref=e369]: 68% lo
+                - generic [ref=e370]: "0.21"
+              - generic [ref=e371]:
+                - generic [ref=e372]: 68% hi
+                - generic [ref=e373]: "0.35"
+              - generic [ref=e374]:
+                - generic [ref=e375]: σ return
+                - generic [ref=e376]: 0.26%
+              - generic [ref=e377]:
+                - generic [ref=e378]: z
+                - generic [ref=e379]: "0.37"
+            - generic [ref=e380]:
+              - generic [ref=e381]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e382]: 2.8d old
+              - generic "model-reported confidence" [ref=e383]: conf 0.0%
+          - generic [ref=e384] [cursor=pointer]:
+            - generic [ref=e385]:
+              - generic [ref=e386]: BCH
+              - generic "bch-usdt-mlp-h12-4a7f0a50" [ref=e387]: mlp · 1h · h12
+            - generic [ref=e388]:
+              - generic [ref=e389]: 0.6%
+              - generic [ref=e390]: P(up) next bar
+              - generic [ref=e391]: up
+            - generic [ref=e396]:
+              - generic [ref=e397]: 0%
+              - generic [ref=e398]: 50%
+              - generic [ref=e399]: 100%
+            - generic [ref=e400]:
+              - generic [ref=e401]:
+                - generic [ref=e402]: last
+                - generic [ref=e403]: "306.97"
+              - generic [ref=e404]:
+                - generic [ref=e405]: pred
+                - generic [ref=e406]: "315.3"
+              - generic [ref=e407]:
+                - generic [ref=e408]: 68% lo
+                - generic [ref=e409]: "287.54"
+              - generic [ref=e410]:
+                - generic [ref=e411]: 68% hi
+                - generic [ref=e412]: "345.75"
+              - generic [ref=e413]:
+                - generic [ref=e414]: σ return
+                - generic [ref=e415]: 0.09%
+              - generic [ref=e416]:
+                - generic [ref=e417]: z
+                - generic [ref=e418]: "0.29"
+            - generic [ref=e419]:
+              - generic [ref=e420]: 1/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=e421]: 2.8d old
+              - generic "model-reported confidence" [ref=e422]: conf 0.1%
+      - generic [ref=e423]:
+        - 'heading "Relative strength — selected symbols rebased to 100 over the window Rebase: close" [level=2] [ref=e424]':
+          - text: Relative strength
+          - generic [ref=e425]: — selected symbols rebased to 100 over the window
+          - combobox [ref=e427]:
+            - 'option "Rebase: close" [selected]'
+            - 'option "Rebase: log return"'
+        - generic [ref=e429]:
+          - img [ref=e430]:
+            - generic [ref=e431]: "80.0"
+            - generic [ref=e432]: "100.0"
+            - generic [ref=e433]: "120.0"
+            - generic [ref=e435]: ADA +87.2%
+            - generic [ref=e437]: APT +88.8%
+            - generic [ref=e439]: ARB +78.7%
+            - generic [ref=e441]: ATOM +84.3%
+            - generic [ref=e443]: AVAX +73.8%
+            - generic [ref=e445]: BCH +96.1%
+            - generic [ref=e446]: 2025-09-29 21:00
+            - generic [ref=e447]: 2025-10-13 04:00
+          - paragraph
+      - generic [ref=e36]:
+        - heading "Training & backtests — queued against the selected symbols" [level=2] [ref=e37]:
+          - text: Training & backtests
+          - generic [ref=e38]: — queued against the selected symbols
+        - generic [ref=e40]:
+          - generic [ref=e41]: Architecture
+          - combobox [ref=e42]:
+            - option "lstm" [selected]
+            - option "mlp"
+            - option "transformer"
+          - generic [ref=e43]: Epochs
+          - spinbutton [ref=e44]: "8"
+          - generic [ref=e45]: Horizon
+          - spinbutton [ref=e46]: "1"
+          - generic [ref=e47]: Folds
+          - spinbutton [ref=e48]: "3"
+          - button "Train forecaster" [ref=e49] [cursor=pointer]
+          - button "Backtest models" [ref=e50] [cursor=pointer]
+        - generic [ref=e51]: No jobs submitted from this session.
+  - contentinfo [ref=e53]: "Probabilities are model outputs, not advice. P(up) assumes the forecaster's Gaussian head is calibrated; the gates above test whether it is. Read the quality verdict before reading the number. 331 models · 216 ingested symbols · sentiment: transformer · data: C:\\Users\\Cursed Saint\\Documents\\Projects\\CQIP\\data"

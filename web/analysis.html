@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-density="comfortable">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CQIP · Crypto Probability Workbench</title>
+<style>
+  /* No webfonts, no CDN, no build step: this must render identically offline. */
+  :root[data-theme="dark"] {
+    --bg:      #0a0c11;
+    --panel:   #111621;
+    --panel-2: #171d2b;
+    --panel-3: #1e2536;
+    --line:    #242c3d;
+    --line-soft: #1a2130;
+    --text:    #e3e8f2;
+    --dim:     #929cb4;
+    --mute:    #626c82;
+    --accent:  #56a8ff;
+    --up:      #2ecc8f;
+    --down:    #ef5f6b;
+    --warn:    #e8a33d;
+    --holdout: #b47cff;
+    --grid:    #1e2536;
+    --shadow:  0 8px 28px rgba(0,0,0,.42);
+  }
+  :root[data-theme="light"] {
+    --bg:      #eef1f6;
+    --panel:   #ffffff;
+    --panel-2: #f5f7fb;
+    --panel-3: #e6eaf2;
+    --line:    #d3dae6;
+    --line-soft: #e4e9f1;
+    --text:    #101725;
+    --dim:     #55607a;
+    --mute:    #8a93a8;
+    --accent:  #1667d6;
+    --up:      #0f9d63;
+    --down:    #d63b4a;
+    --warn:    #b57207;
+    --holdout: #7c3fce;
+    --grid:    #e6eaf2;
+    --shadow:  0 8px 24px rgba(16,23,37,.10);
+  }
+  :root {
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    --r: 10px;
+    --row: 7px;
+  }
+  :root[data-density="compact"] { --row: 4px; --r: 8px; }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--text);
+    background:
+      radial-gradient(1100px 560px at 80% -14%, color-mix(in srgb, var(--accent) 13%, transparent) 0%, transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  :root[data-theme="light"] { color-scheme: light; }
+
+  button, input, select { font-family: inherit; }
+  button {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 12px; font-size: 12.5px; cursor: pointer;
+    transition: border-color .12s, background .12s, color .12s;
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.on, button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 640; }
+  button.ghost { background: none; border-color: transparent; color: var(--dim); padding: 4px 8px; }
+  button.ghost:hover:not(:disabled) { color: var(--text); border-color: var(--line); }
+  :root[data-theme="light"] button.on, :root[data-theme="light"] button.primary { color: #fff; }
+  input[type=search], input[type=number], select {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 7px; padding: 6px 10px; font-size: 12.5px; width: 100%;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--panel-3); border-radius: 6px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+
+  /* ------------------------------------------------------------------ header */
+  header {
+    position: sticky; top: 0; z-index: 60; display: flex; align-items: center;
+    gap: 10px; flex-wrap: wrap; padding: 10px 18px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; flex-direction: column; }
+  .brand b { font-size: 14px; font-weight: 680; letter-spacing: .2px; }
+  .brand span { font-size: 10.5px; color: var(--mute); letter-spacing: .3px; }
+  .spacer { flex: 1; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px;
+    border-radius: 999px; font-size: 11.5px; background: var(--panel-2);
+    border: 1px solid var(--line); color: var(--dim); white-space: nowrap;
+  }
+  a.pill { text-decoration: none; }
+  a.pill:hover { border-color: var(--accent); color: var(--text); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mute); flex: none; }
+  .dot.ok { background: var(--up); box-shadow: 0 0 0 3px color-mix(in srgb, var(--up) 18%, transparent); }
+  .dot.bad { background: var(--down); box-shadow: 0 0 0 3px color-mix(in srgb, var(--down) 18%, transparent); }
+  .dot.busy { background: var(--warn); animation: pulse 1.1s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+
+  /* ------------------------------------------------------------------- shell */
+  .shell { display: grid; grid-template-columns: 288px minmax(0, 1fr); align-items: start; }
+  @media (max-width: 1100px) { .shell { grid-template-columns: minmax(0, 1fr); } }
+
+  .rail {
+    position: sticky; top: 49px; align-self: start; height: calc(100vh - 49px);
+    border-right: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 55%, transparent);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (max-width: 1100px) { .rail { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); } }
+  .rail-head { padding: 12px 13px 10px; border-bottom: 1px solid var(--line-soft); display: grid; gap: 8px; }
+  .rail-body { overflow-y: auto; flex: 1; padding: 3px 0 18px; }
+  .rail-foot { border-top: 1px solid var(--line-soft); padding: 8px 13px; display: flex; gap: 6px; }
+
+  .symrow {
+    display: flex; align-items: center; gap: 9px; padding: var(--row) 13px;
+    cursor: pointer; font-size: 12.5px; border-left: 2px solid transparent;
+  }
+  .symrow:hover { background: var(--panel-2); }
+  .symrow.sel { background: color-mix(in srgb, var(--accent) 10%, transparent); border-left-color: var(--accent); }
+  .symrow .nm { flex: 1; font-family: var(--mono); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .symrow .meta { font-size: 10.5px; color: var(--mute); font-family: var(--mono); flex: none; }
+  .symrow .gdot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+
+  main { padding: 18px 20px 56px; min-width: 0; }
+  section { margin-bottom: 26px; }
+  h2 {
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: .95px; color: var(--dim);
+    margin: 0 0 10px; font-weight: 680; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  h2 .note { text-transform: none; letter-spacing: 0; color: var(--mute); font-weight: 400; font-size: 11.5px; }
+  h2 .right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .7px; color: var(--dim); margin: 0 0 8px; font-weight: 660; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 15px; }
+  .panel.tight { padding: 11px 12px; }
+
+  .nil { color: var(--mute); font-style: italic; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .tag {
+    display: inline-block; padding: 2px 7px; border-radius: 5px; font-size: 10.5px;
+    font-weight: 650; letter-spacing: .25px; white-space: nowrap;
+  }
+  .tag.up { background: color-mix(in srgb, var(--up) 16%, transparent); color: var(--up); }
+  .tag.down { background: color-mix(in srgb, var(--down) 16%, transparent); color: var(--down); }
+  .tag.flat, .tag.mute { background: color-mix(in srgb, var(--mute) 22%, transparent); color: var(--dim); }
+  .tag.pass { background: color-mix(in srgb, var(--up) 16%, transparent); color: var(--up); }
+  .tag.fail { background: color-mix(in srgb, var(--down) 16%, transparent); color: var(--down); }
+  .tag.warn { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
+  .tag.info { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+
+  .banner {
+    border: 1px solid var(--line); background: var(--panel); border-radius: var(--r);
+    padding: 12px 15px; margin-bottom: 16px; display: flex; gap: 11px; align-items: flex-start; font-size: 13px;
+  }
+  .banner.warn { border-left: 3px solid var(--warn); }
+  .banner.bad { border-left: 3px solid var(--down); }
+  .banner.good { border-left: 3px solid var(--up); }
+  .banner.info { border-left: 3px solid var(--accent); }
+  .banner b { display: block; margin-bottom: 3px; }
+  .banner p { margin: 0; color: var(--dim); font-size: 12.5px; line-height: 1.6; }
+  .banner .bd { flex: none; font-size: 16px; line-height: 1.25; }
+  .banner code { font-family: var(--mono); background: var(--panel-3); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+  .banner-stack { display: grid; gap: 10px; margin-bottom: 16px; }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 7px 3px 10px;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px;
+    font-size: 11.5px; font-family: var(--mono); cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip.act { border-color: var(--accent); color: var(--accent); }
+  .chip .x { background: none; border: 0; color: var(--mute); padding: 0 2px; font-size: 14px; line-height: 1; cursor: pointer; }
+  .chip .x:hover { color: var(--down); }
+
+  /* ------------------------------------------------------------- stat strip */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(122px, 1fr)); gap: 10px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 11px 13px; }
+  .stat .k { font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: .6px; }
+  .stat .v { font-size: 21px; font-weight: 660; margin-top: 4px; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .stat .f { font-size: 10.5px; color: var(--mute); margin-top: 2px; }
+
+  /* -------------------------------------------------------------- prob cards */
+  .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(322px, 1fr)); gap: 11px; }
+  .pcard {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 12px 13px; cursor: pointer; display: flex; flex-direction: column; gap: 8px;
+    text-align: left; width: 100%; color: inherit; font-size: inherit; transition: border-color .12s;
+  }
+  .pcard:hover { border-color: var(--dim); }
+  .pcard.active { border-color: var(--accent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .pcard:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .pcard-top { display: flex; align-items: center; gap: 7px; width: 100%; }
+  .pcard-top .sym { font-family: var(--mono); font-size: 13px; font-weight: 660; }
+  .pnum { display: flex; align-items: baseline; gap: 8px; }
+  .pnum .big { font-family: var(--mono); font-size: 25px; font-weight: 660; font-variant-numeric: tabular-nums; letter-spacing: -.5px; }
+  .pnum .lbl { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .6px; }
+  .bar { position: relative; height: 7px; border-radius: 4px; background: var(--panel-3); overflow: hidden; }
+  .bar > i.fill { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+  .bar > i.mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--mute); }
+  .bar-scale { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--mute); font-family: var(--mono); margin-top: -2px; }
+  .pkv { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 2px 12px; font-size: 11.5px; }
+  .pkv > div { display: flex; justify-content: space-between; gap: 8px; }
+  .pkv .k { color: var(--mute); white-space: nowrap; }
+  .pkv .v { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pcard-foot { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-top: auto; padding-top: 2px; }
+
+  /* ----------------------------------------------------------------- tables */
+  .wrap { overflow: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); }
+  .wrap.tall { max-height: 520px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { padding: var(--row) 10px; text-align: right; border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+  th {
+    color: var(--dim); font-weight: 620; font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: .45px; position: sticky; top: 0; background: var(--panel); z-index: 2;
+    cursor: pointer; user-select: none;
+  }
+  th:hover { color: var(--text); }
+  th.l, td.l { text-align: left; }
+  tbody tr:hover { background: var(--panel-2); }
+  tbody tr.active { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  td.nil { color: var(--mute); font-style: italic; }
+
+  /* ------------------------------------------------------------------ gates */
+  .gates { display: grid; gap: 7px; }
+  .gate { display: grid; grid-template-columns: 138px 1fr 88px; gap: 10px; align-items: center; font-size: 12px; }
+  .gate .gn { color: var(--dim); }
+  .gtrack { position: relative; height: 15px; background: var(--panel-3); border-radius: 4px; overflow: hidden; }
+  .gtrack > .zone { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--up) 14%, transparent); }
+  .gtrack > .thr { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--mute); }
+  .gtrack > .thr.good { background: var(--up); }
+  .gtrack > .val { position: absolute; top: 1px; bottom: 1px; width: 3px; border-radius: 2px; }
+  .gtrack > .ci { position: absolute; top: 5.5px; height: 4px; background: color-mix(in srgb, var(--text) 55%, transparent); border-radius: 2px; }
+  .gate .gv { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .gate.none .gn, .gate.none .gv { color: var(--mute); }
+
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; font-size: 12.5px; align-content: start; }
+  .kv dt { color: var(--dim); white-space: nowrap; }
+  .kv dd { margin: 0; font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .kv dd.nil { color: var(--mute); font-style: italic; }
+
+  /* min() keeps the 390px target on roomy screens while letting the column
+   collapse on narrow ones, instead of forcing a track wider than the viewport. */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(390px, 100%), 1fr)); gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+
+  .newslist { display: grid; gap: 8px; max-height: 340px; overflow-y: auto; }
+  .news { border-bottom: 1px solid var(--line-soft); padding-bottom: 8px; font-size: 12px; }
+  .news a { color: var(--text); display: block; line-height: 1.4; }
+  .news a:hover { color: var(--accent); }
+  .news .nm { display: flex; gap: 8px; flex-wrap: wrap; color: var(--mute); font-size: 10.5px; margin-top: 3px; }
+
+  .jobs { display: grid; gap: 8px; max-height: 300px; overflow-y: auto; }
+  .job { border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; background: var(--panel-2); }
+  .job .jh { display: flex; gap: 8px; align-items: center; font-size: 12px; }
+  .job .jid { font-family: var(--mono); font-size: 10.5px; color: var(--mute); }
+  .job .pbar { height: 4px; background: var(--panel-3); border-radius: 3px; margin-top: 7px; overflow: hidden; }
+  .job .pbar > i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+
+  /* ----------------------------------------------------------------- charts */
+  .chartbox { position: relative; }
+  .tip {
+    position: absolute; pointer-events: none; z-index: 20; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; font-size: 11.5px;
+    box-shadow: var(--shadow); font-family: var(--mono); white-space: nowrap;
+    opacity: 0; transition: opacity .1s; line-height: 1.55;
+  }
+  .tip.on { opacity: 1; }
+  .tip b { font-weight: 660; }
+  .tip .r { color: var(--dim); }
+  .xhair { stroke: var(--mute); stroke-width: 1; stroke-dasharray: 3 3; }
+
+  /* --------------------------------------------------------------- histogram */
+  .histo { display: flex; align-items: flex-end; gap: 3px; height: 68px; }
+  .histo .b { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; position: relative; }
+  .histo .b > i { display: block; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 2px; }
+  .histo .b.up > i { background: var(--up); }
+  .histo .b.dn > i { background: var(--down); }
+  .histo .b.zero > i { background: var(--panel-3); }
+  .haxis { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--mute); font-family: var(--mono); margin-top: 3px; }
+
+  .empty { padding: 30px 16px; text-align: center; color: var(--mute); font-size: 12.5px; }
+  .row { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+  .row.end { justify-content: flex-end; }
+  .lbl-sm { font-size: 10.5px; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+  .cap { color: var(--mute); font-size: 11px; margin: 6px 0 0; line-height: 1.6; }
+  .sep { color: var(--mute); opacity: .5; }
+  .spin { display: inline-block; animation: rot 1s linear infinite; }
+  @keyframes rot { to { transform: rotate(360deg) } }
+
+  .skel { background: linear-gradient(90deg, var(--panel-2) 25%, var(--panel-3) 37%, var(--panel-2) 63%); background-size: 400% 100%; animation: shim 1.3s ease infinite; border-radius: 6px; height: 12px; }
+  @keyframes shim { 0% { background-position: 100% 0 } 100% { background-position: 0 0 } }
+
+  dialog {
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    border-radius: var(--r); padding: 0; max-width: 460px; box-shadow: var(--shadow);
+  }
+  dialog::backdrop { background: rgba(0,0,0,.5); }
+  .dlg { padding: 16px 18px; }
+  .dlg h3 { margin-bottom: 10px; }
+  .dlg dl { display: grid; grid-template-columns: auto 1fr; gap: 5px 16px; margin: 0; font-size: 12.5px; }
+  .dlg dt { font-family: var(--mono); color: var(--accent); }
+  .dlg dd { margin: 0; color: var(--dim); }
+
+  /* -------------------------------------------------------- fullscreen chart */
+  #fsDlg {
+    padding: 0; border: 0; background: transparent; max-width: none; max-height: none;
+    /* 100% not 100vw: vw includes the scrollbar gutter, which pushes the
+       dialog a few pixels past a narrow viewport and scrolls the page. */
+    width: 100%; height: 100%; margin: 0; overflow: hidden;
+  }
+  #fsDlg::backdrop { background: rgba(0,0,0,.72); }
+  .fs {
+    display: flex; flex-direction: column; height: 100%; width: 100%;
+    background: var(--panel); border: 1px solid var(--line);
+  }
+  .fs-bar {
+    display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+    padding: 10px 14px; border-bottom: 1px solid var(--line-soft); background: var(--panel-2);
+  }
+  .fs-bar h2 { margin: 0; font-size: 15px; text-transform: none; letter-spacing: 0; }
+  .fs-bar .grow { flex: 1; }
+  .fs-legend {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    padding: 7px 14px; border-bottom: 1px solid var(--line-soft); font-size: 11.5px; color: var(--dim);
+  }
+  .fs-legend .k { display: inline-flex; align-items: center; gap: 5px; }
+  .fs-legend .sw { width: 13px; height: 3px; border-radius: 2px; display: inline-block; }
+  .fs-legend .sw.band { height: 10px; opacity: .3; }
+  .fs-chart { flex: 1; min-height: 0; position: relative; padding: 6px 8px 0; }
+  .fs-foot {
+    border-top: 1px solid var(--line-soft); padding: 9px 14px 12px;
+    display: grid; gap: 8px; background: var(--panel-2);
+  }
+  .fs-warn { color: var(--warn); font-size: 11.5px; }
+  #fsDlg select { width: auto; max-width: 260px; }
+
+  footer { color: var(--mute); font-size: 11px; padding: 4px 20px 30px; text-align: center; line-height: 1.8; }
+  footer b { color: var(--dim); }
+  svg text { font-family: var(--mono); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <b>CQIP</b>
+    <span>Probability Workbench</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="pill"><span class="dot" id="hdot"></span><span id="htext">connecting</span></span>
+  <span class="pill" id="stamp" aria-live="polite">—</span>
+  <button id="auto" class="ghost" title="Auto-refresh every 60s" aria-pressed="false">Auto</button>
+  <button id="density" class="ghost" title="Toggle row density">Compact</button>
+  <button id="theme" class="ghost" title="Toggle light / dark">Light</button>
+  <button id="help" class="ghost" title="Keyboard shortcuts" aria-haspopup="dialog">?</button>
+  <a class="pill" href="/dashboard" title="Research Monitor">Monitor →</a>
+</header>
+
+<div class="shell">
+  <!-- ------------------------------------------------------------ picker -->
+  <aside class="rail" aria-label="Symbol selection">
+    <div class="rail-head">
+      <div class="row" style="justify-content:space-between">
+        <span class="lbl-sm">Cryptocurrencies</span>
+        <span class="mono" id="selcount" style="font-size:11px;color:var(--mute)">0</span>
+      </div>
+      <input type="search" id="symq" placeholder="filter — BTC, bitcoin, sol…" aria-label="Filter symbols" autocomplete="off" />
+      <div class="row" style="gap:6px">
+        <select id="symfilter" aria-label="Model availability filter">
+          <option value="models">Has a model</option>
+          <option value="">All ingested</option>
+          <option value="none">No model yet</option>
+        </select>
+        <select id="symsort" aria-label="Sort symbols">
+          <option value="pup">Sort: probability</option>
+          <option value="name">Sort: name</option>
+          <option value="models">Sort: models</option>
+          <option value="coverage">Sort: data depth</option>
+        </select>
+      </div>
+    </div>
+    <div class="rail-body" id="symlist" role="listbox" aria-multiselectable="true" aria-label="Symbols"></div>
+    <div class="rail-foot">
+      <button id="seltop" style="flex:1">Select modelled</button>
+      <button id="selbest" style="flex:1" title="Select the 6 highest P(up)">Top P(up)</button>
+      <button id="selnone" style="flex:1">Clear</button>
+    </div>
+  </aside>
+
+  <main>
+    <div id="banners" class="banner-stack"></div>
+
+    <!-- ------------------------------------------------- scope + consensus -->
+    <section>
+      <h2>
+        Analysis scope
+        <span class="note">— one model per symbol drives every number below</span>
+        <span class="right">
+          <select id="interval" style="width:auto" aria-label="Timeframe">
+            <option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option>
+          </select>
+          <select id="policy" style="width:auto" aria-label="Model selection policy">
+            <option value="acc">Model: best accuracy</option>
+            <option value="new">Model: newest</option>
+            <option value="lstm">Model: lstm</option>
+            <option value="mlp">Model: mlp</option>
+            <option value="transformer">Model: transformer</option>
+          </select>
+          <button class="primary" id="run">Analyse selection</button>
+        </span>
+      </h2>
+      <div class="panel tight" style="margin-bottom:11px"><div class="chips" id="chips"></div></div>
+      <div class="stats" id="consensus"></div>
+      <div class="panel" style="margin-top:11px" id="histoPanel" hidden>
+        <h3>Distribution of P(up) across the selection</h3>
+        <div class="histo" id="histo" role="img" aria-label="Histogram of predicted probability of an up move"></div>
+        <div class="haxis"><span>0%</span><span>50%</span><span>100%</span></div>
+        <p class="cap" id="histoCap"></p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- probabilities -->
+    <section id="sec-probs" hidden>
+      <h2>
+        Directional probabilities
+        <span class="note">— next bar, from each model's own Gaussian head</span>
+        <span class="right">
+          <span class="mono" id="probsmeta" style="font-size:11px;color:var(--mute)"></span>
+          <button id="viewCards" class="ghost on" aria-pressed="true">Cards</button>
+          <button id="viewTable" class="ghost" aria-pressed="false">Table</button>
+          <button id="csv" class="ghost" title="Download the visible matrix as CSV">CSV</button>
+        </span>
+      </h2>
+      <div class="pgrid" id="pgrid"></div>
+      <div id="ptable" hidden></div>
+    </section>
+
+    <!-- ----------------------------------------------------------- detail -->
+    <section id="sec-detail" hidden>
+      <h2>
+        <span id="detitle">—</span>
+        <span class="note" id="desub"></span>
+        <span class="right"><select id="detmodel" style="width:auto;max-width:330px" aria-label="Model for this symbol"></select>
+          <button id="fsOpen" class="ghost" title="Full-screen chart (F)" aria-label="Open full-screen price and forecast chart">⤢ Full screen</button></span>
+      </h2>
+      <div class="grid2">
+        <div class="panel">
+          <h3>Forecast path <span class="note" style="text-transform:none;letter-spacing:0;color:var(--mute)">— median ± 1σ</span></h3>
+          <div class="chartbox" id="fchart"></div>
+          <div id="fmeta" style="margin-top:8px"></div>
+        </div>
+        <div class="panel">
+          <h3>Price history <span class="note" style="text-transform:none;letter-spacing:0;color:var(--mute)" id="phsub"></span></h3>
+          <div class="chartbox" id="pchart"></div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="panel">
+          <h3>Quality gates</h3>
+          <div class="gates" id="gates"></div>
+          <div id="gateverdict" style="margin-top:10px"></div>
+        </div>
+        <div class="panel">
+          <h3>Provenance</h3>
+          <div class="kv" id="prov"></div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="panel">
+          <h3>Walk-forward evidence <span class="note" style="text-transform:none;letter-spacing:0;color:var(--mute)">— out-of-sample, per fold</span></h3>
+          <div id="btSummary"></div>
+          <div id="btFolds"></div>
+        </div>
+        <div class="panel">
+          <h3>News <span class="note" style="text-transform:none;letter-spacing:0;color:var(--mute)" id="newssub"></span></h3>
+          <div class="newslist" id="news"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------- comparison -->
+    <section id="sec-cmp" hidden>
+      <h2>
+        Relative strength
+        <span class="note">— rebased to a common origin so shape compares, not level</span>
+        <span class="right">
+          <select id="cmpnorm" style="width:auto" aria-label="Comparison normalisation">
+            <option value="idx">Rebase: index (100)</option>
+            <option value="log">Rebase: log return</option>
+          </select>
+        </span>
+      </h2>
+      <div class="panel"><div class="chartbox" id="cmpchart"></div><p class="cap" id="cmpcap"></p></div>
+    </section>
+
+    <!-- ------------------------------------------------------------- lab -->
+    <section>
+      <h2>Training &amp; backtests <span class="note">— queued against the current selection</span></h2>
+      <div class="panel tight" style="margin-bottom:11px">
+        <div class="row">
+          <span class="lbl-sm">Architecture</span>
+          <select id="kind" style="width:auto"><option value="lstm">lstm</option><option value="mlp">mlp</option><option value="transformer">transformer</option></select>
+          <span class="lbl-sm">Epochs</span>
+          <input type="number" id="epochs" value="8" min="1" max="500" style="width:70px" />
+          <span class="lbl-sm">Horizon</span>
+          <input type="number" id="horizon" value="1" min="1" max="48" style="width:62px" />
+          <span class="lbl-sm">Folds</span>
+          <input type="number" id="folds" value="3" min="1" max="20" style="width:62px" />
+          <div class="spacer"></div>
+          <span class="lbl-sm" id="batchnote"></span>
+          <button id="btnTrain">Train</button>
+          <button id="btnBT">Backtest</button>
+        </div>
+      </div>
+      <div class="jobs" id="jobs"></div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  Probabilities are <b>model outputs, not advice</b>. P(up) presumes the forecaster's Gaussian head is
+  calibrated — the gates test whether it is. Read the quality verdict before the number.<br />
+  <span id="foot-stats"></span>
+</footer>
+
+<dialog id="helpDlg"><div class="dlg">
+  <h3>Keyboard</h3>
+  <dl>
+    <dt>/</dt><dd>focus the symbol filter</dd>
+    <dt>r</dt><dd>re-run the analysis</dd>
+    <dt>Enter</dt><dd>open the top-ranked symbol</dd>
+    <dt>↑ ↓</dt><dd>move through the ranked list</dd>
+    <dt>f</dt><dd>open the full-screen price + forecast chart for the open symbol</dd>
+    <dt>Esc</dt><dd>close this dialog</dd>
+  </dl>
+  <h3 style="margin-top:14px">Full-screen chart</h3>
+  <dl>
+    <dt>← →</dt><dd>previous / next symbol</dd>
+    <dt>Esc</dt><dd>close the chart</dd>
+    <dt>dbl-click</dt><dd>open the chart from the inline price or forecast panel</dd>
+  </dl>
+  <div class="row end" style="margin-top:14px"><button onclick="document.getElementById('helpDlg').close()">Close</button></div>
+</div></dialog>
+
+<!-- ==================================================== fullscreen chart view -->
+<dialog id="fsDlg" aria-label="Full-screen price and forecast chart">
+  <div class="fs">
+    <div class="fs-bar">
+      <button id="fsPrev" class="ghost" title="Previous symbol (←)" aria-label="Previous symbol">←</button>
+      <h2 id="fsTitle">—</h2>
+      <span class="note" id="fsSub"></span>
+      <span class="grow"></span>
+      <label class="sr" for="fsModel">Model</label>
+      <select id="fsModel" aria-label="Model shown in full-screen view"></select>
+      <label class="sr" for="fsRange">Range</label>
+      <select id="fsRange" aria-label="Time range">
+        <option value="90">Last 90 bars</option>
+        <option value="180">Last 180 bars</option>
+        <option value="360">Last 360 bars</option>
+        <option value="720">Last 720 bars</option>
+        <option value="0" selected>All stored</option>
+      </select>
+      <button id="fsNext" class="ghost" title="Next symbol (→)" aria-label="Next symbol">→</button>
+      <button id="fsClose" class="ghost" title="Close (Esc)" aria-label="Close full-screen chart">✕</button>
+    </div>
+    <div class="fs-legend">
+      <span class="k"><i class="sw" style="background:var(--up)"></i>actual bar (close ≥ open)</span>
+      <span class="k"><i class="sw" style="background:var(--down)"></i>actual bar (close &lt; open)</span>
+      <span class="k"><i class="sw" style="background:var(--accent)"></i>forecast median</span>
+      <span class="k"><i class="sw band" style="background:var(--accent)"></i>forecast 68% interval</span>
+      <span class="k" id="fsScale"></span>
+    </div>
+    <div class="fs-chart chartbox" id="fsChart"></div>
+    <div class="fs-foot">
+      <div class="kv" id="fsMeta"></div>
+      <p class="fs-warn" id="fsWarn"></p>
+      <p class="cap" id="fsCap"></p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+
+/* ===================================================================== setup */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const SVGNS = "http://www.w3.org/2000/svg";
+const KEY = "cqip.workbench.v2";
+const BATCH_LIMIT = 12;
+const INTERVAL_H = { "1m": 1/60, "5m": 5/60, "15m": 0.25, "30m": 0.5, "1h": 1, "4h": 4, "1d": 24, "1w": 168 };
+
+function el(tag, attrs, kids) {
+  const n = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    if (k === "class") n.className = attrs[k];
+    else if (k === "text") n.textContent = attrs[k];
+    else if (k === "html") n.innerHTML = attrs[k];
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), attrs[k]);
+    else if (k.startsWith("aria") || k === "role" || k === "title") n.setAttribute(k, attrs[k]);
+    else if (k in n && k !== "list" && k !== "type" && k !== "size") { try { n[k] = attrs[k]; } catch (_) { n.setAttribute(k, attrs[k]); } }
+    else n.setAttribute(k, attrs[k]);
+  }
+  for (const kid of [].concat(kids || [])) {
+    if (kid === null || kid === undefined || kid === false) continue;
+    n.appendChild(typeof kid === "object" ? kid : document.createTextNode(String(kid)));
+  }
+  return n;
+}
+function sv(tag, attrs, kids) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in (attrs || {})) {
+    if (k === "text") n.textContent = attrs[k];
+    else n.setAttribute(k, attrs[k]);
+  }
+  for (const kid of [].concat(kids || [])) {
+    if (kid === null || kid === undefined || kid === false) continue;
+    n.appendChild(kid);
+  }
+  return n;
+}
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------------------------------------------------------------- numbers */
+const isNil = (v) => v === null || v === undefined || v === "" || (typeof v === "number" && !Number.isFinite(v));
+
+function fx(v, dp) {
+  if (isNil(v)) return null;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return null;
+  const d = dp === undefined ? 2 : dp;
+  return n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function intf(v) {
+  const s = fx(v, 0);
+  return s === null ? null : s;
+}
+/* Percentages are the only scaled display: every caller passes a fraction. */
+function pc(v, dp) {
+  const s = fx(isNil(v) ? null : 100 * Number(v), dp === undefined ? 1 : dp);
+  return s === null ? null : s + "%";
+}
+function sg(v, dp) {
+  const s = fx(v, dp === undefined ? 0 : dp);
+  return s === null ? null : (Number(v) > 0 ? "+" + s : s);
+}
+/* Prices span six orders of magnitude in this universe; a fixed 2dp renders
+   SHIB as 0.00. Significant digits instead of decimal places keeps every row
+   readable without lying about precision. */
+function price(v) {
+  if (isNil(v)) return null;
+  const n = Math.abs(Number(v));
+  let dp = 2;
+  if (n === 0) dp = 2;
+  else if (n < 0.001) dp = 8;
+  else if (n < 0.01) dp = 6;
+  else if (n < 1) dp = 4;
+  else if (n < 100) dp = 2;
+  else dp = 0;
+  return fx(v, dp);
+}
+function bytes(b) {
+  if (isNil(b)) return null;
+  const u = ["B", "KB", "MB", "GB", "TB"], i = Math.min(u.length - 1, Math.floor(Math.log(b) / Math.log(1024)));
+  return fx(b / Math.pow(1024, i), i ? 1 : 0) + " " + u[i];
+}
+function ago(iso) {
+  const t = new Date(iso || "").getTime();
+  if (!Number.isFinite(t)) return null;
+  const h = (Date.now() - t) / 3.6e6;
+  if (h < 0) return null;
+  if (h < 1/60) return "just now";
+  if (h < 1) return Math.round(h * 60) + "m";
+  if (h < 48) return h.toFixed(1) + "h";
+  return (h / 24).toFixed(1) + "d";
+}
+function stamp(iso) {
+  const d = new Date(iso || "");
+  return isNaN(d) ? String(iso || "—") : d.toLocaleString();
+}
+function shortTs(iso) { return String(iso || "").slice(0, 16).replace("T", " "); }
+
+/* A never-measured value is a distinct display state, never a zero. */
+function cell(s, cls) { return el("td", { class: (cls || "") + (s === null ? " nil" : " mono"), title: s === null ? "never recorded" : "" }, s === null ? "not measured" : s); }
+function kv(k, s, cls) {
+  return [el("dt", {}, k), el("dd", { class: s === null ? "nil" : (cls || "") }, s === null ? "not measured" : s)];
+}
+
+/* ------------------------------------------------------- asset name search */
+const NAMES = {
+  BTC: "Bitcoin", ETH: "Ethereum", SOL: "Solana", BNB: "BNB", XRP: "XRP", ADA: "Cardano",
+  DOGE: "Dogecoin", TRX: "TRON", AVAX: "Avalanche", LINK: "Chainlink", DOT: "Polkadot",
+  MATIC: "Polygon", POL: "Polygon", LTC: "Litecoin", BCH: "Bitcoin Cash", ATOM: "Cosmos",
+  UNI: "Uniswap", XLM: "Stellar", ETC: "Ethereum Classic", FIL: "Filecoin", ICP: "Internet Computer",
+  APT: "Aptos", ARB: "Arbitrum", OP: "Optimism", NEAR: "NEAR Protocol", VET: "VeChain",
+  HBAR: "Hedera", INJ: "Injective", SUI: "Sui", TIA: "Celestia", PEPE: "Pepe", SHIB: "Shiba Inu",
+  AAVE: "Aave", MKR: "Maker", SKY: "Maker", ALGO: "Algorand", RENDER: "Render", TON: "Toncoin",
+  FTM: "Fantom", SAND: "The Sandbox", MANA: "Decentraland", AXS: "Axie Infinity", GRT: "The Graph",
+  CRV: "Curve DAO", LDO: "Lido DAO", COMP: "Compound", SNX: "Synthetix", SUSHI: "SushiSwap",
+  YFI: "yearn.finance", ZEC: "Zcash", XMR: "Monero", EOS: "EOS", KSM: "Kusama", DASH: "Dash",
+  WAVES: "Waves", ZIL: "Zilliqa", IOTA: "IOTA", NANO: "Nano", ENJ: "Enjin Coin", BAT: "Basic Attention",
+  ZRX: "0x Protocol", "1INCH": "1inch", ANKR: "Ankr", API3: "API3", AR: "Arweave", APE: "ApeCoin",
+  CHZ: "Chiliz", GALA: "Gala", IMX: "Immutable", LUNC: "Terra Classic", LUNA: "Terra", ROSE: "Oasis",
+  FLOW: "Flow", EGLD: "MultiversX", QNT: "Quant", RSR: "Reserve Rights", STORJ: "Storj",
+  BAND: "Band Protocol", OCEAN: "Ocean Protocol", NKN: "NKN", SC: "Siacoin", DGB: "DigiByte",
+  RVN: "Ravencoin", ICX: "ICON", ONT: "Ontology", ZEN: "Horizen", DCR: "Decred",
+};
+const baseOf = (s) => String(s || "").split("_")[0].toUpperCase();
+
+/* ===================================================================== state */
+const S = {
+  symbols: [], models: [], coverage: [], probs: new Map(), order: [],
+  selected: new Set(), interval: "1h", policy: "acc", view: "cards",
+  detail: null, detailModel: null, candles: new Map(), forecasts: new Map(),
+  backtests: new Map(), jobs: [], busy: false, auto: false,
+  fs: { sym: null, range: null },
+  gates: { acc: 0.55, corr: 0.05, covLo: 0.60, covHi: 0.75 },
+};
+
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({
+      selected: Array.from(S.selected), interval: S.interval, policy: S.policy,
+      view: S.view, theme: document.documentElement.dataset.theme,
+      density: document.documentElement.dataset.density,
+    }));
+  } catch (_) {}
+}
+function restore() {
+  try {
+    const r = JSON.parse(localStorage.getItem(KEY) || "{}");
+    (r.selected || []).forEach((s) => S.selected.add(s));
+    if (r.interval) S.interval = r.interval;
+    if (r.policy) S.policy = r.policy;
+    if (r.view) S.view = r.view;
+    if (r.theme) document.documentElement.dataset.theme = r.theme;
+    if (r.density) document.documentElement.dataset.density = r.density;
+  } catch (_) {}
+}
+
+/* ======================================================================= api */
+async function getJSON(path) {
+  const res = await fetch(path, { headers: { Accept: "application/json" } });
+  if (!res.ok) {
+    let d = res.status + " " + res.statusText;
+    try { const b = await res.json(); d = b.detail || b.error || d; } catch (_) {}
+    throw new Error(d);
+  }
+  return res.json();
+}
+/* Bounded fan-out: each /predict loads a torch model, and the job manager runs
+   two workers, so unbounded requests just queue behind each other. */
+async function pool(items, limit, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  const work = async () => {
+    while (i < items.length) {
+      const k = i++;
+      try { out[k] = { ok: true, value: await fn(items[k], k) }; }
+      catch (e) { out[k] = { ok: false, error: String((e && e.message) || e) }; }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, work));
+  return out;
+}
+
+/* ============================================================ model picking */
+const archOf = (m) => (m.params && m.params.architecture) || "unknown";
+
+function accVal(m) {
+  const x = (m && m.metrics) || {};
+  for (const k of ["test_directional_accuracy", "val_directional_accuracy", "directional_accuracy"]) {
+    if (!isNil(x[k])) return Number(x[k]);
+  }
+  return null;
+}
+function modelsFor(symbol, interval, policy) {
+  let list = S.models.filter((m) => m.symbol === symbol && m.is_active);
+  if (!list.length) return null;
+  if (policy && ["lstm", "mlp", "transformer"].includes(policy)) {
+    const f = list.filter((m) => archOf(m) === policy);
+    if (f.length) list = f;
+  }
+  if (interval) {
+    const f = list.filter((m) => m.interval === interval);
+    /* Falling back to another timeframe is necessary but must stay visible: a
+       "1h" probability silently computed by a 1d model is a different claim. */
+    if (f.length) list = f;
+  }
+  const withIv = interval ? list.filter((m) => m.interval === interval) : [];
+  const fallback = interval && withIv.length === 0;
+  list = list.slice().sort((a, b) => {
+    const aa = accVal(a), ba = accVal(b);
+    if (ba !== null && aa !== null && ba !== aa) return ba - aa;
+    if (ba !== null && aa === null) return -1;
+    if (aa !== null && ba === null) return 1;
+    return String(b.created_at || "").localeCompare(String(a.created_at || ""));
+  });
+  const pick = list[0];
+  return { model: pick, fallback };
+}
+
+/* ========================================================= probability maths */
+/* The heads are Gaussian over a LOG return. /predict returns lower_68/upper_68
+   as PRICES (while /forecast returns them as returns), and the 68% band is
+   exactly ±1σ, so
+       σ = [ln(upper/p) − ln(lower/p)] / 2 ,  z = r / σ ,  P(up) = Φ(z)
+   A non-positive, inverted or zero-width band yields null: an unmeasurable
+   probability is reported as unmeasurable, never as 50%. */
+function erf(x) {
+  const s = x < 0 ? -1 : 1; x = Math.abs(x);
+  const t = 1 / (1 + 0.3275911 * x);
+  return s * (1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x));
+}
+const Phi = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+
+function derive(p) {
+  const out = { dir: null, pup: null, sigma: null, z: null, why: null };
+  const r = p.predicted_return, lo = p.lower_68, hi = p.upper_68, px = p.predicted_price;
+  if (isNil(r) || isNil(px) || isNil(lo) || isNil(hi)) { out.why = "the response carries no band"; return out; }
+  if (!(px > 0) || !(lo > 0) || !(hi > 0)) { out.why = "non-positive price in the band"; return out; }
+  if (!(hi > lo)) { out.why = "inverted band"; return out; }
+  const sig = (Math.log(hi / px) - Math.log(lo / px)) / 2;
+  if (!Number.isFinite(sig) || sig <= 0) { out.why = "zero-width band — the head has collapsed"; return out; }
+  out.sigma = sig;
+  out.z = Number(r) / sig;
+  out.pup = Phi(out.z);
+  out.dir = Number(r) > 0 ? "up" : Number(r) < 0 ? "down" : "flat";
+  return out;
+}
+
+/* ==================================================================== gates */
+function accDetail(m) {
+  const x = (m && m.metrics) || {};
+  if (!isNil(x.test_directional_accuracy)) return { v: Number(x.test_directional_accuracy), ci: x.test_directional_accuracy_ci, src: "holdout" };
+  if (!isNil(x.val_directional_accuracy)) return { v: Number(x.val_directional_accuracy), ci: x.val_directional_accuracy_ci, src: "validation" };
+  if (!isNil(x.directional_accuracy)) return { v: Number(x.directional_accuracy), ci: null, src: "train" };
+  return { v: null, ci: null, src: "unmeasured" };
+}
+function pick(m, ...keys) {
+  const x = (m && m.metrics) || {};
+  for (const k of keys) if (!isNil(x[k])) return Number(x[k]);
+  return null;
+}
+function gateReport(m) {
+  const a = accDetail(m);
+  const corr = pick(m, "test_correlation", "val_correlation", "correlation");
+  const cov = pick(m, "test_68pct_interval_coverage", "val_68pct_interval_coverage");
+  const rows = [
+    { key: "directional accuracy", short: "accuracy", n: a.v, ci: a.ci, lo: S.gates.acc, hi: null, dom: [Math.min(0, S.gates.acc * 1.6 - 0.02), 0.8], fmt: (v) => pc(v, 1) },
+    { key: "correlation", short: "correlation", n: corr, ci: null, lo: S.gates.corr, hi: null, dom: [Math.min(0, S.gates.corr * 1.6 - 0.02), 0.4], fmt: (v) => fx(v, 3) },
+    { key: "68% band coverage", short: "coverage", n: cov, ci: null, lo: S.gates.covLo, hi: S.gates.covHi, dom: [0.4, 1], fmt: (v) => pc(v, 1) },
+  ].map((r) => Object.assign(r, { pass: r.n === null ? null : (r.hi === null ? Number(r.n) > r.lo : (Number(r.n) >= r.lo && Number(r.n) <= r.hi)) }));
+
+  const measured = rows.filter((r) => r.pass !== null);
+  const pass = measured.filter((r) => r.pass).length;
+  const verdict = !measured.length ? "unmeasured" : pass === measured.length ? "passes" : "fails";
+  /* Thin evidence: an interval straddling the gate means the point estimate
+     cannot support the claim, whatever it says. */
+  const wide = a.ci && !isNil(a.ci.lower) && !isNil(a.ci.upper) && a.ci.lower <= S.gates.acc && a.ci.upper >= S.gates.acc;
+  return { rows, pass, total: measured.length, verdict, wide, acc: a.v, ci: a.ci, src: a.src, corr, cov };
+}
+const gateTag = (v) => v === "passes" ? { cls: "pass", text: "gates pass" }
+  : v === "fails" ? { cls: "fail", text: "" } : { cls: "mute", text: "unmeasured" };
+
+/* ================================================================= banners */
+function banner(kind, glyph, title, body) {
+  return el("div", { class: "banner " + kind }, [
+    el("div", { class: "bd" }, glyph), el("div", {}, [el("b", {}, title), el("p", { html: body })]),
+  ]);
+}
+function setBanners(list) {
+  const box = $("#banners"); box.innerHTML = "";
+  (list || []).forEach((b) => b && box.appendChild(b));
+}
+
+/* ==================================================================== boot */
+async function boot() {
+  restore();
+  $("#interval").value = S.interval;
+  $("#policy").value = S.policy;
+  $("#theme").textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  $("#density").textContent = document.documentElement.dataset.density === "compact" ? "Comfortable" : "Compact";
+  setView(S.view);
+  $("#hdot").className = "dot busy"; $("#htext").textContent = "loading";
+
+  let syms, models, health;
+  try {
+    [syms, models, health] = await Promise.all([
+      getJSON("/data/symbols"),
+      getJSON("/models?limit=500"),
+      getJSON("/health").catch(() => null),
+    ]);
+  } catch (err) {
+    $("#hdot").className = "dot bad"; $("#htext").textContent = "api unreachable";
+    setBanners([banner("bad", "!", "Cannot reach the API",
+      "Start the backend with <code>py -m cqip.cli serve</code>, then reload. " + esc(err.message || err))]);
+    return;
+  }
+
+  S.symbols = syms.symbols || [];
+  S.models = models.models || [];
+  $("#hdot").className = "dot ok";
+  $("#htext").textContent = health && health.database && health.database.ok ? "api ok" : "api degraded";
+  $("#foot-stats").textContent =
+    S.models.length + " models · " + S.symbols.length + " ingested symbols · sentiment " +
+    (health && health.sentiment_backend ? health.sentiment_backend : "unknown") +
+    (health && health.data_dir ? " · data " + health.data_dir : "");
+
+  await Promise.all([
+    getJSON("/data/coverage?dataset=ohlcv").then((c) => { S.coverage = c.entries || []; }).catch(() => {}),
+    getJSON("/health/datasets").catch(() => {}),
+  ]);
+
+  if (!S.selected.size) {
+    S.symbols.filter((s) => modelsFor(s, null, S.policy)).slice(0, 6).forEach((s) => S.selected.add(s));
+  }
+  renderRail(); renderChips(); renderJobs();
+  await analyse();
+  loadNews();
+}
+
+/* ===================================================================== rail */
+function depthOf(sym) {
+  let best = 0;
+  for (const e of S.coverage) if (e.symbol === sym && !isNil(e.rows) && e.rows > best) best = e.rows;
+  return best;
+}
+const modelCount = (s) => S.models.filter((m) => m.symbol === s && m.is_active).length;
+
+function renderRail() {
+  const q = ($("#symq").value || "").trim();
+  const ql = q.toLowerCase();
+  const filt = $("#symfilter").value, sort = $("#symsort").value;
+  const has = (s) => !!modelsFor(s, null, S.policy);
+
+  let rows = S.symbols.filter((s) => {
+    if (!ql) return true;
+    const b = baseOf(s), nm = (NAMES[b] || "").toLowerCase();
+    return s.toLowerCase().includes(ql) || b.toLowerCase().includes(ql) || (nm && nm.includes(ql));
+  });
+  if (filt === "models") rows = rows.filter(has);
+  else if (filt === "none") rows = rows.filter((s) => !has(s));
+
+  const pupOf = (s) => {
+    const p = S.probs.get(s);
+    return p && p.ok && p.pred && p.derived ? p.derived.pup : null;
+  };
+  rows.sort((a, b) => {
+    if (sort === "name") return a.localeCompare(b);
+    if (sort === "models") return modelCount(b) - modelCount(a) || a.localeCompare(b);
+    if (sort === "coverage") return depthOf(b) - depthOf(a) || a.localeCompare(b);
+    const pa = pupOf(a), pb = pupOf(b);
+    if (pa === null && pb === null) return a.localeCompare(b);
+    if (pa === null) return 1;
+    if (pb === null) return -1;
+    return pb - pa;
+  });
+
+  const box = $("#symlist"); box.innerHTML = "";
+  if (!rows.length) { box.appendChild(el("div", { class: "empty" }, "No symbol matches.")); }
+  const frag = document.createDocumentFragment();
+  for (const s of rows) {
+    const p = S.probs.get(s), n = modelCount(s);
+    let dot = null, right;
+    if (p && !p.ok) right = el("span", { class: "meta", style: "color:var(--down)" }, "err");
+    else if (p && p.ok && p.derived && p.derived.pup !== null) {
+      const v = p.derived.pup;
+      dot = el("i", { class: "gdot", style: "background:" + (v >= 0.5 ? "var(--up)" : "var(--down)") });
+      right = el("span", { class: "meta", style: "color:" + (v >= 0.5 ? "var(--up)" : "var(--down)") }, pc(v, 0));
+    } else if (p && p.ok && p.missing) right = el("span", { class: "meta" }, "no model");
+    else right = el("span", { class: "meta" }, n ? String(n) : "—");
+
+    const row = el("div", { class: "symrow" + (S.selected.has(s) ? " sel" : ""), role: "option",
+      "aria-selected": String(S.selected.has(s)), tabindex: "0", title: (NAMES[baseOf(s)] || "") + " · " + n + " models",
+      onclick: () => toggle(s),
+      onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(s); } },
+    }, [dot, el("span", { class: "nm" }, s.replace("_USDT", "")), right]);
+    frag.appendChild(row);
+  }
+  box.appendChild(frag);
+  $("#selcount").textContent = S.selected.size + " / " + S.symbols.length;
+}
+function toggle(s) { S.selected.has(s) ? S.selected.delete(s) : S.selected.add(s); persist(); renderRail(); renderChips(); }
+
+function renderChips() {
+  const box = $("#chips"); box.innerHTML = "";
+  const list = Array.from(S.selected);
+  if (!list.length) { box.appendChild(el("span", { class: "nil" }, "No symbols selected — pick from the list.")); return; }
+  list.forEach((s) => box.appendChild(el("span", { class: "chip" + (S.detail === s ? " act" : ""),
+    onclick: () => { S.detail = s; renderChips(); showDetail(s); },
+  }, [s.replace("_USDT", ""), el("button", { class: "x", title: "remove " + s, "aria-label": "Remove " + s,
+    onclick: (e) => { e.stopPropagation(); S.selected.delete(s); persist(); renderRail(); renderChips(); } }, "×")])));
+}
+
+/* ================================================================== analyse */
+async function analyse() {
+  if (S.busy) return;
+  const syms = Array.from(S.selected);
+  S.busy = true;
+  $("#run").disabled = true;
+  $("#hdot").className = "dot busy"; $("#htext").textContent = "inferring";
+  $("#stamp").textContent = "running…";
+
+  const res = await pool(syms, 4, async (sym) => {
+    const pickd = modelsFor(sym, S.interval, S.policy);
+    if (!pickd) return { symbol: sym, missing: true };
+    const pred = await getJSON("/models/" + encodeURIComponent(pickd.model.model_id) + "/predict");
+    const fc = await getJSON("/models/" + encodeURIComponent(pickd.model.model_id) + "/forecast?limit=60").catch(() => null);
+    if (fc && fc.points && fc.points.length) S.forecasts.set(pickd.model.model_id, fc.points);
+    return { symbol: sym, model: pickd.model, fallback: pickd.fallback, pred, derived: derive(pred) };
+  });
+
+  res.forEach((r, i) => {
+    const sym = syms[i];
+    S.probs.set(sym, r.ok ? Object.assign({ ok: true }, r.value) : { ok: false, error: r.error });
+  });
+
+  S.busy = false;
+  $("#run").disabled = false;
+  $("#hdot").className = "dot ok"; $("#htext").textContent = "api ok";
+  $("#stamp").textContent = "updated " + new Date().toLocaleTimeString();
+  renderRail(); renderProbs();
+  await loadComparison();
+  const next = S.detail && S.selected.has(S.detail) ? S.detail : S.order[0];
+  if (next) await showDetail(next);
+  else { S.detail = null; $("#sec-detail").hidden = true; }
+  warnings();
+}
+
+function warnings() {
+  const out = [];
+  /* Staleness, judged per model against its own timeframe: a 1h model fed a
+     bar from two days ago is 60+ bars behind; a 1d model is barely late. */
+  const stale = [];
+  S.selected.forEach((s) => {
+    const p = S.probs.get(s);
+    if (!p || !p.ok || !p.pred || !p.pred.as_of) return;
+    const h = (Date.now() - new Date(p.pred.as_of).getTime()) / 3.6e6;
+    if (!Number.isFinite(h)) return;
+    const iv = (p.model && p.model.interval) || S.interval;
+    const per = INTERVAL_H[iv] || 1;
+    if (h > Math.max(6, per * 3)) stale.push({ s, h, iv, per, asof: p.pred.as_of });
+  });
+  stale.sort((a, b) => b.h / b.per - a.h / a.per);
+  if (stale.length) {
+    const w = stale[0];
+    out.push(banner("warn", "⏳", stale.length === 1 ? "A forecast is stale" : stale.length + " forecasts are stale",
+      "P(up) is conditioned on each model's last ingested bar. The oldest here is <b>" + esc(w.s) + " · " +
+      esc(shortTs(w.asof)) + "</b> — <b>" + esc(ago(w.asof)) + "</b> old on a " + esc(w.iv) +
+      " model, roughly <b>" + Math.round(w.h / w.per) + " bars</b> behind (tolerance " + Math.round(Math.max(6, w.per * 3)) +
+      "h). Run <code>py -m cqip.cli ingest all</code> to refresh. A probability built on a stale close describes that bar, not the next one."));
+  }
+
+  const measured = Array.from(S.selected).map((s) => S.probs.get(s)).filter((p) => p && p.ok && p.pred && p.derived && p.derived.pup !== null);
+  if (measured.length >= 2) {
+    const failing = measured.filter((p) => gateReport(p.model).verdict !== "passes").length;
+    if (failing === measured.length) {
+      out.push(banner("warn", "!", "No model in this selection clears its own gates",
+        "All <b>" + measured.length + "</b> probabilities come from models that fail the accuracy, correlation or calibration bar. " +
+        "Agreement between failing models is not confirmation — treat this board as a diagnostic."));
+    }
+  }
+  const failRows = Array.from(S.selected).filter((s) => { const p = S.probs.get(s); return p && !p.ok; });
+  if (failRows.length) {
+    out.push(banner("bad", "!", failRows.length + " symbol(s) failed inference",
+      esc(failRows.slice(0, 8).join(", ")) + (failRows.length > 8 ? " …" : "") +
+      " — their probabilities are absent, not zero. Re-run the analysis to retry."));
+  }
+  setBanners(out);
+}
+
+/* ============================================================ probability UI */
+function measuredRows() {
+  return Array.from(S.selected).map((s) => ({ s, r: S.probs.get(s) }));
+}
+function rank() {
+  const rows = measuredRows().filter((h) => h.r && h.r.ok && h.r.pred && h.r.derived && h.r.derived.pup !== null);
+  rows.sort((a, b) => b.r.derived.pup - a.r.derived.pup);
+  return rows;
+}
+
+function renderProbs() {
+  const rows = measuredRows();
+  const sec = $("#sec-probs");
+  sec.hidden = !rows.length;
+  if (!rows.length) return;
+  const meas = rank();
+  S.order = meas.map((h) => h.s);
+  const failing = rows.filter((h) => h.r && h.r.ok && h.r.pred && gateReport(h.r.model).verdict !== "passes").length;
+  $("#probsmeta").textContent = meas.length + "/" + rows.length + " measured · " + failing + " not gate-passing";
+
+  renderConsensus(rows, meas);
+  renderHistogram(meas);
+
+  if (S.view === "table") { $("#pgrid").hidden = true; $("#ptable").hidden = false; renderTable(rows); }
+  else { $("#pgrid").hidden = false; $("#ptable").hidden = true; renderCards(rows); }
+}
+
+function stat(k, v, f, cls) {
+  return el("div", { class: "stat" }, [el("div", { class: "k" }, k),
+    el("div", { class: "v" + (v === null ? " nil" : ""), style: cls ? "color:" + cls : "" }, v === null ? "—" : v),
+    f ? el("div", { class: "f" }, f) : null]);
+}
+function renderConsensus(rows, meas) {
+  const box = $("#consensus"); box.innerHTML = "";
+  const ups = meas.filter((h) => h.r.derived.pup >= 0.5).length;
+  const med = (() => {
+    if (!meas.length) return null;
+    const v = meas.map((h) => h.r.derived.pup).sort((a, b) => a - b);
+    const i = Math.floor(v.length / 2);
+    return v.length % 2 ? v[i] : (v[i - 1] + v[i]) / 2;
+  })();
+  const spread = meas.length > 1 ? Math.max.apply(null, meas.map((h) => h.r.derived.pup)) - Math.min.apply(null, meas.map((h) => h.r.derived.pup)) : null;
+  const strong = meas.filter((h) => Math.abs(h.r.derived.pup - 0.5) >= 0.15).length;
+  const tops = meas.filter((h) => gateReport(h.r.model).verdict === "passes").length;
+
+  box.appendChild(stat("Selected", String(rows.length), meas.length + " measured"));
+  box.appendChild(stat("Median P(up)", med === null ? null : pc(med, 1), "across selection",
+    med === null ? null : med >= 0.5 ? "var(--up)" : "var(--down)"));
+  box.appendChild(stat("Leaning up", ups + " / " + meas.length, "P(up) ≥ 50%", ups ? "var(--up)" : null));
+  box.appendChild(stat("Spread", spread === null ? null : pc(spread, 1), "max − min", spread !== null && spread > 0.4 ? "var(--warn)" : null));
+  box.appendChild(stat("Convicted", strong + " / " + meas.length, "|P−50%| ≥ 15pp"));
+  box.appendChild(stat("Gate-passing", tops + " / " + meas.length, "models clearing all gates",
+    tops === 0 && meas.length ? "var(--down)" : tops === meas.length && meas.length ? "var(--up)" : null));
+}
+
+function renderHistogram(meas) {
+  const panel = $("#histoPanel");
+  if (meas.length < 3) { panel.hidden = true; return; }
+  panel.hidden = false;
+  const bins = new Array(10).fill(0);
+  meas.forEach((h) => { bins[clamp(Math.floor(h.r.derived.pup * 10), 0, 9)]++; });
+  const max = Math.max.apply(null, bins) || 1;
+  const box = $("#histo"); box.innerHTML = "";
+  bins.forEach((c, i) => {
+    const lo = i * 10;
+    box.appendChild(el("div", { class: "b " + (lo >= 50 ? "up" : "dn") + (c === 0 ? " zero" : ""), title: pc(lo / 100, 0) + "–" + pc((lo + 10) / 100, 0) + ": " + c },
+      [el("i", { style: "height:" + (c ? Math.max(6, (c / max) * 100) : 2) + "%" })]));
+  });
+  const spread = Math.max.apply(null, meas.map((h) => h.r.derived.pup)) - Math.min.apply(null, meas.map((h) => h.r.derived.pup));
+  $("#histoCap").textContent =
+    "A tight cluster around 50% means the models are indifferent; a wide one means they disagree. Neither is evidence on its own — " +
+    (spread > 0.5 ? "this selection disagrees substantially." : spread < 0.1 ? "this selection barely differentiates." : "the spread is moderate.") +
+    " Spread here is " + pc(spread, 1) + ".";
+}
+
+function renderCards(rows) {
+  const grid = $("#pgrid"); grid.innerHTML = "";
+  const order = rows.slice().sort((a, b) => {
+    const pa = a.r && a.r.derived ? a.r.derived.pup : null, pb = b.r && b.r.derived ? b.r.derived.pup : null;
+    if (pa === null && pb === null) return a.s.localeCompare(b.s);
+    if (pa === null) return 1; if (pb === null) return -1;
+    return pb - pa;
+  });
+  for (const { s, r } of order) {
+    const card = el("button", { class: "pcard" + (S.detail === s ? " active" : ""), onclick: () => { S.detail = s; renderProbs(); renderChips(); showDetail(s); } });
+
+    if (!r || !r.ok) {
+      card.appendChild(el("div", { class: "pcard-top" }, [el("span", { class: "sym" }, s.replace("_USDT", "")),
+        el("span", { class: "spacer" }), el("span", { class: "tag fail" }, "error")]));
+      card.appendChild(el("div", { class: "nil" }, "Inference failed — " + esc(r ? r.error : "not run")));
+      grid.appendChild(card); continue;
+    }
+    if (r.missing) {
+      card.appendChild(el("div", { class: "pcard-top" }, [el("span", { class: "sym" }, s.replace("_USDT", "")),
+        el("span", { class: "spacer" }), el("span", { class: "tag mute" }, "no model")]));
+      card.appendChild(el("div", { class: "nil" }, "No trained forecaster for " + s + ". Candles are stored, so one can be trained from the panel below."));
+      grid.appendChild(card); continue;
+    }
+
+    const d = r.derived, p = r.pred, m = r.model, g = gateReport(m);
+    card.appendChild(el("div", { class: "pcard-top" }, [
+      el("span", { class: "sym" }, s.replace("_USDT", "")),
+      el("span", { class: "spacer" }),
+      el("span", { class: "tag mute", title: m.model_id }, archOf(m) + " · " + m.interval + " · h" + (p.horizon || "?")),
+      r.fallback ? el("span", { class: "tag warn", title: "No model exists at " + S.interval + "; this one scored a different timeframe." }, "fallback") : null,
+    ]));
+
+    if (d.pup === null) {
+      card.appendChild(el("div", { class: "pnum" }, [el("span", { class: "big nil" }, "not measured")]));
+      card.appendChild(el("div", { class: "nil" }, "P(up) not derivable: " + esc(d.why || "incomplete response") + ". A collapsed band means the model has no usable distribution."));
+      grid.appendChild(card); continue;
+    }
+
+    const up = d.pup >= 0.5, col = up ? "var(--up)" : "var(--down)", w = clamp(d.pup, 0, 1) * 100;
+    card.appendChild(el("div", { class: "pnum" }, [
+      el("span", { class: "big", style: "color:" + col }, pc(d.pup, 1)),
+      el("span", { class: "lbl" }, "P(up)"),
+      el("span", { class: "spacer" }),
+      el("span", { class: "tag " + (d.dir === "up" ? "up" : d.dir === "down" ? "down" : "flat") }, d.dir),
+    ]));
+    card.appendChild(el("div", {}, [
+      el("div", { class: "bar" }, [el("i", { class: "mid" }),
+        el("i", { class: "fill", style: "background:" + col + ";left:" + Math.min(50, w) + "%;width:" + Math.abs(w - 50) + "%" })]),
+      el("div", { class: "bar-scale" }, [el("span", {}, "0%"), el("span", {}, "50%"), el("span", {}, "100%")]),
+    ]));
+
+    const kv = el("div", { class: "pkv" });
+    [kvLine("last", price(p.last_price)), kvLine("pred", price(p.predicted_price)),
+     kvLine("68% low", price(p.lower_68)), kvLine("68% high", price(p.upper_68)),
+     kvLine("σ", pc(d.sigma, 2)), kvLine("z", fx(d.z, 2))].forEach((x) => kv.appendChild(x));
+    card.appendChild(kv);
+
+    const foot = el("div", { class: "pcard-foot" });
+    const gt = gateTag(g.verdict);
+    foot.appendChild(el("span", { class: "tag " + gt.cls, title: "accuracy " + pc(g.acc, 1) + " (gate 55%), correlation " + (g.corr === null ? "n/a" : fx(g.corr, 3)) + " (gate 0.05), coverage " + (g.cov === null ? "n/a" : pc(g.cov, 1)) },
+      g.verdict === "passes" ? gt.text : g.verdict === "fails" ? g.pass + "/" + g.total + " gates" : gt.text));
+    if (g.wide) foot.appendChild(el("span", { class: "tag warn", title: "The 95% interval spans the 55% accuracy gate." }, "CI spans gate"));
+    if (g.src === "validation") foot.appendChild(el("span", { class: "tag info", title: "No holdout metrics on this model." }, "val only"));
+    const age = ago(p.as_of);
+    foot.appendChild(el("span", { class: "tag mute", title: "prediction as_of " + p.as_of }, age ? age + " old" : "as_of ?"));
+    if (!isNil(p.confidence)) foot.appendChild(el("span", { class: "tag mute", title: "model-reported confidence" }, "c " + pc(p.confidence, 1)));
+    card.appendChild(foot);
+    grid.appendChild(card);
+  }
+}
+function kvLine(k, v) { return el("div", {}, [el("span", { class: "k" }, k), el("span", { class: "v" + (v === null ? " nil" : "") }, v === null ? "n/m" : v)]); }
+
+const TCOLS = [
+  { k: "symbol", l: "symbol", cls: "l", get: (h) => h.s.replace("_USDT", ""), raw: (h) => h.s },
+  { k: "pup", l: "P(up)", get: (h) => (h.r && h.r.derived ? h.r.derived.pup : null), fmt: (h) => (h.r && h.r.derived ? pc(h.r.derived.pup, 1) : null) },
+  { k: "dir", l: "dir", get: (h) => (h.r && h.r.derived ? h.r.derived.dir : null), fmt: (h) => (h.r && h.r.derived ? h.r.derived.dir : null), raw: (h) => (h.r && h.r.derived ? h.r.derived.dir : "") },
+  { k: "last", l: "last", get: (h) => (h.r && h.r.pred ? h.r.pred.last_price : null), fmt: (h) => (h.r && h.r.pred ? price(h.r.pred.last_price) : null) },
+  { k: "pred", l: "pred", get: (h) => (h.r && h.r.pred ? h.r.pred.predicted_price : null), fmt: (h) => (h.r && h.r.pred ? price(h.r.pred.predicted_price) : null) },
+  { k: "lo", l: "68% low", get: (h) => (h.r && h.r.pred ? h.r.pred.lower_68 : null), fmt: (h) => (h.r && h.r.pred ? price(h.r.pred.lower_68) : null) },
+  { k: "hi", l: "68% high", get: (h) => (h.r && h.r.pred ? h.r.pred.upper_68 : null), fmt: (h) => (h.r && h.r.pred ? price(h.r.pred.upper_68) : null) },
+  { k: "sigma", l: "σ ret", get: (h) => (h.r && h.r.derived ? h.r.derived.sigma : null), fmt: (h) => (h.r && h.r.derived ? pc(h.r.derived.sigma, 2) : null) },
+  { k: "arch", l: "arch", cls: "l", get: (h) => (h.r && h.r.model ? archOf(h.r.model) : null), raw: (h) => (h.r && h.r.model ? archOf(h.r.model) : "") },
+  { k: "iv", l: "tf", cls: "l", get: (h) => (h.r && h.r.model ? h.r.model.interval : null), raw: (h) => (h.r && h.r.model ? h.r.model.interval : "") },
+  { k: "acc", l: "acc", get: (h) => { const g = h.r && h.r.model ? gateReport(h.r.model) : null; return g ? g.acc : null; }, fmt: (h) => { const g = h.r && h.r.model ? gateReport(h.r.model) : null; return g ? pc(g.acc, 1) : null; } },
+  { k: "verdict", l: "verdict", cls: "l", get: (h) => { const g = h.r && h.r.model ? gateReport(h.r.model) : null; return g ? g.verdict : null; }, raw: (h) => { const g = h.r && h.r.model ? gateReport(h.r.model) : null; return g ? g.verdict : ""; } },
+  { k: "conf", l: "conf", get: (h) => (h.r && h.r.pred ? h.r.pred.confidence : null), fmt: (h) => (h.r && h.r.pred ? pc(h.r.pred.confidence, 2) : null) },
+  { k: "age", l: "as_of", cls: "l", get: (h) => (h.r && h.r.pred ? new Date(h.r.pred.as_of).getTime() : null), raw: (h) => (h.r && h.r.pred ? h.r.pred.as_of : "") },
+];
+let tsort = { k: "pup", asc: false };
+
+function renderTable(rows) {
+  const box = $("#ptable"); box.innerHTML = "";
+  const sorted = rows.slice().sort((a, b) => {
+    const col = TCOLS.find((c) => c.k === tsort.k) || TCOLS[1];
+    const va = col.get(a), vb = col.get(b);
+    if (va === null && vb === null) return 0;
+    if (va === null) return 1; if (vb === null) return -1;
+    const r = typeof va === "string" ? va.localeCompare(vb) : va - vb;
+    return tsort.asc ? r : -r;
+  });
+  const wrap = el("div", { class: "wrap tall" });
+  const tb = el("table");
+  const hr = el("tr");
+  TCOLS.forEach((c) => hr.appendChild(el("th", { class: (c.cls || "") + (tsort.k === c.k ? " sorted" : ""),
+    onclick: () => { if (tsort.k === c.k) tsort.asc = !tsort.asc; else { tsort.k = c.k; tsort.asc = c.k === "symbol"; } renderProbs(); },
+    "aria-sort": tsort.k === c.k ? (tsort.asc ? "ascending" : "descending") : "none" }, c.l)));
+  tb.appendChild(el("thead", {}, hr));
+  const body = el("tbody");
+  for (const h of sorted) {
+    const tr = el("tr", { class: S.detail === h.s ? "active" : "", onclick: () => { S.detail = h.s; renderChips(); showDetail(h.s); } });
+    TCOLS.forEach((c) => {
+      if (c.k === "verdict") {
+        const g = h.r && h.r.model ? gateReport(h.r.model) : null;
+        tr.appendChild(el("td", { class: "l" }, g
+          ? el("span", { class: "tag " + (g.verdict === "passes" ? "pass" : g.verdict === "fails" ? "fail" : "mute") }, g.verdict === "passes" ? "passes" : g.verdict === "fails" ? g.pass + "/" + g.total : "unmeasured")
+          : el("span", { class: "nil" }, "n/m")));
+        return;
+      }
+      tr.appendChild(cell(c.fmt ? c.fmt(h) : c.get(h)));
+    });
+    body.appendChild(tr);
+  }
+  tb.appendChild(body);
+  wrap.appendChild(tb);
+  box.appendChild(wrap);
+}
+
+function exportCSV() {
+  const rows = measuredRows();
+  const head = ["symbol", "p_up", "direction", "last_price", "predicted_price", "lower_68", "upper_68",
+    "sigma_return", "z", "architecture", "timeframe", "model_id", "accuracy", "accuracy_source",
+    "correlation", "coverage", "verdict", "confidence", "as_of", "error"];
+  const q = (v) => { const s = v === null || v === undefined ? "" : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const lines = [head.join(",")];
+  rows.forEach(({ s, r }) => {
+    if (!r || !r.ok) { lines.push([s, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", q(r ? r.error : "not run")].map(q).join(",")); return; }
+    if (r.missing) { lines.push([s].concat(new Array(18).fill("")).map(q).join(",") + ",no model"); return; }
+    const g = gateReport(r.model), d = r.derived, p = r.pred;
+    lines.push([s, d.pup, d.dir, p.last_price, p.predicted_price, p.lower_68, p.upper_68, d.sigma, d.z,
+      archOf(r.model), r.model.interval, r.model.model_id, g.acc, g.src, g.corr, g.cov, g.verdict,
+      p.confidence, p.as_of, d.pup === null ? d.why : ""].map(q).join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: "cqip-probabilities-" + S.interval + ".csv" });
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* =================================================================== detail */
+async function showDetail(sym) {
+  S.detail = sym;
+  const r = S.probs.get(sym);
+  if (!r || !r.ok || r.missing) {
+    $("#sec-detail").hidden = false;
+    $("#detitle").textContent = sym.replace("_USDT", "") + " / USDT";
+    $("#desub").textContent = r && !r.ok ? "inference failed" : "no model trained";
+    $("#detmodel").innerHTML = "";
+    $("#gates").innerHTML = ""; $("#prov").innerHTML = ""; $("#btSummary").innerHTML = ""; $("#btFolds").innerHTML = ""; $("#news").innerHTML = "";
+    $("#fchart").innerHTML = ""; $("#pchart").innerHTML = ""; $("#fmeta").innerHTML = "";
+    $("#prov").appendChild(el("div", { class: "nil" }, r && !r.ok ? esc(r.error) :
+      "Nothing to show. Train a " + S.interval + " model for " + sym + " to populate this panel."));
+    return;
+  }
+  const m = r.model, p = r.pred;
+  S.detailModel = m;
+  $("#sec-detail").hidden = false;
+  $("#detitle").textContent = sym.replace("_USDT", "") + " / USDT";
+  $("#desub").textContent = m.interval + " · horizon " + (p.horizon || "?") + " bar · " + m.model_id;
+
+  const sel = $("#detmodel"); sel.innerHTML = "";
+  const cands = S.models.filter((x) => x.symbol === sym && x.is_active && x.interval === m.interval)
+    .sort((a, b) => (accVal(b) === null ? -1 : accVal(b)) - (accVal(a) === null ? -1 : accVal(a)));
+  cands.forEach((x) => {
+    const a = accVal(x);
+    sel.appendChild(el("option", { value: x.model_id, selected: x.model_id === m.model_id },
+      archOf(x) + " · acc " + (a === null ? "n/m" : pc(a, 1)) + " · " + x.model_id.slice(-8)));
+  });
+  if (!cands.length) sel.appendChild(el("option", {}, "no model at " + m.interval));
+  sel.onchange = async () => {
+    S.detailModel = cands.find((x) => x.model_id === sel.value) || m;
+    renderGates(); renderProvenance(); renderBacktest();
+    await ensureForecast(S.detailModel.model_id);
+    drawForecast(); drawPrice();
+  };
+
+  renderGates(); renderProvenance(); renderBacktest();
+  await Promise.all([ensureForecast(m.model_id), loadCandles(sym)]);
+  drawForecast(); drawPrice(); filterNews(sym);
+}
+
+function renderGates() {
+  const m = S.detailModel; if (!m) return;
+  const g = gateReport(m);
+  const gb = $("#gates"); gb.innerHTML = "";
+  g.rows.forEach((row) => {
+    const wrap = el("div", { class: "gate" + (row.n === null ? " none" : "") });
+    wrap.appendChild(el("div", { class: "gn" }, row.key));
+    const track = el("div", { class: "gtrack" });
+    const px = (v) => clamp(((v - row.dom[0]) / (row.dom[1] - row.dom[0])) * 100, 0, 100);
+    track.appendChild(el("div", { class: "zone", style: "left:" + px(row.lo) + "%;width:" + (px(row.hi === null ? row.dom[1] : row.hi) - px(row.lo)) + "%" }));
+    if (row.n !== null) {
+      track.appendChild(el("div", { class: "val", style: "background:" + (row.pass ? "var(--up)" : "var(--down)") + ";left:" + Math.min(px(row.n), px(row.lo) - 1.5) + "%" }));
+      if (row.ci && !isNil(row.ci.lower) && !isNil(row.ci.upper)) {
+        track.appendChild(el("div", { class: "ci", style: "left:" + px(row.ci.lower) + "%;width:" + Math.max(2, px(row.ci.upper) - px(row.ci.lower)) + "%",
+          title: "95% CI " + fx(row.ci.lower, 3) + " – " + fx(row.ci.upper, 3) }));
+      }
+    }
+    track.appendChild(el("div", { class: "thr", style: "left:" + px(row.lo) + "%" }));
+    if (row.hi !== null) track.appendChild(el("div", { class: "thr good", style: "left:" + px(row.hi) + "%" }));
+    wrap.appendChild(track);
+    wrap.appendChild(el("div", { class: "gv" }, row.n === null ? "not measured" : row.fmt(row.n) + (row.pass ? " ✓" : " ✗")));
+    gb.appendChild(wrap);
+  });
+
+  const v = $("#gateverdict"); v.innerHTML = "";
+  const spec = {
+    passes: ["good", "✓", "Clears every measured gate.", "Even so, P(up) is a model belief, not a live market probability."],
+    fails: ["warn", "!", g.pass + " of " + g.total + " measured gates clear.", "The probability above comes from a model that misses the project's own bar — read it as a diagnostic, not a signal."],
+    unmeasured: ["bad", "?", "No gate metrics were recorded.", "An unmeasured model is not an approved model; nothing here has been tested."],
+  }[g.verdict];
+  v.appendChild(banner(spec[0], spec[1], "Quality verdict: " + g.verdict, spec[2] + " " + spec[3] +
+    " Accuracy is read from <b>" + g.src + "</b>." + (g.src !== "holdout" ? " No holdout was scored for this model." : "")));
+  if (g.wide) v.appendChild(el("p", { class: "cap", style: "margin:6px 2px 0" },
+    "Evidence is thin: the 95% interval on accuracy spans the 55% gate, so the point estimate cannot separate this model from one at chance."));
+}
+
+function renderProvenance() {
+  const m = S.detailModel; if (!m) return;
+  const x = m.metrics || {};
+  const box = $("#prov"); box.innerHTML = "";
+  [kv("model id", m.model_id), kv("architecture", archOf(m)), kv("framework", m.framework),
+   kv("stage", m.stage), kv("active", String(m.is_active)), kv("target", m.target),
+   kv("features", intf(m.feature_count)), kv("horizon", x.horizon === undefined ? null : intf(x.horizon)),
+   kv("trained from", m.trained_from ? stamp(m.trained_from) : null),
+   kv("trained to", m.trained_to ? stamp(m.trained_to) : null),
+   kv("created", m.created_at ? stamp(m.created_at) : null),
+   kv("epochs run", intf(x.epochs_run)), kv("best epoch", intf(x.best_epoch)),
+   kv("train windows", intf(x.train_windows)), kv("val windows", intf(x.val_windows)),
+   kv("test samples", intf(x.test_samples)), kv("parameters", intf(x.parameters)),
+   kv("val MAE", fx(x.val_mae, 5)), kv("test MAE", fx(x.test_mae, 5)),
+  ].forEach((p) => box.appendChild(p[0]) && box.appendChild(p[1]));
+
+  const cov = S.coverage.filter((e) => e.symbol === S.detail && e.interval === m.interval)[0];
+  if (cov) [kv("data provider", cov.provider), kv("data range", String(cov.start).slice(0, 10) + " → " + String(cov.end).slice(0, 10)), kv("data rows", intf(cov.rows))]
+    .forEach((p) => { box.appendChild(p[0]); box.appendChild(p[1]); });
+
+  const r = S.probs.get(S.detail), pm = (r && r.pred ? r.pred.metrics : null) || {};
+  const bt = $("#btmetricsUnused");
+  void bt;
+}
+
+async function renderBacktest() {
+  const m = S.detailModel; if (!m) return;
+  const sum = $("#btSummary"), folds = $("#btFolds");
+  sum.innerHTML = ""; folds.innerHTML = "";
+  sum.appendChild(el("div", { class: "skel", style: "width:60%;margin-bottom:8px" }));
+  let list;
+  try {
+    list = (await getJSON("/research/backtests?model_id=" + encodeURIComponent(m.model_id) + "&limit=5")).backtests || [];
+  } catch (err) {
+    sum.innerHTML = ""; sum.appendChild(el("div", { class: "nil" }, "Backtest evidence unavailable: " + esc(err.message)));
+    return;
+  }
+  if (!list.length) {
+    sum.innerHTML = ""; sum.appendChild(el("div", { class: "nil" }, "No walk-forward backtest was recorded for this model. Run one from the panel below — the result is what says whether this probability ever paid."));
+    return;
+  }
+  sum.innerHTML = "";
+  const b = list[0], mx = b.metrics || {};
+  const grid = el("div", { class: "kv" });
+  [kv("backtest", b.backtest_id), kv("strategy", b.strategy), kv("run", b.created_at ? stamp(b.created_at) : null),
+   kv("folds recorded", intf(b.folds_recorded)), kv("folds that traded", intf(b.folds_traded)),
+   kv("total return", pc(mx.total_return, 2)), kv("CAGR", pc(mx.cagr, 2)),
+   kv("Sharpe", fx(mx.sharpe, 3)), kv("Sortino", fx(mx.sortino, 3)),
+   kv("max drawdown", pc(mx.max_drawdown, 2)), kv("win rate", pc(mx.win_rate, 1)),
+   kv("profit factor", fx(mx.profit_factor, 2)), kv("consistency", pc(mx.consistency, 0)),
+   kv("excess vs buy & hold", pc(mx.excess_vs_buy_and_hold, 2)),
+   kv("buy & hold return", pc(mx.benchmark_total_return, 2)),
+   kv("final equity", intf(mx.final_equity)),
+  ].forEach((p) => { grid.appendChild(p[0]); grid.appendChild(p[1]); });
+  sum.appendChild(grid);
+
+  if (!mx.sharpe_recorded && !b.metrics_recorded) {
+    sum.appendChild(el("p", { class: "cap" }, "This backtest recorded no headline metrics — it failed before scoring."));
+  }
+  const traded = (b.folds_traded || 0) > 0;
+  sum.appendChild(el("p", { class: "cap" },
+    traded
+      ? (b.folds_traded === b.folds_recorded ? "Every fold traded." : "Only " + b.folds_traded + " of " + b.folds_recorded + " folds produced a trade; a headline Sharpe over the rest is mostly noise.")
+      : "No fold produced a trade, so these return figures describe an account that stayed flat. They are not evidence of profitability."));
+  if (list.length > 1) {
+    const sel = el("select", { style: "width:auto", "aria-label": "Choose a backtest",
+      onchange: (e) => showFolds(e.target.value) });
+    list.forEach((x) => sel.appendChild(el("option", { value: x.backtest_id }, x.backtest_id + " · " + String(x.created_at).slice(0, 16) + " · " + (x.metrics_recorded ? pc(x.metrics.sharpe, 2) + " Sharpe" : "no metrics"))));
+    sum.appendChild(el("div", { class: "row", style: "margin-top:8px" }, [el("span", { class: "lbl-sm" }, "Backtest"), sel]));
+    await showFolds(b.backtest_id);
+  } else {
+    await showFolds(b.backtest_id);
+  }
+}
+
+async function showFolds(id) {
+  const box = $("#btFolds"); box.innerHTML = "";
+  if (!id) return;
+  let d;
+  try { d = await getJSON("/research/backtests/" + encodeURIComponent(id)); }
+  catch (err) { box.appendChild(el("div", { class: "nil" }, esc(err.message))); return; }
+  S.backtests.set(id, d);
+  if (!d.folds.length) { box.appendChild(el("div", { class: "nil" }, "No folds recorded.")); return; }
+
+  const wrap = el("div", { class: "wrap", style: "margin-top:11px;max-height:220px" });
+  const tb = el("table");
+  tb.appendChild(el("thead", {}, el("tr", {}, ["#", "test window", "bars", "return", "B&H", "excess", "Sharpe", "trades", "max DD"].map((h, i) =>
+    el("th", { class: i === 1 ? "l" : "" }, h)))));
+  const body = el("tbody");
+  d.folds.forEach((f) => {
+    const tr = el("tr", { style: "cursor:default" });
+    [String(f.index === null ? "—" : f.index),
+     String(f.test_start || "?").slice(0, 10) + " → " + String(f.test_end || "?").slice(0, 10),
+     intf(f.n_bars), pc(f.total_return, 2), pc(f.bm_total_return, 2), pc(f.excess, 2),
+     fx(f.sharpe, 2), intf(f.trades), pc(f.max_drawdown, 2)].forEach((v, i) =>
+      tr.appendChild(i === 1 ? el("td", { class: "l" }, v) : cell(v)));
+    body.appendChild(tr);
+  });
+  tb.appendChild(body);
+  wrap.appendChild(tb);
+  box.appendChild(wrap);
+  box.appendChild(el("p", { class: "cap" },
+    "Each row is a fold refit on its own training window and scored on unseen bars. B&H is buy-and-hold over that fold's own test prices. " +
+    "Folds that disagree are the honest signal — that is what consistency above summarises."));
+  if (!d.trades.length) box.appendChild(el("p", { class: "cap" }, "No trade log was stored for this run."));
+}
+
+/* =================================================================== charts */
+function axisTicks(lo, hi, n) {
+  const span = hi - lo;
+  if (!(span > 0) || !Number.isFinite(span)) return [lo];
+  const raw = span / n;
+  const step = Math.pow(10, Math.floor(Math.log10(raw)));
+  const mult = [1, 2, 2.5, 5, 10].find((m) => raw <= step * m) || 10;
+  const s = step * mult, out = [];
+  for (let v = Math.ceil(lo / s) * s; v <= hi + s * 1e-9; v += s) out.push(v);
+  return out;
+}
+function niceDomain(vals) {
+  const finite = vals.filter((v) => Number.isFinite(v));
+  if (!finite.length) return [0, 1];
+  let lo = Math.min.apply(null, finite), hi = Math.max.apply(null, finite);
+  if (lo === hi) { const d = Math.abs(lo) * 0.05 || 1; return [lo - d, hi + d]; }
+  const pad = (hi - lo) * 0.08;
+  return [lo - pad, hi + pad];
+}
+/* Crosshair readout: every time-series chart shares one interaction so a reader
+   learns it once. Returns the DOM index under the pointer. */
+function crosshair(box, count, xOf, onMove) {
+  const svg = box.querySelector("svg");
+  const tip = el("div", { class: "tip" });
+  box.appendChild(tip);
+  const line = sv("line", { class: "xhair", y1: 0, y2: 0, x1: -99, x2: -99, opacity: 0 });
+  svg.appendChild(line);
+  const hit = sv("rect", { x: 0, y: 0, width: svg.viewBox.baseVal.width, height: svg.viewBox.baseVal.height, fill: "transparent" });
+  svg.appendChild(hit);
+  const move = (ev) => {
+    const box2 = svg.getBoundingClientRect();
+    const vx = ((ev.clientX - box2.left) / box2.width) * svg.viewBox.baseVal.width;
+    let best = 0, bd = Infinity;
+    for (let i = 0; i < count; i++) { const d = Math.abs(xOf(i) - vx); if (d < bd) { bd = d; best = i; } }
+    line.setAttribute("x1", xOf(best)); line.setAttribute("x2", xOf(best));
+    line.setAttribute("opacity", "1");
+    const html = onMove(best);
+    tip.innerHTML = html;
+    tip.classList.add("on");
+    const px = (xOf(best) / svg.viewBox.baseVal.width) * box2.width;
+    tip.style.left = Math.min(box2.width - tip.offsetWidth - 6, Math.max(4, px + 10)) + "px";
+    tip.style.top = "6px";
+  };
+  const leave = () => { line.setAttribute("opacity", "0"); tip.classList.remove("on"); };
+  svg.addEventListener("mousemove", move);
+  svg.addEventListener("mouseleave", leave);
+  svg.addEventListener("touchmove", (e) => { if (e.touches[0]) move(e.touches[0]); }, { passive: true });
+}
+
+function chartFrame(w, h, ml, mr, mt, mb) {
+  return { ml, mr, mt, mb, w, h, iw: w - ml - mr, ih: h - mt - mb,
+    X: (i) => ml + i, Y: (t) => mt + (1 - t) * (h - mt - mb) };
+}
+function gridY(root, f, lo, hi, fmt, ticks) {
+  axisTicks(lo, hi, ticks || 4).forEach((t) => {
+    const y = f.Y((t - lo) / (hi - lo));
+    root.appendChild(sv("line", { x1: f.ml, x2: f.ml + f.iw, y1: y, y2: y, stroke: "var(--grid)" }));
+    root.appendChild(sv("text", { x: f.ml - 6, y: y + 3.4, "text-anchor": "end", "font-size": 9.5, fill: "var(--mute)", text: fmt(t) }));
+  });
+}
+
+async function ensureForecast(modelId) {
+  if (S.forecasts.has(modelId)) return S.forecasts.get(modelId);
+  try {
+    const fc = await getJSON("/models/" + encodeURIComponent(modelId) + "/forecast?limit=60");
+    const pts = fc.points || [];
+    S.forecasts.set(modelId, pts);
+    return pts;
+  } catch (_) { S.forecasts.set(modelId, null); return null; }
+}
+
+function drawForecast() {
+  const box = $("#fchart"); box.innerHTML = "";
+  const pts = S.detailModel ? S.forecasts.get(S.detailModel.model_id) : null;
+  if (!pts || !pts.length) { box.appendChild(el("div", { class: "empty" }, "No forecast series for this model.")); return; }
+  const W = 640, H = 268, f = chartFrame(W, H, 58, 14, 12, 26);
+  /* /forecast returns lower_68/upper_68 in RETURN space; /predict returns
+     prices. Converting keeps both panels on one comparable scale. */
+  const hiB = pts.map((p) => p.predicted_price * Math.exp(p.upper_68));
+  const loB = pts.map((p) => p.predicted_price * Math.exp(p.lower_68));
+  const [lo, hi] = niceDomain(pts.map((p) => p.predicted_price).concat(hiB, loB));
+  const n = pts.length;
+  const X = (i) => f.ml + (n === 1 ? f.iw / 2 : (i / (n - 1)) * f.iw);
+  const Y = (v) => f.Y((v - lo) / (hi - lo));
+  const root = sv("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", style: "display:block", role: "img",
+    "aria-label": "Forecast median price with 68 percent interval" });
+  gridY(root, f, lo, hi, (t) => fx(t, 0));
+  root.appendChild(sv("path", { d: hiB.map((v, i) => (i ? "L" : "M") + X(i) + " " + Y(v)).join(" ") + " " +
+    loB.slice().reverse().map((v, i) => "L" + X(n - 1 - i) + " " + Y(v)).join(" ") + " Z",
+    fill: "color-mix(in srgb, var(--accent) 15%, transparent)", stroke: "none" }));
+  root.appendChild(sv("path", { d: pts.map((p, i) => (i ? "L" : "M") + X(i) + " " + Y(p.predicted_price)).join(" "),
+    fill: "none", stroke: "var(--accent)", "stroke-width": 1.8, "stroke-linejoin": "round" }));
+  [0, n - 1].forEach((i) => root.appendChild(sv("circle", { cx: X(i), cy: Y(pts[i].predicted_price), r: 2.8, fill: "var(--accent)" })));
+  root.appendChild(sv("text", { x: f.ml, y: H - 6, "font-size": 9.5, fill: "var(--mute)", text: shortTs(pts[0].ts) }));
+  root.appendChild(sv("text", { x: f.ml + f.iw, y: H - 6, "text-anchor": "end", "font-size": 9.5, fill: "var(--mute)", text: shortTs(pts[n - 1].ts) }));
+  box.appendChild(root);
+  crosshair(box, n, X, (i) => {
+    const p = pts[i];
+    return "<b>" + esc(shortTs(p.ts)) + "</b><br>" +
+      '<span class="r">median</span> ' + price(p.predicted_price) + "<br>" +
+      '<span class="r">σ</span> ' + pc(p.predicted_volatility, 2) + "<br>" +
+      '<span class="r">68%</span> ' + price(loB[i]) + " – " + price(hiB[i]) + "<br>" +
+      '<span class="r">conf</span> ' + (isNil(p.confidence) ? "n/m" : pc(p.confidence, 2));
+  });
+  const last = pts[n - 1], meta = $("#fmeta"); meta.innerHTML = "";
+  const g = el("div", { class: "kv" });
+  [kv("final median", price(last.predicted_price)), kv("σ last bar", pc(last.predicted_volatility, 2)),
+   kv("68% band", price(last.predicted_price * Math.exp(last.lower_68)) + " – " + price(last.predicted_price * Math.exp(last.upper_68))),
+   kv("confidence", pc(last.confidence, 2)), kv("points", String(n))].forEach((p) => { g.appendChild(p[0]); g.appendChild(p[1]); });
+  meta.appendChild(g);
+  meta.appendChild(el("p", { class: "cap" }, "The band is ±1σ from the Gaussian head, converted from log-return to price space. A wide band is the model admitting it does not know."));
+}
+
+async function loadCandles(sym) {
+  const key = sym + "|" + S.interval;
+  if (!S.candles.has(key)) {
+    try {
+      S.candles.set(key, await getJSON("/data/candles?symbol=" + encodeURIComponent(sym) + "&interval=" + encodeURIComponent(S.interval) + "&limit=320"));
+    } catch (err) { S.candles.set(key, { error: err.message }); }
+  }
+  const c = S.candles.get(key);
+  $("#phsub").textContent = c && c.exchange ? c.exchange + " · " + ((c.candles || []).length) + " bars" : "";
+  return c;
+}
+function drawPrice() {
+  const box = $("#pchart"); box.innerHTML = "";
+  const c = S.candles.get(S.detail + "|" + S.interval);
+  if (!c || c.error) { box.appendChild(el("div", { class: "empty" }, c ? "No candles: " + esc(c.error) : "Loading…")); return; }
+  const cs = c.candles || [];
+  if (!cs.length) { box.appendChild(el("div", { class: "empty" }, "No candles stored at " + S.interval + " for " + S.detail + ".")); return; }
+  const W = 640, H = 268, f = chartFrame(W, H, 58, 14, 12, 26);
+  const [lo, hi] = niceDomain(cs.map((b) => b.low).concat(cs.map((b) => b.high)));
+  const n = cs.length, slot = f.iw / n, bw = Math.max(1, slot * 0.68);
+  const X = (i) => f.ml + (i + 0.5) * slot;
+  const Y = (v) => f.Y((v - lo) / (hi - lo));
+  const root = sv("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", style: "display:block", role: "img", "aria-label": "Candlestick price history" });
+  gridY(root, f, lo, hi, (t) => fx(t, 0));
+  for (let i = 0; i < n; i++) {
+    const b = cs[i], col = b.close >= b.open ? "var(--up)" : "var(--down)";
+    root.appendChild(sv("line", { x1: X(i), x2: X(i), y1: Y(b.high), y2: Y(b.low), stroke: col, "stroke-width": 1, opacity: .75 }));
+    const y1 = Y(Math.max(b.open, b.close)), y2 = Y(Math.min(b.open, b.close));
+    root.appendChild(sv("rect", { x: X(i) - bw / 2, y: y1, width: bw, height: Math.max(0.9, y2 - y1), fill: col, opacity: .85 }));
+  }
+  const r = S.probs.get(S.detail);
+  if (r && r.ok && r.pred && !isNil(r.pred.predicted_price)) {
+    const pp = Number(r.pred.predicted_price);
+    if (pp >= lo && pp <= hi) {
+      root.appendChild(sv("line", { x1: f.ml, x2: f.ml + f.iw, y1: Y(pp), y2: Y(pp), stroke: "var(--holdout)", "stroke-width": 1.2, "stroke-dasharray": "4 3" }));
+      root.appendChild(sv("text", { x: f.ml + f.iw - 2, y: Y(pp) - 5, "text-anchor": "end", "font-size": 9, fill: "var(--holdout)", text: "forecast " + price(pp) }));
+    }
+  }
+  root.appendChild(sv("text", { x: f.ml, y: H - 6, "font-size": 9.5, fill: "var(--mute)", text: shortTs(cs[0].ts) }));
+  root.appendChild(sv("text", { x: f.ml + f.iw, y: H - 6, "text-anchor": "end", "font-size": 9.5, fill: "var(--mute)", text: shortTs(cs[n - 1].ts) }));
+  box.appendChild(root);
+  crosshair(box, n, X, (i) => {
+    const b = cs[i];
+    return "<b>" + esc(shortTs(b.ts)) + "</b><br>" +
+      '<span class="r">o</span> ' + price(b.open) + '  <span class="r">h</span> ' + price(b.high) + "<br>" +
+      '<span class="r">l</span> ' + price(b.low) + '  <span class="r">c</span> ' + price(b.close) + "<br>" +
+      '<span class="r">vol</span> ' + fx(b.volume, 0) + "<br>" +
+      '<span class="r">chg</span> ' + sg((b.close / b.open - 1) * 100, 2) + "%";
+  });
+}
+
+/* ================================================== full-screen price + forecast
+   The inline panels put forecast and price on separate index axes, which hides
+   the only question that matters: did the forecast line up with what the market
+   actually did? This view overlays both on one shared wall-clock axis. */
+function fsBars() { return S.interval === "1d" ? 96 : 168; }
+function fsSlots() { const per = fsBars(); return per <= 96 ? 6 : per <= 240 ? 5 : 4; }
+
+/* Round the visible window out to bar boundaries so a range of "180" always
+   starts and ends on a real bar instead of slicing a candle in half. */
+function fsSlice(cs, per) {
+  const n = cs.length;
+  if (per <= 0 || n <= per) return { loI: 0, hiI: n - 1, sliced: false };
+  return { loI: n - per, hiI: n - 1, sliced: true };
+}
+
+function forecastBand(p) {
+  /* /forecast returns the interval in RETURN space; converting to price keeps
+     the band on the same axis as the candles. */
+  const mid = Number(p.predicted_price);
+  if (!Number.isFinite(mid)) return null;
+  const lo = isNil(p.lower_68) ? NaN : mid * Math.exp(Number(p.lower_68));
+  const hi = isNil(p.upper_68) ? NaN : mid * Math.exp(Number(p.upper_68));
+  return { t: Date.parse(p.ts), mid, lo, hi, sigma: p.predicted_volatility, conf: p.confidence };
+}
+
+function drawFullscreen() {
+  const box = $("#fsChart");
+  box.innerHTML = "";
+  const sym = S.fs.sym;
+  $("#fsTitle").textContent = sym ? sym.replace("_USDT", "") + " / USDT" : "—";
+
+  const c = sym ? S.candles.get(sym + "|" + S.interval) : null;
+  const all = (c && !c.error && (c.candles || []).length) ? c.candles : [];
+  const fc = (S.fs.model && S.forecasts.get(S.fs.model.model_id)) || [];
+  const bands = fc.map(forecastBand).filter((b) => b && Number.isFinite(b.t));
+
+  if (!all.length) {
+    const why = !sym ? "Pick a symbol." : c && c.error ? "No candles: " + esc(c.error)
+      : "No candles stored at " + S.interval + " for " + sym + ".";
+    box.appendChild(el("div", { class: "empty" }, why));
+    $("#fsMeta").innerHTML = ""; $("#fsWarn").textContent = ""; $("#fsCap").textContent = "";
+    $("#fsSub").textContent = "";
+    return;
+  }
+
+  const sl = fsSlice(all, S.fs.range);
+  const cs = all.slice(sl.loI, sl.hiI + 1);
+  const n = cs.length;
+  const inRange = bands.filter((b) => b.t >= Date.parse(cs[0].ts) && b.t <= Date.parse(cs[n - 1].ts));
+
+  const W = 1600, H = 900;
+  const f = chartFrame(W, H, 74, 108, 18, 40);
+  const t0 = Date.parse(cs[0].ts), t1 = Date.parse(cs[n - 1].ts);
+  const tSpan = Math.max(1, t1 - t0);
+
+  /* Pad the price domain to include every visible candle wick and every visible
+     band edge, so the forecast can never be clipped out of frame. */
+  const vals = [];
+  cs.forEach((b) => { vals.push(b.high, b.low); });
+  inRange.forEach((b) => { vals.push(b.mid); if (Number.isFinite(b.lo)) vals.push(b.lo); if (Number.isFinite(b.hi)) vals.push(b.hi); });
+  const [lo, hi] = niceDomain(vals);
+  const Y = (v) => f.Y((v - lo) / (hi - lo));
+  const Xt = (t) => f.ml + ((t - t0) / tSpan) * f.iw;
+  const X = (i) => Xt(Date.parse(cs[i].ts));
+
+  const slots = Math.max(fsSlots(), Math.min(n, 480));
+  const slot = f.iw / slots;
+  const bw = Math.max(1, Math.min(26, slot * 0.68));
+
+  const root = sv("svg", {
+    viewBox: "0 0 " + W + " " + H, width: "100%", height: "100%",
+    preserveAspectRatio: "xMidYMid meet", style: "display:block",
+    role: "img", "aria-label": sym + " actual price bars overlaid with the model forecast and 68 percent interval",
+  });
+  gridY(root, f, lo, hi, (t) => fx(t, 0), 6);
+
+  /* forecast band first so candles draw on top of it */
+  if (inRange.length > 1) {
+    const path = inRange.map((b, i) => (i ? "L" : "M") + Xt(b.t) + " " + Y(b.hi)).join(" ") + " " +
+      inRange.slice().reverse().map((b) => "L" + Xt(b.t) + " " + Y(b.lo)).join(" ") + " Z";
+    root.appendChild(sv("path", { d: path, fill: "color-mix(in srgb, var(--accent) 16%, transparent)", stroke: "none" }));
+    root.appendChild(sv("path", { d: inRange.map((b, i) => (i ? "L" : "M") + Xt(b.t) + " " + Y(b.mid)).join(" "),
+      fill: "none", stroke: "var(--accent)", "stroke-width": 2, "stroke-linejoin": "round" }));
+    const a = inRange[0], z = inRange[inRange.length - 1];
+    root.appendChild(sv("circle", { cx: Xt(a.t), cy: Y(a.mid), r: 3.2, fill: "var(--accent)" }));
+    root.appendChild(sv("circle", { cx: Xt(z.t), cy: Y(z.mid), r: 3.2, fill: "var(--accent)" }));
+  } else if (bands.length) {
+    box.appendChild(el("div", { class: "empty", style: "position:absolute;top:8px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 10px" },
+      "Forecast covers " + shortTs(bands[0].t) + " → " + shortTs(bands[bands.length - 1].t) + ", outside the visible range."));
+  }
+
+  cs.forEach((b, i) => {
+    const col = b.close >= b.open ? "var(--up)" : "var(--down)";
+    const x = X(i);
+    root.appendChild(sv("line", { x1: x, x2: x, y1: Y(b.high), y2: Y(b.low), stroke: col, "stroke-width": 1, opacity: .7 }));
+    const y1 = Y(Math.max(b.open, b.close)), y2 = Y(Math.min(b.open, b.close));
+    root.appendChild(sv("rect", { x: x - bw / 2, y: y1, width: bw, height: Math.max(0.9, y2 - y1), fill: col, opacity: .85 }));
+  });
+
+  /* x axis */
+  const tTicks = 6;
+  for (let k = 0; k <= tTicks; k++) {
+    const t = t0 + (k / tTicks) * tSpan, x = Xt(t);
+    root.appendChild(sv("line", { x1: x, x2: x, y1: f.mt, y2: f.mt + f.ih, stroke: "var(--grid)", opacity: .5 }));
+    root.appendChild(sv("text", { x: x, y: H - 16, "text-anchor": k === 0 ? "start" : k === tTicks ? "end" : "middle",
+      "font-size": 10.5, fill: "var(--mute)", text: shortTs(new Date(t).toISOString()) }));
+  }
+  root.appendChild(sv("text", { x: f.ml - 10, y: f.mt - 6, "font-size": 10.5, fill: "var(--mute)", text: "price (USDT)" }));
+
+  box.appendChild(root);
+
+  /* crosshair keyed to whichever series the pointer is nearer in time */
+  crosshair(box, n, (i) => X(i), (i) => {
+    const b = cs[i], t = Date.parse(b.ts);
+    const near = inRange.length ? inRange.reduce((p, c) => (Math.abs(c.t - t) < Math.abs(p.t - t) ? c : p), inRange[0]) : null;
+    const exact = near && Math.abs(near.t - t) <= Math.max(1, tSpan / n) * 1.5 ? near : null;
+    return "<b>" + esc(shortTs(b.ts)) + "</b><br>" +
+      '<span class="r">actual o</span> ' + price(b.open) + '  <span class="r">h</span> ' + price(b.high) + "<br>" +
+      '<span class="r">l</span> ' + price(b.low) + '  <span class="r">c</span> ' + price(b.close) + "<br>" +
+      '<span class="r">vol</span> ' + fx(b.volume, 0) +
+      (exact
+        ? "<br><span class='r'>fcst</span> " + price(exact.mid) +
+          "<br><span class='r'>68%</span> " + price(exact.lo) + " – " + price(exact.hi) +
+          "<br><span class='r'>err</span> " + sg(((exact.mid - b.close) / b.close) * 100, 2) + "%"
+        : "<br><span class='r'>fcst</span> no point at this bar");
+  });
+
+  /* ---- footer ---- */
+  const meta = $("#fsMeta"); meta.innerHTML = "";
+  const last = cs[n - 1];
+  const row = [];
+  row.push(kv("last close", price(last.close) + "  " + shortTs(last.ts)));
+  row.push(kv("bars shown", n + (sl.sliced ? " of " + all.length : "")));
+  row.push(kv("window", shortTs(cs[0].ts) + " → " + shortTs(cs[n - 1].ts)));
+  if (inRange.length) {
+    const a = inRange[0], z = inRange[inRange.length - 1];
+    row.push(kv("fcst points", String(inRange.length) + (inRange.length < bands.length ? " of " + bands.length + " in range" : "")));
+    row.push(kv("fcst median", price(a.mid) + " → " + price(z.mid)));
+    row.push(kv("fcst 68%", price(z.lo) + " – " + price(z.hi)));
+    row.push(kv("fcst σ last", isNil(z.sigma) ? "not measured" : pc(z.sigma, 2)));
+  } else {
+    row.push(kv("fcst points", "none in range"));
+  }
+  row.forEach((p) => { meta.appendChild(p[0]); meta.appendChild(p[1]); });
+
+  $("#fsSub").textContent = S.interval + " · " + n + " bars" + (S.fs.model ? " · " + archOf(S.fs.model) : "");
+  $("#fsScale").textContent = "time axis shared: bars and forecast share one wall-clock scale";
+  const warn = $("#fsWarn");
+  if (!inRange.length && bands.length) {
+    warn.textContent = "No forecast point falls inside the visible window. Widen the range to overlay the forecast on actual prices.";
+  } else if (!bands.length) {
+    warn.textContent = S.fs.model ? "This model returned no forecast series, so only actual bars are drawn." : "No model selected for this symbol.";
+  } else {
+    warn.textContent = "";
+  }
+  $("#fsCap").textContent = "Actual bars are what the market did; the median and 68% interval are what the model committed to at each bar. Where they diverge, the model is wrong — the gap is the error, not noise to be averaged away.";
+}
+
+function fillFsModel(sym) {
+  const sel = $("#fsModel");
+  sel.innerHTML = "";
+  const cands = S.models.filter((x) => x.symbol === sym && x.is_active && x.interval === S.interval)
+    .sort((a, b) => (accVal(b) === null ? -1 : accVal(b)) - (accVal(a) === null ? -1 : accVal(a)));
+  if (!cands.length) {
+    sel.appendChild(el("option", { value: "" }, "no model at " + S.interval));
+    S.fs.model = null;
+    return;
+  }
+  cands.forEach((x) => {
+    const a = accVal(x);
+    sel.appendChild(el("option", { value: x.model_id, selected: S.fs.model && x.model_id === S.fs.model.model_id },
+      archOf(x) + " · acc " + (a === null ? "n/m" : pc(a, 1)) + " · " + x.model_id.slice(-8)));
+  });
+  if (!S.fs.model || !cands.some((x) => x.model_id === S.fs.model.model_id)) S.fs.model = cands[0];
+  sel.value = S.fs.model.model_id;
+}
+
+/* A phone cannot draw 320 bars across ~360px, so the first open picks a window
+   wide enough to stay readable. The value must match an <option> so the select
+   shows it; once the reader picks a range themselves their choice sticks. */
+function fsDefaultRange() {
+  return (window.innerWidth || 1200) < 900 ? 90 : 0;
+}
+
+async function openFullscreen(sym) {
+  const target = sym || S.detail;
+  if (!target) return;
+  S.fs.sym = target;
+  const dlg = $("#fsDlg");
+  if (!dlg.open) dlg.showModal();
+  if (S.fs.range === null || S.fs.range === undefined) {
+    S.fs.range = fsDefaultRange();
+    $("#fsRange").value = String(S.fs.range);
+  }
+  $("#fsChart").innerHTML = "";
+  $("#fsChart").appendChild(el("div", { class: "empty" }, "Loading…"));
+  S.fs.model = S.detailModel && S.detailModel.symbol === target ? S.detailModel : null;
+  fillFsModel(target);
+  await Promise.all([ensureModelFor(target)]);
+  drawFullscreen();
+}
+
+/* Resolve the symbol's chosen model without disturbing the inline detail panel. */
+async function ensureModelFor(sym) {
+  if (!S.fs.model) {
+    const best = modelsFor(sym, S.interval, S.policy);
+    if (best) S.fs.model = best.model;
+    fillFsModel(sym);
+  }
+  if (S.fs.model) await ensureForecast(S.fs.model.model_id);
+}
+
+function fsStep(dir) {
+  const list = S.order && S.order.length ? S.order : Array.from(S.selected);
+  if (!list.length) return;
+  const i = list.indexOf(S.fs.sym);
+  const next = list[(i < 0 ? 0 : i + dir + list.length) % list.length];
+  if (next && next !== S.fs.sym) openFullscreen(next);
+}
+
+async function loadComparison() {
+  const sec = $("#sec-cmp");
+  const syms = Array.from(S.selected);
+  sec.hidden = syms.length < 2;
+  if (syms.length < 2) return;
+  const box = $("#cmpchart"); box.innerHTML = "";
+  box.appendChild(el("div", { class: "empty" }, "Loading series…"));
+  const res = await pool(syms, 6, (s) => loadCandles(s).then((c) => ({ s, c })));
+  const series = res.filter((r) => r.ok && r.value.c && !(r.value.c.error) && (r.value.c.candles || []).length).map((r) => r.value);
+  box.innerHTML = "";
+  if (series.length < 2) { box.appendChild(el("div", { class: "empty" }, "Need two or more symbols with stored candles at " + S.interval + ".")); return; }
+
+  const useLog = $("#cmpnorm").value === "log";
+  const norm = (cs) => cs.map((b) => useLog ? Math.log(b.close / cs[0].close) : (b.close / cs[0].close) * 100);
+  const vals = series.flatMap((s) => norm(s.c.candles));
+  const [lo, hi] = niceDomain(vals);
+  const W = 1180, H = 300, f = chartFrame(W, H, 58, 118, 12, 26);
+  const n = Math.max.apply(null, series.map((s) => s.c.candles.length));
+  const X = (i) => f.ml + (n === 1 ? f.iw / 2 : (i / (n - 1)) * f.iw);
+  const Y = (v) => f.Y((v - lo) / (hi - lo));
+  const hue = ["var(--accent)", "var(--up)", "var(--warn)", "var(--down)", "var(--holdout)", "#4ecdc4", "#ff9f43", "#f368e0", "#a3e635", "#60a5fa", "#f87171", "#fbbf24", "#34d399", "#c084fc"];
+  const root = sv("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", style: "display:block", role: "img", "aria-label": "Rebased relative strength comparison" });
+  gridY(root, f, lo, hi, (t) => fx(t, useLog ? 2 : 1), 5);
+  const base = useLog ? 0 : 100;
+  root.appendChild(sv("line", { x1: f.ml, x2: f.ml + f.iw, y1: Y(base), y2: Y(base), stroke: "var(--dim)", "stroke-dasharray": "3 3", opacity: .55 }));
+  series.forEach((s, i) => {
+    const v = norm(s.c.candles), col = hue[i % hue.length];
+    root.appendChild(sv("path", { d: v.map((y, j) => (j ? "L" : "M") + X(j) + " " + Y(y)).join(" "),
+      fill: "none", stroke: col, "stroke-width": 1.5, "stroke-linejoin": "round" }));
+    const lv = v[v.length - 1];
+    root.appendChild(sv("text", { x: f.ml + f.iw + 6, y: Y(lv) + 3.4, "font-size": 10, fill: col,
+      text: s.s.replace("_USDT", "") + " " + (lv >= 0 ? "+" : "") + fx(lv, useLog ? 2 : 1) + (useLog ? "" : "%") }));
+  });
+  const cs0 = series[0].c.candles;
+  root.appendChild(sv("text", { x: f.ml, y: H - 6, "font-size": 9.5, fill: "var(--mute)", text: shortTs(cs0[0].ts) }));
+  root.appendChild(sv("text", { x: f.ml + f.iw, y: H - 6, "text-anchor": "end", "font-size": 9.5, fill: "var(--mute)", text: shortTs(cs0[cs0.length - 1].ts) }));
+  box.appendChild(root);
+  const shown = series.length, skipped = syms.length - shown;
+  crosshair(box, n, X, (i) => "<b>" + esc(shortTs(cs0[Math.min(i, cs0.length - 1)].ts)) + "</b><br>" +
+    series.map((s, k) => {
+      const cs = s.c.candles, v = norm(cs);
+      const idx = Math.min(i, cs.length - 1);
+      return '<span style="color:' + hue[k % hue.length] + '">■</span> ' + esc(s.s.replace("_USDT", "")) + " " +
+        (v[idx] >= 0 ? "+" : "") + fx(v[idx], useLog ? 2 : 1) + (useLog ? "" : "%");
+    }).join("<br>"));
+  $("#cmpcap").textContent = "Each series is rebased to its own first close in the window, so this compares shape rather than level — a 12× alt and a 80k maj both start at the same point. " +
+    (skipped > 0 ? skipped + " selected symbol(s) have no candles at " + S.interval + " and are omitted." : "All " + shown + " selected symbols are shown.");
+}
+
+async function loadNews() {
+  const box = $("#news"); box.innerHTML = "";
+  try {
+    const n = await getJSON("/data/news?limit=120");
+    S.news = n.items || [];
+  } catch (_) { S.news = []; }
+  filterNews(S.detail);
+}
+/* The API's news feed has no symbol filter, so relevance is matched on the
+   asset's ticker and name. Matches are a heuristic, and the panel says so. */
+function filterNews(sym) {
+  const box = $("#news"); box.innerHTML = "";
+  const all = S.news || [];
+  const sub = $("#newssub");
+  if (!sym) { sub.textContent = ""; box.appendChild(el("div", { class: "nil" }, "No symbol focused.")); return; }
+  const b = baseOf(sym), nm = (NAMES[b] || "").split(" ")[0].toLowerCase();
+  const hit = all.filter((it) => {
+    const t = (it.title + " " + (it.summary || "")).toLowerCase();
+    return t.includes(b.toLowerCase()) || (nm.length > 3 && t.includes(nm));
+  });
+  sub.textContent = "— " + hit.length + " of " + all.length + " articles mention " + (NAMES[b] || b);
+  const items = (hit.length ? hit : all).slice(0, 14);
+  if (!items.length) { box.appendChild(el("div", { class: "nil" }, "No news ingested. Run `ingest news`.")); return; }
+  if (!hit.length) box.appendChild(el("p", { class: "cap" }, "Nothing in the stored feed mentions " + b + "; showing the market-wide tail instead."));
+  items.forEach((it) => {
+    const sc = it.sentiment_score;
+    box.appendChild(el("div", { class: "news" }, [
+      el("a", { href: it.url || "#", target: "_blank", rel: "noopener noreferrer" }, it.title || "(untitled)"),
+      el("div", { class: "nm" }, [el("span", {}, it.source || "?"), el("span", {}, stamp(it.ts)), el("span", {}, it.category || ""),
+        isNil(sc) ? null : el("span", { class: "tag " + (sc > 0.15 ? "up" : sc < -0.15 ? "down" : "mute") }, (sc > 0 ? "+" : "") + fx(sc, 2))]),
+    ]));
+  });
+}
+
+/* ===================================================================== jobs */
+function renderJobs() {
+  const box = $("#jobs"); box.innerHTML = "";
+  if (!S.jobs.length) { box.appendChild(el("span", { class: "nil" }, "No jobs submitted from this session.")); return; }
+  S.jobs.slice().reverse().forEach((j) => {
+    const st = j.status || "queued";
+    const cls = st === "succeeded" ? "pass" : st === "failed" ? "fail" : st === "running" ? "warn" : "mute";
+    box.appendChild(el("div", { class: "job" }, [
+      el("div", { class: "jh" }, [el("span", { class: "tag " + cls }, st), el("span", {}, j.label || j.kind),
+        el("span", { class: "spacer" }), el("span", { class: "jid" }, j.job_id)]),
+      el("div", { class: "pbar" }, [el("i", { style: "width:" + Math.round((j.progress || 0) * 100) + "%" })]),
+      j.stage ? el("div", { class: "cap", style: "margin-top:4px" }, j.stage) : null,
+      j.error ? el("div", { class: "cap", style: "color:var(--down);margin-top:4px" }, esc(j.error)) : null,
+    ]));
+  });
+}
+async function submit(kind, params, label) {
+  try {
+    const res = await fetch("/jobs", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind, params }) });
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.detail || body.error || String(res.status));
+    const job = { job_id: body.job_id, kind, label, status: body.status || "queued", progress: 0, stage: "submitted" };
+    S.jobs.push(job); renderJobs(); track(job);
+  } catch (err) {
+    S.jobs.push({ job_id: "—", kind, label, status: "failed", progress: 0, error: String(err.message || err) });
+    renderJobs();
+  }
+}
+/* SSE with a polling fallback: the stream can close silently behind a proxy, and
+   a job that stops updating with no error is indistinguishable from a hang. */
+function track(job) {
+  let done = false, es = null;
+  const finish = () => { if (!done) { done = true; try { es && es.close(); } catch (_) {} } };
+  const apply = (p) => {
+    if (done || !p) return;
+    if (p.status) job.status = p.status;
+    if (!isNil(p.progress)) job.progress = Number(p.progress);
+    if (p.stage) job.stage = p.stage;
+    if (p.error) job.error = p.error;
+    renderJobs();
+    if (["succeeded", "failed", "cancelled"].includes(job.status)) { finish(); clearInterval(timer); if (job.kind === "train_forecaster") reloadModels(); }
+  };
+  try { es = new EventSource("/jobs/" + job.job_id + "/stream"); es.onmessage = (e) => { try { apply(JSON.parse(e.data)); } catch (_) {} }; es.onerror = () => finish(); }
+  catch (_) { es = null; }
+  const timer = setInterval(async () => {
+    if (done) { clearInterval(timer); return; }
+    try { const r = await getJSON("/jobs/" + job.job_id);
+      apply({ status: r.status, progress: r.progress, stage: r.stage, error: r.error }); }
+    catch (_) { clearInterval(timer); finish(); }
+  }, 3000);
+}
+async function reloadModels() {
+  try {
+    S.models = (await getJSON("/models?limit=500")).models || [];
+    renderRail();
+  } catch (_) {}
+}
+
+/* =================================================================== wiring */
+function setView(v) {
+  S.view = v;
+  $("#viewCards").classList.toggle("on", v === "cards");
+  $("#viewTable").classList.toggle("on", v === "table");
+  $("#viewCards").setAttribute("aria-pressed", String(v === "cards"));
+  $("#viewTable").setAttribute("aria-pressed", String(v === "table"));
+  persist();
+}
+$("#symq").addEventListener("input", renderRail);
+$("#symfilter").addEventListener("change", renderRail);
+$("#symsort").addEventListener("change", renderRail);
+$("#cmpnorm").addEventListener("change", loadComparison);
+$("#interval").addEventListener("change", () => { S.interval = $("#interval").value; S.candles.clear(); persist(); analyse(); });
+$("#policy").addEventListener("change", () => { S.policy = $("#policy").value; persist(); analyse(); });
+$("#run").addEventListener("click", analyse);
+$("#viewCards").addEventListener("click", () => { setView("cards"); renderProbs(); });
+$("#viewTable").addEventListener("click", () => { setView("table"); renderProbs(); });
+$("#csv").addEventListener("click", exportCSV);
+$("#selnone").addEventListener("click", () => { S.selected.clear(); persist(); renderRail(); renderChips(); renderProbs(); });
+$("#seltop").addEventListener("click", () => {
+  S.symbols.filter((s) => modelsFor(s, null, S.policy)).forEach((s) => S.selected.add(s));
+  persist(); renderRail(); renderChips(); analyse();
+});
+$("#selbest").addEventListener("click", () => {
+  const r = rank().slice(0, 6);
+  if (!r.length) return;
+  S.selected.clear(); r.forEach((h) => S.selected.add(h.s));
+  persist(); renderRail(); renderChips(); analyse();
+});
+$("#reload") && null;
+$("#theme").addEventListener("click", () => {
+  const d = document.documentElement;
+  d.dataset.theme = d.dataset.theme === "light" ? "dark" : "light";
+  $("#theme").textContent = d.dataset.theme === "light" ? "Dark" : "Light";
+  persist(); renderProbs(); if (S.detail) { drawForecast(); drawPrice(); loadComparison(); }
+});
+$("#density").addEventListener("click", () => {
+  const d = document.documentElement;
+  d.dataset.density = d.dataset.density === "compact" ? "comfortable" : "compact";
+  $("#density").textContent = d.dataset.density === "compact" ? "Comfortable" : "Compact";
+  persist();
+});
+$("#help").addEventListener("click", () => $("#helpDlg").showModal());
+
+/* ---- full-screen chart wiring ---- */
+$("#fsOpen").addEventListener("click", () => openFullscreen(S.detail));
+$("#fsClose").addEventListener("click", () => $("#fsDlg").close());
+$("#fsPrev").addEventListener("click", () => fsStep(-1));
+$("#fsNext").addEventListener("click", () => fsStep(1));
+$("#fsRange").addEventListener("change", (e) => { S.fs.range = Number(e.target.value); drawFullscreen(); });
+$("#fsModel").addEventListener("change", async (e) => {
+  const m = S.models.find((x) => x.model_id === e.target.value);
+  if (m) { S.fs.model = m; await ensureForecast(m.model_id); drawFullscreen(); }
+});
+/* Clicking anywhere on the panel background opens the chart for that symbol. */
+$("#pchart").addEventListener("dblclick", () => openFullscreen(S.detail));
+$("#fchart").addEventListener("dblclick", () => openFullscreen(S.detail));
+/* Keep focus sane on close so the inline panels stay keyboard-reachable. */
+$("#fsDlg").addEventListener("close", () => { S.fs.sym = null; S.fs.model = null; });
+/* The SVG is a fixed 1600x900 viewBox, so it scales on its own; a redraw is only
+   needed when the dialog first becomes visible and has real dimensions. */
+$("#fsDlg").addEventListener("toggle", () => { if ($("#fsDlg").open && S.fs.sym) drawFullscreen(); });
+$("#auto").addEventListener("click", () => {
+  S.auto = !S.auto;
+  $("#auto").classList.toggle("on", S.auto);
+  $("#auto").setAttribute("aria-pressed", String(S.auto));
+  clearInterval(S.timer);
+  if (S.auto) S.timer = setInterval(() => { if (!S.busy && document.visibilityState === "visible") analyse(); }, 60000);
+});
+
+function batchNote(n) { $("#batchnote").textContent = n > BATCH_LIMIT ? "first " + BATCH_LIMIT + " of " + n + " (batch cap)" : ""; }
+$("#btnTrain").addEventListener("click", () => {
+  const syms = Array.from(S.selected);
+  if (!syms.length) { setBanners([banner("warn", "!", "Nothing selected", "Select at least one symbol first.")]); return; }
+  batchNote(syms.length);
+  const common = { interval: S.interval, kind: $("#kind").value, epochs: Number($("#epochs").value), horizon: Number($("#horizon").value) };
+  syms.slice(0, BATCH_LIMIT).forEach((s) => submit("train_forecaster", Object.assign({ symbol: s }, common),
+    "train " + s.replace("_USDT", "") + " · " + common.interval + " · " + common.kind));
+  if (syms.length > BATCH_LIMIT) setBanners([banner("info", "i", "Queued the first " + BATCH_LIMIT + " symbols",
+    "Training " + syms.length + " models at once saturates the two-worker job pool and the queue is serialised anyway. " + (syms.length - BATCH_LIMIT) + " were left out — narrow the selection to run the rest.")]);
+});
+$("#btnBT").addEventListener("click", () => {
+  const jobs = [];
+  Array.from(S.selected).forEach((s) => { const p = modelsFor(s, S.interval, S.policy); if (p) jobs.push([s, p.model]); });
+  if (!jobs.length) { setBanners([banner("warn", "!", "Nothing to backtest", "No model exists at " + S.interval + " for the current selection.")]); return; }
+  batchNote(jobs.length);
+  const folds = Number($("#folds").value);
+  jobs.slice(0, BATCH_LIMIT).forEach(([s, m]) => submit("backtest",
+    { model_id: m.model_id, symbol: s, interval: m.interval, n_folds: folds },
+    "backtest " + s.replace("_USDT", "") + " · " + m.model_id.slice(-8) + " · " + folds + " folds"));
+});
+
+document.addEventListener("keydown", (e) => {
+  /* The full-screen view owns the arrow keys while it is open, so the global
+     list navigation must stand down or ←/→ would fight the chart. */
+  if ($("#fsDlg").open) {
+    if (e.key === "ArrowLeft") { e.preventDefault(); fsStep(-1); return; }
+    if (e.key === "ArrowRight") { e.preventDefault(); fsStep(1); return; }
+    if (e.key === "Escape") { e.preventDefault(); $("#fsDlg").close(); return; }
+    return;
+  }
+  const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+  if (e.key === "/" && !typing) { e.preventDefault(); $("#symq").focus(); return; }
+  if (e.key === "Escape" && document.activeElement === $("#symq")) { $("#symq").blur(); return; }
+  if (typing) return;
+  if (e.key === "r") { analyse(); return; }
+  if (e.key === "?") { $("#helpDlg").showModal(); return; }
+  if ((e.key === "f" || e.key === "F") && S.detail) { e.preventDefault(); openFullscreen(S.detail); return; }
+  if (e.key === "Enter" && S.order[0]) { S.detail = S.order[0]; renderChips(); showDetail(S.detail); return; }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    const rows = rank(); if (!rows.length) return;
+    e.preventDefault();
+    const i = rows.findIndex((h) => h.s === S.detail);
+    const nx = clamp(i + (e.key === "ArrowDown" ? 1 : -1), 0, rows.length - 1);
+    S.detail = rows[nx].s; renderChips(); renderProbs(); showDetail(S.detail);
+  }
+});
+boot();
+</script>
+</body>
+</html>

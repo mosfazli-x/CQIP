@@ -1,0 +1,429 @@
+{
+  "preregistration": {
+    "feature": "sma_fast_slow_spread",
+    "horizon": 24,
+    "direction": "long highest feature value, short lowest; no reversal",
+    "top_k": 3,
+    "oos_fraction": 0.25,
+    "oos_start": "2026-08-22 04:00:00+00:00",
+    "oos_end": "2026-09-29 03:00:00+00:00",
+    "n_oos_timestamps": 912,
+    "non_overlap_stride": 24,
+    "winsor": [
+      0.01,
+      0.99
+    ],
+    "cost_per_fill_bps": 18.0,
+    "cost_per_leg_round_trip_bps": 36.0,
+    "hurdle_per_leg_bps": 60.0,
+    "hurdle_spread_bps": 120.0,
+    "primary_metric": "non-overlapping top3-minus-bottom3 spread, bps",
+    "contamination_disclosure": "The most recent 25% of this sample was NOT untouched at the time this test was written. The feature audit already reported a quartile decomposition of the full-sample spread for this exact feature and horizon, in which the final quartile read approximately -14bps. No clean holdout exists in the stored data because the panel already ends at the last available bar. Treat every p-value below as optimistic and the PASS bar as correspondingly higher than a genuinely pre-registered threshold would be."
+  },
+  "temporal_availability": {
+    "feature_formula": "(sma(close,10) - sma(close,30)) / sma(close,30)",
+    "uses_current_bar_close": true,
+    "decision_convention": "decide and transact at the CLOSE of bar t, using close[t] for both the feature and the entry price (market-on-close)",
+    "target": "log(close[t+24] / close[t])",
+    "no_lookahead": "sma10 and sma30 are trailing windows ending at t; no centred or forward-looking window is used",
+    "alternative_convention_note": "entering at open[t+1] instead is a different strategy and is not evaluated here; the frozen convention is close[t]"
+  },
+  "economics": {
+    "convention": "production per-leg: each selected long or short is one round trip",
+    "cost_per_fill_bps": 18.0,
+    "cost_per_leg_round_trip_bps": 36.0,
+    "safety_margin_bps": 24.0,
+    "hurdle_per_leg_gross_bps": 60.0,
+    "hurdle_spread_bps": 120.0,
+    "spread_gross_bps": -40.24902270369132,
+    "per_leg_gross_bps": -20.12451135184566,
+    "per_leg_net_bps": -56.124511351845655,
+    "spread_net_bps": -112.24902270369131,
+    "gross_sharpe_nonoverlap": -1.6680900921798372,
+    "net_sharpe_nonoverlap": -4.652075256767038,
+    "turnover_per_rebalance": 0.48,
+    "rebalances": 37,
+    "legs_per_rebalance": 6,
+    "approx_trades_per_day": 6.0,
+    "holding_hours": 24
+  },
+  "robustness": {
+    "primary_nonoverlap": {
+      "sampling_rule": "every 24th OOS timestamp (one per 24h cycle)",
+      "n": 37,
+      "mean_spread_bps": -40.24902270369132,
+      "se_bps": 75.78467752986478,
+      "t_stat": -0.5310971032083658,
+      "frac_positive": 0.40540540540540543
+    },
+    "full_hourly_descriptive": {
+      "note": "overlapping windows; reported descriptively only, never for inference",
+      "n_timestamps_overlapping": 888,
+      "spread_mean_bps_overlapping": -23.55284079074746,
+      "spread_se_naive_bps_overlapping": 15.092321172785656,
+      "n_legs": 5328,
+      "per_leg_mean_bps": -11.77642039537373
+    },
+    "first_vs_second_half": {
+      "first_half_mean_bps": -89.30751834659428,
+      "second_half_mean_bps": 42.20183676509934
+    },
+    "by_month": {
+      "2026-08": -32.342355417187655,
+      "2026-09": -20.371360036391803
+    },
+    "robustification": {
+      "method": "single pre-declared winsorization at 0.01/0.99",
+      "raw_mean_bps": -40.24902270369132,
+      "winsorized_mean_bps": -45.923552596631154,
+      "raw_median_bps": -53.99441139698156,
+      "retention_ratio_median_over_mean": 1.341508632258781
+    },
+    "by_symbol": {
+      "mean_leg_bps": {
+        "AAVE_USDT": -219.50812464986922,
+        "ADA_USDT": -55.795040530860476,
+        "ASTER_USDT": 35.95353629148322,
+        "BNB_USDT": -5.362240373909037,
+        "BTC_USDT": -105.79029383738884,
+        "DOGE_USDT": 12.49109293226748,
+        "ENA_USDT": 48.046021563071996,
+        "ETH_USDT": 56.89094972190936,
+        "FARTCOIN_USDT": 76.70163634835235,
+        "HYPE_USDT": -62.63984687580163,
+        "H_USDT": 38.72657995190818,
+        "LINK_USDT": -62.18776083206155,
+        "LTC_USDT": 123.9263366976006,
+        "NEAR_USDT": -51.130565606229084,
+        "PEPE_USDT": -73.25198518772538,
+        "PUMP_USDT": -60.03722933101416,
+        "SOL_USDT": -132.91054703700448,
+        "SUI_USDT": 51.947433413938306,
+        "TAO_USDT": -67.27596493321673,
+        "TRX_USDT": -3.099173663008686,
+        "UNI_USDT": 114.17444503951674,
+        "WLD_USDT": -30.04090310662428,
+        "XPL_USDT": -41.74209711612687,
+        "XRP_USDT": -244.61356941681328,
+        "ZEC_USDT": -40.65330013966666
+      },
+      "pct_of_total_gross": {
+        "XRP_USDT": 13.478098937565155,
+        "AAVE_USDT": 12.094800090950999,
+        "SOL_USDT": 7.323312059431175,
+        "LTC_USDT": 6.828286063452809,
+        "UNI_USDT": 6.2909611680701385,
+        "BTC_USDT": 5.828998163813277,
+        "FARTCOIN_USDT": 4.226226066856862,
+        "PEPE_USDT": 4.036151821368905,
+        "TAO_USDT": 3.7068757618469803,
+        "HYPE_USDT": 3.4514277177623987,
+        "LINK_USDT": 3.426517977716709,
+        "PUMP_USDT": 3.308024647978007,
+        "ETH_USDT": 3.134666040122119,
+        "ADA_USDT": 3.0742819308563942,
+        "SUI_USDT": 2.8622804890786826,
+        "NEAR_USDT": 2.8172714359935838,
+        "ENA_USDT": 2.6473144303782976,
+        "XPL_USDT": 2.299970995615344,
+        "ZEC_USDT": 2.239978766211885,
+        "H_USDT": 2.133817340345262,
+        "ASTER_USDT": 1.98102386734823,
+        "WLD_USDT": 1.6552404071867506,
+        "DOGE_USDT": 0.6882536679416531,
+        "BNB_USDT": 0.29545706094252666,
+        "TRX_USDT": 0.1707630911658501
+      },
+      "concentration_denominator": "sum of absolute per-symbol means, because the signed total is near zero and makes a signed share meaningless",
+      "top2_symbol_share_pct": 25.572899028516154,
+      "equal_weight_symbol_mean_bps": -27.88722442709088
+    },
+    "leave_one_symbol_out": {
+      "per_leg_mean_bps": {
+        "AAVE_USDT": -6.5401584640019905,
+        "ADA_USDT": -11.376251121414754,
+        "ASTER_USDT": -13.628294324148252,
+        "BNB_USDT": -11.853171267425438,
+        "BTC_USDT": -10.215800859129626,
+        "DOGE_USDT": -11.79921535435141,
+        "ENA_USDT": -16.501157609588763,
+        "ETH_USDT": -12.492655054287166,
+        "FARTCOIN_USDT": -17.1675564693642,
+        "HYPE_USDT": -10.763825381215138,
+        "H_USDT": -18.402928721195426,
+        "LINK_USDT": -11.027451908885793,
+        "LTC_USDT": -15.653642026601565,
+        "NEAR_USDT": -8.685447046828811,
+        "PEPE_USDT": -9.676323461473519,
+        "PUMP_USDT": -7.432157725226059,
+        "SOL_USDT": -10.117048797543166,
+        "SUI_USDT": -13.132247072167608,
+        "TAO_USDT": -9.712878832841508,
+        "TRX_USDT": -12.187510716289776,
+        "UNI_USDT": -19.90471800485817,
+        "WLD_USDT": -10.911128409250011,
+        "XPL_USDT": -9.53367961195646,
+        "XRP_USDT": -7.2319525040253145,
+        "ZEC_USDT": -9.177028601697607
+      },
+      "min": -19.90471800485817,
+      "max": -6.5401584640019905
+    },
+    "rank_ic": {
+      "mean": -0.03416926541926542,
+      "median": -0.04307692307692308,
+      "t_stat": -3.6726321033273135,
+      "frac_positive": 0.4346846846846847
+    },
+    "bucket_monotonicity": {
+      "note": "deciles are infeasible with 25 coins (2-3 observations per bucket per timestamp); quintiles reported instead",
+      "quintiles": [
+        {
+          "bucket": 1,
+          "n": 4440,
+          "mean_ret": 0.003802477613978733
+        },
+        {
+          "bucket": 2,
+          "n": 4440,
+          "mean_ret": 0.007850552272614136
+        },
+        {
+          "bucket": 3,
+          "n": 4440,
+          "mean_ret": 0.006535753911791699
+        },
+        {
+          "bucket": 4,
+          "n": 4440,
+          "mean_ret": 0.006063292342437774
+        },
+        {
+          "bucket": 5,
+          "n": 4440,
+          "mean_ret": 0.003099926961334748
+        }
+      ]
+    }
+  },
+  "time_series_by_symbol": {
+    "AAVE_USDT": {
+      "mean_leg_bps": -219.50812464986922,
+      "median_leg_bps": -417.86258606658544,
+      "hit_rate": 0.35877862595419846,
+      "n_legs": 131
+    },
+    "ADA_USDT": {
+      "mean_leg_bps": -55.79504053086046,
+      "median_leg_bps": -219.46509860440827,
+      "hit_rate": 0.25,
+      "n_legs": 48
+    },
+    "ASTER_USDT": {
+      "mean_leg_bps": 35.95353629148322,
+      "median_leg_bps": 15.817154120111342,
+      "hit_rate": 0.5477386934673367,
+      "n_legs": 199
+    },
+    "BNB_USDT": {
+      "mean_leg_bps": -5.362240373909037,
+      "median_leg_bps": 50.17008462823872,
+      "hit_rate": 0.6031746031746031,
+      "n_legs": 63
+    },
+    "BTC_USDT": {
+      "mean_leg_bps": -105.79029383738884,
+      "median_leg_bps": -68.93759349366208,
+      "hit_rate": 0.367816091954023,
+      "n_legs": 87
+    },
+    "DOGE_USDT": {
+      "mean_leg_bps": 12.491092932267486,
+      "median_leg_bps": 6.976496855081369,
+      "hit_rate": 0.6,
+      "n_legs": 5
+    },
+    "ENA_USDT": {
+      "mean_leg_bps": 48.046021563071996,
+      "median_leg_bps": 19.054557559941383,
+      "hit_rate": 0.5102564102564102,
+      "n_legs": 390
+    },
+    "ETH_USDT": {
+      "mean_leg_bps": 56.89094972190936,
+      "median_leg_bps": 8.097756330151723,
+      "hit_rate": 0.5272727272727272,
+      "n_legs": 55
+    },
+    "FARTCOIN_USDT": {
+      "mean_leg_bps": 76.70163634835235,
+      "median_leg_bps": 7.758629776600046,
+      "hit_rate": 0.5130718954248366,
+      "n_legs": 306
+    },
+    "HYPE_USDT": {
+      "mean_leg_bps": -62.63984687580163,
+      "median_leg_bps": -100.20873908110538,
+      "hit_rate": 0.3269230769230769,
+      "n_legs": 104
+    },
+    "H_USDT": {
+      "mean_leg_bps": 38.72657995190818,
+      "median_leg_bps": 32.27438429903383,
+      "hit_rate": 0.5275080906148867,
+      "n_legs": 618
+    },
+    "LINK_USDT": {
+      "mean_leg_bps": -62.18776083206155,
+      "median_leg_bps": -54.5202344793891,
+      "hit_rate": 0.44871794871794873,
+      "n_legs": 78
+    },
+    "LTC_USDT": {
+      "mean_leg_bps": 123.9263366976006,
+      "median_leg_bps": 150.48991467884076,
+      "hit_rate": 0.7162162162162162,
+      "n_legs": 148
+    },
+    "NEAR_USDT": {
+      "mean_leg_bps": -51.130565606229084,
+      "median_leg_bps": -205.16825942499545,
+      "hit_rate": 0.35051546391752575,
+      "n_legs": 388
+    },
+    "PEPE_USDT": {
+      "mean_leg_bps": -73.25198518772541,
+      "median_leg_bps": -116.95119091942719,
+      "hit_rate": 0.36363636363636365,
+      "n_legs": 176
+    },
+    "PUMP_USDT": {
+      "mean_leg_bps": -60.03722933101417,
+      "median_leg_bps": 0.5516275465441666,
+      "hit_rate": 0.5,
+      "n_legs": 440
+    },
+    "SOL_USDT": {
+      "mean_leg_bps": -132.91054703700448,
+      "median_leg_bps": -229.21774300627965,
+      "hit_rate": 0.2916666666666667,
+      "n_legs": 72
+    },
+    "SUI_USDT": {
+      "mean_leg_bps": 51.9474334139383,
+      "median_leg_bps": 2.557642097591107,
+      "hit_rate": 0.5135135135135135,
+      "n_legs": 111
+    },
+    "TAO_USDT": {
+      "mean_leg_bps": -67.27596493321673,
+      "median_leg_bps": -74.40591113731693,
+      "hit_rate": 0.450261780104712,
+      "n_legs": 191
+    },
+    "TRX_USDT": {
+      "mean_leg_bps": -3.099173663008689,
+      "median_leg_bps": -18.121725078015157,
+      "hit_rate": 0.3817427385892116,
+      "n_legs": 241
+    },
+    "UNI_USDT": {
+      "mean_leg_bps": 114.17444503951674,
+      "median_leg_bps": -45.79227864119563,
+      "hit_rate": 0.4674922600619195,
+      "n_legs": 323
+    },
+    "WLD_USDT": {
+      "mean_leg_bps": -30.04090310662429,
+      "median_leg_bps": 24.721459913862727,
+      "hit_rate": 0.5311203319502075,
+      "n_legs": 241
+    },
+    "XPL_USDT": {
+      "mean_leg_bps": -41.74209711612687,
+      "median_leg_bps": -48.87101656594183,
+      "hit_rate": 0.4797843665768194,
+      "n_legs": 371
+    },
+    "XRP_USDT": {
+      "mean_leg_bps": -244.61356941681322,
+      "median_leg_bps": -131.3610539563481,
+      "hit_rate": 0.29411764705882354,
+      "n_legs": 102
+    },
+    "ZEC_USDT": {
+      "mean_leg_bps": -40.65330013966666,
+      "median_leg_bps": -101.11438358346385,
+      "hit_rate": 0.45227272727272727,
+      "n_legs": 440
+    }
+  },
+  "baselines": {
+    "equal_weight_universe": {
+      "n": 888,
+      "mean": 54.70400620431419,
+      "median": 47.19667146149369,
+      "std": 324.939536613461,
+      "min": -1011.9846872789816,
+      "max": 843.553925566649,
+      "win_rate": 0.5630630630630631,
+      "frac_positive": 0.5630630630630631
+    },
+    "btc_buy_hold": {
+      "n": 888,
+      "mean": 20.446628980057703,
+      "median": 4.4180054049590725,
+      "std": 194.9947157317698,
+      "min": -429.26807567270515,
+      "max": 704.2692031441367,
+      "win_rate": 0.5123873873873874,
+      "frac_positive": 0.5123873873873874
+    },
+    "frozen_rule_spread": {
+      "n": 888,
+      "mean": -23.55284079074746,
+      "median": -41.76467206233076,
+      "std": 449.7410417603364,
+      "min": -998.9937405482704,
+      "max": 2160.7376440843786,
+      "win_rate": 0.44819819819819817,
+      "frac_positive": 0.44819819819819817
+    },
+    "inverse_ranking_spread": {
+      "n": 888,
+      "mean": 23.55284079074746,
+      "median": 41.76467206233076,
+      "std": 449.7410417603364,
+      "min": -2160.7376440843786,
+      "max": 998.9937405482704,
+      "win_rate": 0.5518018018018018,
+      "frac_positive": 0.5518018018018018
+    },
+    "random_selection_null_mean_bps": -0.22512456512766904,
+    "random_selection_null_sd_bps": 10.90874292620385,
+    "random_selection_p_two_sided": 0.035,
+    "observed_pctile_in_null": 2.0,
+    "n_timestamps": 888
+  },
+  "n_timestamps_with_spread": 888,
+  "decision": {
+    "verdict": "FAIL",
+    "gates": {
+      "oos_expectancy_positive": false,
+      "clears_economic_hurdle": false,
+      "net_positive_after_costs": false,
+      "direction_consistent": false,
+      "survives_winsorization": false,
+      "not_dominated_by_median_gap": true,
+      "not_two_coin_concentrated": true,
+      "second_half_positive": true
+    },
+    "failed_gates": [
+      "oos_expectancy_positive",
+      "clears_economic_hurdle",
+      "net_positive_after_costs",
+      "direction_consistent",
+      "survives_winsorization"
+    ]
+  }
+}

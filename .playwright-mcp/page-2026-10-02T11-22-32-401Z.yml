@@ -1,0 +1,687 @@
+- generic [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - generic [ref=f4e4]: CQIP
+      - generic [ref=f4e5]: Probability Workbench
+    - generic [ref=f4e6]: api ok
+    - generic [ref=f4e9]: updated 2:52:19 PM
+    - button "Auto" [ref=f4e10] [cursor=pointer]
+    - button "Compact" [ref=f4e11] [cursor=pointer]
+    - button "Dark" [active] [ref=f4e55] [cursor=pointer]
+    - button "?" [ref=f4e13] [cursor=pointer]
+    - link "Monitor →" [ref=f4e14] [cursor=pointer]:
+      - /url: /dashboard
+  - generic [ref=f4e15]:
+    - complementary "Symbol selection" [ref=f4e16]:
+      - generic [ref=f4e17]:
+        - generic [ref=f4e18]:
+          - generic [ref=f4e19]: Cryptocurrencies
+          - generic [ref=f4e20]: 6 / 216
+        - searchbox "Filter symbols" [ref=f4e21]
+        - generic [ref=f4e22]:
+          - combobox "Model availability filter" [ref=f4e23]:
+            - option "Has a model" [selected]
+            - option "All ingested"
+            - option "No model yet"
+          - combobox "Sort symbols" [ref=f4e24]:
+            - 'option "Sort: probability" [selected]'
+            - 'option "Sort: name"'
+            - 'option "Sort: models"'
+            - 'option "Sort: data depth"'
+      - listbox "Symbols" [ref=f4e25]:
+        - option "AVAX 82%" [selected] [ref=f4e56] [cursor=pointer]:
+          - generic [ref=f4e58]: AVAX
+          - generic [ref=f4e59]: 82%
+        - option "ATOM 75%" [selected] [ref=f4e60] [cursor=pointer]:
+          - generic [ref=f4e62]: ATOM
+          - generic [ref=f4e63]: 75%
+        - option "ARB 73%" [selected] [ref=f4e64] [cursor=pointer]:
+          - generic [ref=f4e66]: ARB
+          - generic [ref=f4e67]: 73%
+        - option "APT 67%" [selected] [ref=f4e68] [cursor=pointer]:
+          - generic [ref=f4e70]: APT
+          - generic [ref=f4e71]: 67%
+        - option "ADA 64%" [selected] [ref=f4e72] [cursor=pointer]:
+          - generic [ref=f4e74]: ADA
+          - generic [ref=f4e75]: 64%
+        - option "BCH 61%" [selected] [ref=f4e76] [cursor=pointer]:
+          - generic [ref=f4e78]: BCH
+          - generic [ref=f4e79]: 61%
+        - option "BNB 8" [ref=f4e80] [cursor=pointer]:
+          - generic [ref=f4e81]: BNB
+          - generic [ref=f4e82]: "8"
+        - option "BTC 49" [ref=f4e83] [cursor=pointer]:
+          - generic [ref=f4e84]: BTC
+          - generic [ref=f4e85]: "49"
+        - option "DOGE 12" [ref=f4e86] [cursor=pointer]:
+          - generic [ref=f4e87]: DOGE
+          - generic [ref=f4e88]: "12"
+        - option "DOT 19" [ref=f4e89] [cursor=pointer]:
+          - generic [ref=f4e90]: DOT
+          - generic [ref=f4e91]: "19"
+        - option "ETH 29" [ref=f4e92] [cursor=pointer]:
+          - generic [ref=f4e93]: ETH
+          - generic [ref=f4e94]: "29"
+        - option "FIL 8" [ref=f4e95] [cursor=pointer]:
+          - generic [ref=f4e96]: FIL
+          - generic [ref=f4e97]: "8"
+        - option "HBAR 8" [ref=f4e98] [cursor=pointer]:
+          - generic [ref=f4e99]: HBAR
+          - generic [ref=f4e100]: "8"
+        - option "ICP 10" [ref=f4e101] [cursor=pointer]:
+          - generic [ref=f4e102]: ICP
+          - generic [ref=f4e103]: "10"
+        - option "INJ 10" [ref=f4e104] [cursor=pointer]:
+          - generic [ref=f4e105]: INJ
+          - generic [ref=f4e106]: "10"
+        - option "LINK 8" [ref=f4e107] [cursor=pointer]:
+          - generic [ref=f4e108]: LINK
+          - generic [ref=f4e109]: "8"
+        - option "LTC 8" [ref=f4e110] [cursor=pointer]:
+          - generic [ref=f4e111]: LTC
+          - generic [ref=f4e112]: "8"
+        - option "NEAR 8" [ref=f4e113] [cursor=pointer]:
+          - generic [ref=f4e114]: NEAR
+          - generic [ref=f4e115]: "8"
+        - option "OP 8" [ref=f4e116] [cursor=pointer]:
+          - generic [ref=f4e117]: OP
+          - generic [ref=f4e118]: "8"
+        - option "PEPE 7" [ref=f4e119] [cursor=pointer]:
+          - generic [ref=f4e120]: PEPE
+          - generic [ref=f4e121]: "7"
+        - option "SHIB 8" [ref=f4e122] [cursor=pointer]:
+          - generic [ref=f4e123]: SHIB
+          - generic [ref=f4e124]: "8"
+        - option "SOL 12" [ref=f4e125] [cursor=pointer]:
+          - generic [ref=f4e126]: SOL
+          - generic [ref=f4e127]: "12"
+        - option "SUI 8" [ref=f4e128] [cursor=pointer]:
+          - generic [ref=f4e129]: SUI
+          - generic [ref=f4e130]: "8"
+        - option "TIA 8" [ref=f4e131] [cursor=pointer]:
+          - generic [ref=f4e132]: TIA
+          - generic [ref=f4e133]: "8"
+        - option "TRX 8" [ref=f4e134] [cursor=pointer]:
+          - generic [ref=f4e135]: TRX
+          - generic [ref=f4e136]: "8"
+        - option "UNI 8" [ref=f4e137] [cursor=pointer]:
+          - generic [ref=f4e138]: UNI
+          - generic [ref=f4e139]: "8"
+        - option "VET 13" [ref=f4e140] [cursor=pointer]:
+          - generic [ref=f4e141]: VET
+          - generic [ref=f4e142]: "13"
+        - option "XLM 8" [ref=f4e143] [cursor=pointer]:
+          - generic [ref=f4e144]: XLM
+          - generic [ref=f4e145]: "8"
+        - option "XRP 14" [ref=f4e146] [cursor=pointer]:
+          - generic [ref=f4e147]: XRP
+          - generic [ref=f4e148]: "14"
+      - generic [ref=f4e26]:
+        - button "Select modelled" [ref=f4e27] [cursor=pointer]
+        - button "Top P(up)" [ref=f4e28] [cursor=pointer]
+        - button "Clear" [ref=f4e29] [cursor=pointer]
+    - main [ref=f4e30]:
+      - generic [ref=f4e149]:
+        - generic [ref=f4e150]:
+          - generic [ref=f4e151]: ⏳
+          - generic [ref=f4e152]:
+            - generic [ref=f4e153]: 6 forecasts are stale
+            - paragraph [ref=f4e154]:
+              - text: P(up) is conditioned on each model's last ingested bar. The oldest here is
+              - generic [ref=f4e155]: ADA_USDT · 2026-09-29 15:00
+              - text: —
+              - generic [ref=f4e156]: 2.8d
+              - text: old on a 1h model, roughly
+              - generic [ref=f4e157]: 68 bars
+              - text: behind (tolerance 6h). Run
+              - code [ref=f4e158]: py -m cqip.cli ingest all
+              - text: to refresh. A probability built on a stale close describes that bar, not the next one.
+        - generic [ref=f4e159]:
+          - generic [ref=f4e160]: "!"
+          - generic [ref=f4e161]:
+            - generic [ref=f4e162]: No model in this selection clears its own gates
+            - paragraph [ref=f4e163]:
+              - text: All
+              - generic [ref=f4e164]: "6"
+              - text: probabilities come from models that fail the accuracy, correlation or calibration bar. Agreement between failing models is not confirmation — treat this board as a diagnostic.
+      - generic [ref=f4e31]:
+        - 'heading "Analysis scope — one model per symbol drives every number below 1h Model: best accuracy Analyse selection" [level=2] [ref=f4e32]':
+          - text: Analysis scope
+          - generic [ref=f4e33]: — one model per symbol drives every number below
+          - generic [ref=f4e34]:
+            - combobox "Timeframe" [ref=f4e35]:
+              - option "1h" [selected]
+              - option "4h"
+              - option "1d"
+            - combobox "Model selection policy" [ref=f4e36]:
+              - 'option "Model: best accuracy" [selected]'
+              - 'option "Model: newest"'
+              - 'option "Model: lstm"'
+              - 'option "Model: mlp"'
+              - 'option "Model: transformer"'
+            - button "Analyse selection" [ref=f4e37] [cursor=pointer]
+        - generic [ref=f4e165]:
+          - generic [ref=f4e166] [cursor=pointer]:
+            - text: ADA
+            - button "Remove ADA_USDT" [ref=f4e167]: ×
+          - generic [ref=f4e168] [cursor=pointer]:
+            - text: APT
+            - button "Remove APT_USDT" [ref=f4e169]: ×
+          - generic [ref=f4e170] [cursor=pointer]:
+            - text: ARB
+            - button "Remove ARB_USDT" [ref=f4e171]: ×
+          - generic [ref=f4e172] [cursor=pointer]:
+            - text: ATOM
+            - button "Remove ATOM_USDT" [ref=f4e173]: ×
+          - generic [ref=f4e174] [cursor=pointer]:
+            - text: AVAX
+            - button "Remove AVAX_USDT" [ref=f4e175]: ×
+          - generic [ref=f4e176] [cursor=pointer]:
+            - text: BCH
+            - button "Remove BCH_USDT" [ref=f4e177]: ×
+        - generic [ref=f4e178]:
+          - generic [ref=f4e179]:
+            - generic [ref=f4e180]: Selected
+            - generic [ref=f4e181]: "6"
+            - generic [ref=f4e182]: 6 measured
+          - generic [ref=f4e183]:
+            - generic [ref=f4e184]: Median P(up)
+            - generic [ref=f4e185]: 69.9%
+            - generic [ref=f4e186]: across selection
+          - generic [ref=f4e187]:
+            - generic [ref=f4e188]: Leaning up
+            - generic [ref=f4e189]: 6 / 6
+            - generic [ref=f4e190]: P(up) ≥ 50%
+          - generic [ref=f4e191]:
+            - generic [ref=f4e192]: Spread
+            - generic [ref=f4e193]: 20.1%
+            - generic [ref=f4e194]: max − min
+          - generic [ref=f4e195]:
+            - generic [ref=f4e196]: Convicted
+            - generic [ref=f4e197]: 4 / 6
+            - generic [ref=f4e198]: "|P−50%| ≥ 15pp"
+          - generic [ref=f4e199]:
+            - generic [ref=f4e200]: Gate-passing
+            - generic [ref=f4e201]: 0 / 6
+            - generic [ref=f4e202]: models clearing all gates
+        - generic [ref=f4e203]:
+          - heading "Distribution of P(up) across the selection" [level=3] [ref=f4e204]
+          - img "Histogram of predicted probability of an up move" [ref=f4e205]:
+            - 'generic "0%–10%: 0" [ref=f4e206]'
+            - 'generic "10%–20%: 0" [ref=f4e208]'
+            - 'generic "20%–30%: 0" [ref=f4e210]'
+            - 'generic "30%–40%: 0" [ref=f4e212]'
+            - 'generic "40%–50%: 0" [ref=f4e214]'
+            - 'generic "50%–60%: 0" [ref=f4e216]'
+            - 'generic "60%–70%: 3" [ref=f4e218]'
+            - 'generic "70%–80%: 2" [ref=f4e220]'
+            - 'generic "80%–90%: 1" [ref=f4e222]'
+            - 'generic "90%–100%: 0" [ref=f4e224]'
+          - generic [ref=f4e226]:
+            - generic [ref=f4e227]: 0%
+            - generic [ref=f4e228]: 50%
+            - generic [ref=f4e229]: 100%
+          - paragraph [ref=f4e230]: A tight cluster around 50% means the models are indifferent; a wide one means they disagree. Neither is evidence on its own — the spread is moderate. Spread here is 20.1%.
+      - generic [ref=f4e231]:
+        - heading "Directional probabilities — next bar, from each model's own Gaussian head 6/6 measured · 6 not gate-passing Cards Table CSV" [level=2] [ref=f4e232]:
+          - text: Directional probabilities
+          - generic [ref=f4e233]: — next bar, from each model's own Gaussian head
+          - generic [ref=f4e234]:
+            - generic [ref=f4e235]: 6/6 measured · 6 not gate-passing
+            - button "Cards" [pressed] [ref=f4e236] [cursor=pointer]
+            - button "Table" [ref=f4e237] [cursor=pointer]
+            - button "CSV" [ref=f4e238] [cursor=pointer]
+        - generic [ref=f4e239]:
+          - button "AVAX mlp · 1h · h12 81.6% P(up) up 0% 50% 100% last 11.22 pred 12.12 68% low 11.12 68% high 13.20 σ 8.57% z 0.90 0/3 gates 2.8d old c 10.4%" [ref=f4e240] [cursor=pointer]:
+            - generic [ref=f4e241]:
+              - generic [ref=f4e242]: AVAX
+              - generic "avax-usdt-mlp-h12-1038f8c8" [ref=f4e243]: mlp · 1h · h12
+            - generic [ref=f4e244]:
+              - generic [ref=f4e245]: 81.6%
+              - generic [ref=f4e246]: P(up)
+              - generic [ref=f4e247]: up
+            - generic [ref=f4e252]:
+              - generic [ref=f4e253]: 0%
+              - generic [ref=f4e254]: 50%
+              - generic [ref=f4e255]: 100%
+            - generic [ref=f4e256]:
+              - generic [ref=f4e257]:
+                - generic [ref=f4e258]: last
+                - generic [ref=f4e259]: "11.22"
+              - generic [ref=f4e260]:
+                - generic [ref=f4e261]: pred
+                - generic [ref=f4e262]: "12.12"
+              - generic [ref=f4e263]:
+                - generic [ref=f4e264]: 68% low
+                - generic [ref=f4e265]: "11.12"
+              - generic [ref=f4e266]:
+                - generic [ref=f4e267]: 68% high
+                - generic [ref=f4e268]: "13.20"
+              - generic [ref=f4e269]:
+                - generic [ref=f4e270]: σ
+                - generic [ref=f4e271]: 8.57%
+              - generic [ref=f4e272]:
+                - generic [ref=f4e273]: z
+                - generic [ref=f4e274]: "0.90"
+            - generic [ref=f4e275]:
+              - generic "accuracy 54.3% (gate 55%), correlation -0.064 (gate 0.05), coverage 95.4%" [ref=f4e276]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e277]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e278]: c 10.4%
+          - button "ATOM mlp · 1h · h12 75.4% P(up) up 0% 50% 100% last 1.73 pred 1.85 68% low 1.68 68% high 2.03 σ 9.20% z 0.69 1/3 gates 2.8d old c 9.8%" [ref=f4e279] [cursor=pointer]:
+            - generic [ref=f4e280]:
+              - generic [ref=f4e281]: ATOM
+              - generic "atom-usdt-mlp-h12-0dcd4873" [ref=f4e282]: mlp · 1h · h12
+            - generic [ref=f4e283]:
+              - generic [ref=f4e284]: 75.4%
+              - generic [ref=f4e285]: P(up)
+              - generic [ref=f4e286]: up
+            - generic [ref=f4e291]:
+              - generic [ref=f4e292]: 0%
+              - generic [ref=f4e293]: 50%
+              - generic [ref=f4e294]: 100%
+            - generic [ref=f4e295]:
+              - generic [ref=f4e296]:
+                - generic [ref=f4e297]: last
+                - generic [ref=f4e298]: "1.73"
+              - generic [ref=f4e299]:
+                - generic [ref=f4e300]: pred
+                - generic [ref=f4e301]: "1.85"
+              - generic [ref=f4e302]:
+                - generic [ref=f4e303]: 68% low
+                - generic [ref=f4e304]: "1.68"
+              - generic [ref=f4e305]:
+                - generic [ref=f4e306]: 68% high
+                - generic [ref=f4e307]: "2.03"
+              - generic [ref=f4e308]:
+                - generic [ref=f4e309]: σ
+                - generic [ref=f4e310]: 9.20%
+              - generic [ref=f4e311]:
+                - generic [ref=f4e312]: z
+                - generic [ref=f4e313]: "0.69"
+            - generic [ref=f4e314]:
+              - generic "accuracy 50.0% (gate 55%), correlation 0.093 (gate 0.05), coverage 87.1%" [ref=f4e315]: 1/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e316]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e317]: c 9.8%
+          - button "ARB lstm · 1h · h12 72.7% P(up) up 0% 50% 100% last 0.2056 pred 0.2482 68% low 0.1818 68% high 0.3389 σ 31.15% z 0.60 0/3 gates 2.8d old c 3.1%" [ref=f4e318] [cursor=pointer]:
+            - generic [ref=f4e319]:
+              - generic [ref=f4e320]: ARB
+              - generic "arb-usdt-lstm-h12-1b3e16f5" [ref=f4e321]: lstm · 1h · h12
+            - generic [ref=f4e322]:
+              - generic [ref=f4e323]: 72.7%
+              - generic [ref=f4e324]: P(up)
+              - generic [ref=f4e325]: up
+            - generic [ref=f4e330]:
+              - generic [ref=f4e331]: 0%
+              - generic [ref=f4e332]: 50%
+              - generic [ref=f4e333]: 100%
+            - generic [ref=f4e334]:
+              - generic [ref=f4e335]:
+                - generic [ref=f4e336]: last
+                - generic [ref=f4e337]: "0.2056"
+              - generic [ref=f4e338]:
+                - generic [ref=f4e339]: pred
+                - generic [ref=f4e340]: "0.2482"
+              - generic [ref=f4e341]:
+                - generic [ref=f4e342]: 68% low
+                - generic [ref=f4e343]: "0.1818"
+              - generic [ref=f4e344]:
+                - generic [ref=f4e345]: 68% high
+                - generic [ref=f4e346]: "0.3389"
+              - generic [ref=f4e347]:
+                - generic [ref=f4e348]: σ
+                - generic [ref=f4e349]: 31.15%
+              - generic [ref=f4e350]:
+                - generic [ref=f4e351]: z
+                - generic [ref=f4e352]: "0.60"
+            - generic [ref=f4e353]:
+              - generic "accuracy 50.4% (gate 55%), correlation -0.072 (gate 0.05), coverage 100.0%" [ref=f4e354]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e355]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e356]: c 3.1%
+          - button "APT mlp · 1h · h12 67.0% P(up) up 0% 50% 100% last 0.8098 pred 0.8448 68% low 0.7674 68% high 0.9300 σ 9.61% z 0.44 0/3 gates 2.8d old c 9.4%" [ref=f4e357] [cursor=pointer]:
+            - generic [ref=f4e358]:
+              - generic [ref=f4e359]: APT
+              - generic "apt-usdt-mlp-h12-981d4f03" [ref=f4e360]: mlp · 1h · h12
+            - generic [ref=f4e361]:
+              - generic [ref=f4e362]: 67.0%
+              - generic [ref=f4e363]: P(up)
+              - generic [ref=f4e364]: up
+            - generic [ref=f4e369]:
+              - generic [ref=f4e370]: 0%
+              - generic [ref=f4e371]: 50%
+              - generic [ref=f4e372]: 100%
+            - generic [ref=f4e373]:
+              - generic [ref=f4e374]:
+                - generic [ref=f4e375]: last
+                - generic [ref=f4e376]: "0.8098"
+              - generic [ref=f4e377]:
+                - generic [ref=f4e378]: pred
+                - generic [ref=f4e379]: "0.8448"
+              - generic [ref=f4e380]:
+                - generic [ref=f4e381]: 68% low
+                - generic [ref=f4e382]: "0.7674"
+              - generic [ref=f4e383]:
+                - generic [ref=f4e384]: 68% high
+                - generic [ref=f4e385]: "0.9300"
+              - generic [ref=f4e386]:
+                - generic [ref=f4e387]: σ
+                - generic [ref=f4e388]: 9.61%
+              - generic [ref=f4e389]:
+                - generic [ref=f4e390]: z
+                - generic [ref=f4e391]: "0.44"
+            - generic [ref=f4e392]:
+              - generic "accuracy 49.4% (gate 55%), correlation -0.007 (gate 0.05), coverage 94.4%" [ref=f4e393]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e394]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e395]: c 9.4%
+          - button "ADA lstm · 1h · h12 64.3% P(up) up 0% 50% 100% last 0.2443 pred 0.2691 68% low 0.2067 68% high 0.3503 σ 26.37% z 0.37 0/3 gates 2.8d old c 3.6%" [ref=f4e396] [cursor=pointer]:
+            - generic [ref=f4e397]:
+              - generic [ref=f4e398]: ADA
+              - generic "ada-usdt-lstm-h12-b5077785" [ref=f4e399]: lstm · 1h · h12
+            - generic [ref=f4e400]:
+              - generic [ref=f4e401]: 64.3%
+              - generic [ref=f4e402]: P(up)
+              - generic [ref=f4e403]: up
+            - generic [ref=f4e408]:
+              - generic [ref=f4e409]: 0%
+              - generic [ref=f4e410]: 50%
+              - generic [ref=f4e411]: 100%
+            - generic [ref=f4e412]:
+              - generic [ref=f4e413]:
+                - generic [ref=f4e414]: last
+                - generic [ref=f4e415]: "0.2443"
+              - generic [ref=f4e416]:
+                - generic [ref=f4e417]: pred
+                - generic [ref=f4e418]: "0.2691"
+              - generic [ref=f4e419]:
+                - generic [ref=f4e420]: 68% low
+                - generic [ref=f4e421]: "0.2067"
+              - generic [ref=f4e422]:
+                - generic [ref=f4e423]: 68% high
+                - generic [ref=f4e424]: "0.3503"
+              - generic [ref=f4e425]:
+                - generic [ref=f4e426]: σ
+                - generic [ref=f4e427]: 26.37%
+              - generic [ref=f4e428]:
+                - generic [ref=f4e429]: z
+                - generic [ref=f4e430]: "0.37"
+            - generic [ref=f4e431]:
+              - generic "accuracy 49.3% (gate 55%), correlation 0.013 (gate 0.05), coverage 100.0%" [ref=f4e432]: 0/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e433]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e434]: c 3.6%
+          - button "BCH mlp · 1h · h12 61.4% P(up) up 0% 50% 100% last 307 pred 315 68% low 288 68% high 346 σ 9.22% z 0.29 1/3 gates 2.8d old c 9.7%" [ref=f4e435] [cursor=pointer]:
+            - generic [ref=f4e436]:
+              - generic [ref=f4e437]: BCH
+              - generic "bch-usdt-mlp-h12-4a7f0a50" [ref=f4e438]: mlp · 1h · h12
+            - generic [ref=f4e439]:
+              - generic [ref=f4e440]: 61.4%
+              - generic [ref=f4e441]: P(up)
+              - generic [ref=f4e442]: up
+            - generic [ref=f4e447]:
+              - generic [ref=f4e448]: 0%
+              - generic [ref=f4e449]: 50%
+              - generic [ref=f4e450]: 100%
+            - generic [ref=f4e451]:
+              - generic [ref=f4e452]:
+                - generic [ref=f4e453]: last
+                - generic [ref=f4e454]: "307"
+              - generic [ref=f4e455]:
+                - generic [ref=f4e456]: pred
+                - generic [ref=f4e457]: "315"
+              - generic [ref=f4e458]:
+                - generic [ref=f4e459]: 68% low
+                - generic [ref=f4e460]: "288"
+              - generic [ref=f4e461]:
+                - generic [ref=f4e462]: 68% high
+                - generic [ref=f4e463]: "346"
+              - generic [ref=f4e464]:
+                - generic [ref=f4e465]: σ
+                - generic [ref=f4e466]: 9.22%
+              - generic [ref=f4e467]:
+                - generic [ref=f4e468]: z
+                - generic [ref=f4e469]: "0.29"
+            - generic [ref=f4e470]:
+              - generic "accuracy 50.2% (gate 55%), correlation 0.163 (gate 0.05), coverage 94.2%" [ref=f4e471]: 1/3 gates
+              - generic "prediction as_of 2026-09-29T15:00:00Z" [ref=f4e472]: 2.8d old
+              - generic "model-reported confidence" [ref=f4e473]: c 9.7%
+      - generic [ref=f4e474]:
+        - heading "AVAX / USDT 1h · horizon 12 bar · avax-usdt-mlp-h12-1038f8c8 mlp · acc 54.3% · 1038f8c8" [level=2] [ref=f4e475]:
+          - generic [ref=f4e476]: AVAX / USDT
+          - generic [ref=f4e477]: 1h · horizon 12 bar · avax-usdt-mlp-h12-1038f8c8
+          - combobox "Model for this symbol" [ref=f4e479]:
+            - option "mlp · acc 54.3% · 1038f8c8" [selected]
+            - option "mlp · acc 54.3% · a83d99a6"
+            - option "lstm · acc 53.7% · ad321108"
+            - option "lstm · acc 53.7% · 1776ccd4"
+        - generic [ref=f4e480]:
+          - generic [ref=f4e481]:
+            - heading "Forecast path — median ± 1σ" [level=3] [ref=f4e482]
+            - img "Forecast median price with 68 percent interval" [ref=f4e484]:
+              - generic [ref=f4e485]: "10"
+              - generic [ref=f4e486]: "12"
+              - generic [ref=f4e487]: "14"
+              - generic [ref=f4e492]: 2026-09-27 04:00
+              - generic [ref=f4e493]: 2026-09-29 15:00
+            - generic [ref=f4e495]:
+              - generic [ref=f4e496]:
+                - term [ref=f4e497]: final median
+                - definition [ref=f4e498]: "12.12"
+                - term [ref=f4e499]: σ last bar
+                - definition [ref=f4e500]: 8.62%
+                - term [ref=f4e501]: 68% band
+                - definition [ref=f4e502]: 12.01 – 14.26
+                - term [ref=f4e503]: confidence
+                - definition [ref=f4e504]: 10.39%
+                - term [ref=f4e505]: points
+                - definition [ref=f4e506]: "60"
+              - paragraph [ref=f4e507]: The band is ±1σ from the Gaussian head, converted from log-return to price space. A wide band is the model admitting it does not know.
+          - generic [ref=f4e508]:
+            - heading "Price history gate · 320 bars" [level=3] [ref=f4e509]
+            - img "Candlestick price history" [ref=f4e511]:
+              - generic [ref=f4e512]: "10"
+              - generic [ref=f4e513]: "20"
+              - generic [ref=f4e514]: "30"
+              - generic [ref=f4e835]: forecast 12.12
+              - generic [ref=f4e836]: 2025-09-29 21:00
+              - generic [ref=f4e837]: 2025-10-13 04:00
+        - generic [ref=f4e839]:
+          - generic [ref=f4e840]:
+            - heading "Quality gates" [level=3] [ref=f4e841]
+            - generic [ref=f4e842]:
+              - generic [ref=f4e843]:
+                - generic [ref=f4e844]: directional accuracy
+                - generic [ref=f4e849]: 54.3% ✗
+              - generic [ref=f4e850]:
+                - generic [ref=f4e851]: correlation
+                - generic [ref=f4e856]: "-0.064 ✗"
+              - generic [ref=f4e857]:
+                - generic [ref=f4e858]: 68% band coverage
+                - generic [ref=f4e864]: 95.4% ✗
+            - generic [ref=f4e866]:
+              - generic [ref=f4e867]: "!"
+              - generic [ref=f4e868]:
+                - generic [ref=f4e869]: "Quality verdict: fails"
+                - paragraph [ref=f4e870]:
+                  - text: 0 of 3 measured gates clear. The probability above comes from a model that misses the project's own bar — read it as a diagnostic, not a signal. Accuracy is read from
+                  - generic [ref=f4e871]: holdout
+                  - text: .
+          - generic [ref=f4e872]:
+            - heading "Provenance" [level=3] [ref=f4e873]
+            - generic [ref=f4e874]:
+              - term [ref=f4e875]: model id
+              - definition [ref=f4e876]: avax-usdt-mlp-h12-1038f8c8
+              - term [ref=f4e877]: architecture
+              - definition [ref=f4e878]: mlp
+              - term [ref=f4e879]: framework
+              - definition [ref=f4e880]: torch
+              - term [ref=f4e881]: stage
+              - definition [ref=f4e882]: production
+              - term [ref=f4e883]: active
+              - definition [ref=f4e884]: "true"
+              - term [ref=f4e885]: target
+              - definition [ref=f4e886]: log_return_12
+              - term [ref=f4e887]: features
+              - definition [ref=f4e888]: "64"
+              - term [ref=f4e889]: horizon
+              - definition [ref=f4e890]: not measured
+              - term [ref=f4e891]: trained from
+              - definition [ref=f4e892]: 9/30/2025, 12:30:00 AM
+              - term [ref=f4e893]: trained to
+              - definition [ref=f4e894]: 9/29/2026, 10:30:00 AM
+              - term [ref=f4e895]: created
+              - definition [ref=f4e896]: 9/30/2026, 3:48:13 AM
+              - term [ref=f4e897]: epochs run
+              - definition [ref=f4e898]: "1"
+              - term [ref=f4e899]: best epoch
+              - definition [ref=f4e900]: "1"
+              - term [ref=f4e901]: train windows
+              - definition [ref=f4e902]: 6,058
+              - term [ref=f4e903]: val windows
+              - definition [ref=f4e904]: 1,248
+              - term [ref=f4e905]: test samples
+              - definition [ref=f4e906]: not measured
+              - term [ref=f4e907]: parameters
+              - definition [ref=f4e908]: 541,698
+              - term [ref=f4e909]: val MAE
+              - definition [ref=f4e910]: not measured
+              - term [ref=f4e911]: test MAE
+              - definition [ref=f4e912]: "0.02186"
+              - term [ref=f4e913]: data provider
+              - definition [ref=f4e914]: gate
+              - term [ref=f4e915]: data range
+              - definition [ref=f4e916]: 2025-09-29 → 2026-09-30
+              - term [ref=f4e917]: data rows
+              - definition [ref=f4e918]: 8,759
+        - generic [ref=f4e919]:
+          - generic [ref=f4e920]:
+            - heading "Walk-forward evidence — out-of-sample, per fold" [level=3] [ref=f4e921]
+            - generic [ref=f4e922]:
+              - generic [ref=f4e923]:
+                - term [ref=f4e924]: backtest
+                - definition [ref=f4e925]: backtest-d50d1f01a0b2
+                - term [ref=f4e926]: strategy
+                - definition [ref=f4e927]: model_threshold_long
+                - term [ref=f4e928]: run
+                - definition [ref=f4e929]: 9/30/2026, 12:18:40 AM
+                - term [ref=f4e930]: folds recorded
+                - definition [ref=f4e931]: "3"
+                - term [ref=f4e932]: folds that traded
+                - definition [ref=f4e933]: "2"
+                - term [ref=f4e934]: total return
+                - definition [ref=f4e935]: "-4.45%"
+                - term [ref=f4e936]: CAGR
+                - definition [ref=f4e937]: "-26.21%"
+                - term [ref=f4e938]: Sharpe
+                - definition [ref=f4e939]: "-1.376"
+                - term [ref=f4e940]: Sortino
+                - definition [ref=f4e941]: "-0.754"
+                - term [ref=f4e942]: max drawdown
+                - definition [ref=f4e943]: "-11.73%"
+                - term [ref=f4e944]: win rate
+                - definition [ref=f4e945]: 6.9%
+                - term [ref=f4e946]: profit factor
+                - definition [ref=f4e947]: "0.89"
+                - term [ref=f4e948]: consistency
+                - definition [ref=f4e949]: 33%
+                - term [ref=f4e950]: excess vs buy & hold
+                - definition [ref=f4e951]: "-167.01%"
+                - term [ref=f4e952]: buy & hold return
+                - definition [ref=f4e953]: "-0.36%"
+                - term [ref=f4e954]: final equity
+                - definition [ref=f4e955]: 9,555
+              - paragraph [ref=f4e956]: Only 2 of 3 folds produced a trade; a headline Sharpe over the rest is mostly noise.
+            - generic [ref=f4e957]:
+              - table [ref=f4e959]:
+                - rowgroup [ref=f4e960]:
+                  - row [ref=f4e961]:
+                    - columnheader "#" [ref=f4e962] [cursor=pointer]
+                    - columnheader "test window" [ref=f4e963] [cursor=pointer]
+                    - columnheader "bars" [ref=f4e964] [cursor=pointer]
+                    - columnheader "return" [ref=f4e965] [cursor=pointer]
+                    - columnheader "B&H" [ref=f4e966] [cursor=pointer]
+                    - columnheader "excess" [ref=f4e967] [cursor=pointer]
+                    - columnheader "Sharpe" [ref=f4e968] [cursor=pointer]
+                    - columnheader "trades" [ref=f4e969] [cursor=pointer]
+                    - columnheader "max DD" [ref=f4e970] [cursor=pointer]
+                - rowgroup [ref=f4e971]:
+                  - row [ref=f4e972]:
+                    - cell "0" [ref=f4e973]
+                    - cell "2026-06-11 → 2026-06-30" [ref=f4e974]
+                    - cell "437" [ref=f4e975]
+                    - cell "-7.24%" [ref=f4e976]
+                    - cell "-0.28%" [ref=f4e977]
+                    - cell "-6.96%" [ref=f4e978]
+                    - cell "-8.20" [ref=f4e979]
+                    - cell "14" [ref=f4e980]
+                    - cell "-7.24%" [ref=f4e981]
+                  - row [ref=f4e982]:
+                    - cell "1" [ref=f4e983]
+                    - cell "2026-06-30 → 2026-07-18" [ref=f4e984]
+                    - cell "437" [ref=f4e985]
+                    - cell "0.00%" [ref=f4e986]
+                    - cell "-1.40%" [ref=f4e987]
+                    - cell "1.40%" [ref=f4e988]
+                    - cell "0.00" [ref=f4e989]
+                    - cell "0" [ref=f4e990]
+                    - cell "0.00%" [ref=f4e991]
+                  - row [ref=f4e992]:
+                    - cell "2" [ref=f4e993]
+                    - cell "2026-07-18 → 2026-08-05" [ref=f4e994]
+                    - cell "437" [ref=f4e995]
+                    - cell "3.01%" [ref=f4e996]
+                    - cell "1.33%" [ref=f4e997]
+                    - cell "1.68%" [ref=f4e998]
+                    - cell "2.10" [ref=f4e999]
+                    - cell "22" [ref=f4e1000]
+                    - cell "-5.55%" [ref=f4e1001]
+              - paragraph [ref=f4e1002]: Each row is a fold refit on its own training window and scored on unseen bars. B&H is buy-and-hold over that fold's own test prices. Folds that disagree are the honest signal — that is what consistency above summarises.
+              - paragraph [ref=f4e1003]: No trade log was stored for this run.
+          - generic [ref=f4e1004]:
+            - heading "News — 1 of 120 articles mention Avalanche" [level=3] [ref=f4e1005]
+            - generic [ref=f4e1007]:
+              - link "Avalanche adds $131M in tokenized stocks – But there’s a catch!" [ref=f4e1008] [cursor=pointer]:
+                - /url: https://ambcrypto.com/avalanche-adds-131m-in-tokenized-stocks-but-theres-a-catch/
+              - generic [ref=f4e1009]:
+                - generic [ref=f4e1010]: ambcrypto
+                - generic [ref=f4e1011]: 9/29/2026, 5:30:21 PM
+                - generic [ref=f4e1012]: adoption
+                - generic [ref=f4e1013]: "-0.91"
+      - generic [ref=f4e1014]:
+        - 'heading "Relative strength — rebased to a common origin so shape compares, not level Rebase: index (100)" [level=2] [ref=f4e1015]':
+          - text: Relative strength
+          - generic [ref=f4e1016]: — rebased to a common origin so shape compares, not level
+          - combobox "Comparison normalisation" [ref=f4e1018]:
+            - 'option "Rebase: index (100)" [selected]'
+            - 'option "Rebase: log return"'
+        - generic [ref=f4e1019]:
+          - img "Rebased relative strength comparison" [ref=f4e1021]:
+            - generic [ref=f4e1022]: "80.0"
+            - generic [ref=f4e1023]: "100.0"
+            - generic [ref=f4e1024]: "120.0"
+            - generic [ref=f4e1026]: ADA +87.2%
+            - generic [ref=f4e1028]: APT +88.8%
+            - generic [ref=f4e1030]: ARB +78.7%
+            - generic [ref=f4e1032]: ATOM +84.3%
+            - generic [ref=f4e1034]: AVAX +73.8%
+            - generic [ref=f4e1036]: BCH +96.1%
+            - generic [ref=f4e1037]: 2025-09-29 21:00
+            - generic [ref=f4e1038]: 2025-10-13 04:00
+          - paragraph [ref=f4e1040]: Each series is rebased to its own first close in the window, so this compares shape rather than level — a 12× alt and a 80k maj both start at the same point. All 6 selected symbols are shown.
+      - generic [ref=f4e39]:
+        - heading "Training & backtests — queued against the current selection" [level=2] [ref=f4e40]:
+          - text: Training & backtests
+          - generic [ref=f4e41]: — queued against the current selection
+        - generic [ref=f4e43]:
+          - generic [ref=f4e44]: Architecture
+          - combobox [ref=f4e45]:
+            - option "lstm" [selected]
+            - option "mlp"
+            - option "transformer"
+          - generic [ref=f4e46]: Epochs
+          - spinbutton [ref=f4e47]: "8"
+          - generic [ref=f4e48]: Horizon
+          - spinbutton [ref=f4e49]: "1"
+          - generic [ref=f4e50]: Folds
+          - spinbutton [ref=f4e51]: "3"
+          - button "Train" [ref=f4e52] [cursor=pointer]
+          - button "Backtest" [ref=f4e53] [cursor=pointer]
+        - generic [ref=f4e1041]: No jobs submitted from this session.
+  - contentinfo [ref=f4e54]: Probabilities are model outputs, not advice. P(up) presumes the forecaster's Gaussian head is calibrated — the gates test whether it is. Read the quality verdict before the number. 331 models · 216 ingested symbols · sentiment transformer · data C:\Users\Cursed Saint\Documents\Projects\CQIP\data

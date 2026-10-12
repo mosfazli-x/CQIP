@@ -1,0 +1,64 @@
+{
+  "symbols": [
+    "BTC_USDT"
+  ],
+  "intervals": [
+    "1d"
+  ],
+  "kinds": [
+    "mlp"
+  ],
+  "folds": 2,
+  "epochs": 4,
+  "started_at": "2026-09-30T07:20:20.114243+00:00",
+  "finished_at": "2026-09-30T07:20:24.598225+00:00",
+  "duration_seconds": 4.483968699991237,
+  "cells": [
+    {
+      "interval": "1d",
+      "kind": "mlp",
+      "symbol": "BTC_USDT",
+      "status": "ok",
+      "verdict": "no-edge",
+      "reason": "dir_acc 0.518 < 0.55; corr +0.0452 < 0.05; dir_acc 95% CI [0.489, 0.556] includes 0.50 (indistinguishable from chance); dir_acc CI lower 0.489 < 0.55",
+      "model_id": "btc-usdt-mlp-h1-67042a51",
+      "rows": 4931,
+      "direction_accuracy": 0.5180327868852459,
+      "correlation": 0.045216752838034925,
+      "interval_coverage": 0.9065573770491804,
+      "sharpe": null,
+      "total_return": null,
+      "max_drawdown": null,
+      "trades": null,
+      "consistency": null,
+      "excess_vs_buy_and_hold": null,
+      "buy_and_hold_sharpe": null,
+      "buy_and_hold_return": null,
+      "duration_seconds": 4.481087299995124,
+      "val_directional_accuracy": 0.5180327868852459,
+      "val_correlation": 0.045216752838034925,
+      "val_mae": 0.020664052198844526,
+      "val_directional_accuracy_ci": {
+        "lower": 0.4885245901639344,
+        "upper": 0.5557377049180328
+      },
+      "val_correlation_ci": {
+        "lower": -0.020255040723684073,
+        "upper": 0.11339608730643286
+      },
+      "val_ensemble_spread": null,
+      "val_trades": null,
+      "val_max_drawdown": null,
+      "val_excess_vs_buy_and_hold": null,
+      "test_directional_accuracy": null,
+      "test_correlation": null,
+      "test_mae": null,
+      "test_directional_accuracy_ci": null,
+      "test_correlation_ci": null,
+      "test_trades": null,
+      "test_max_drawdown": null,
+      "test_excess_vs_buy_and_hold": null,
+      "holdout_scored": false
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+- generic [active] [ref=f7e1]:
+  - banner [ref=f7e2]:
+    - generic [ref=f7e3]:
+      - generic [ref=f7e4]: CQIP
+      - generic [ref=f7e5]: Probability Workbench
+    - generic [ref=f7e6]: loading
+    - generic [ref=f7e9]: —
+    - button "Auto" [ref=f7e10] [cursor=pointer]
+    - button "Comfortable" [ref=f7e11] [cursor=pointer]
+    - button "Dark" [ref=f7e12] [cursor=pointer]
+    - button "?" [ref=f7e13] [cursor=pointer]
+    - link "Monitor →" [ref=f7e14] [cursor=pointer]:
+      - /url: /dashboard
+  - generic [ref=f7e15]:
+    - complementary "Symbol selection" [ref=f7e16]:
+      - generic [ref=f7e17]:
+        - generic [ref=f7e18]:
+          - generic [ref=f7e19]: Cryptocurrencies
+          - generic [ref=f7e20]: "0"
+        - searchbox "Filter symbols" [ref=f7e21]
+        - generic [ref=f7e22]:
+          - combobox "Model availability filter" [ref=f7e23]:
+            - option "Has a model" [selected]
+            - option "All ingested"
+            - option "No model yet"
+          - combobox "Sort symbols" [ref=f7e24]:
+            - 'option "Sort: probability" [selected]'
+            - 'option "Sort: name"'
+            - 'option "Sort: models"'
+            - 'option "Sort: data depth"'
+      - listbox "Symbols" [ref=f7e25]
+      - generic [ref=f7e26]:
+        - button "Select modelled" [ref=f7e27] [cursor=pointer]
+        - button "Top P(up)" [ref=f7e28] [cursor=pointer]
+        - button "Clear" [ref=f7e29] [cursor=pointer]
+    - main [ref=f7e30]:
+      - 'heading "Analysis scope — one model per symbol drives every number below 1h Model: best accuracy Analyse selection" [level=2] [ref=f7e32]':
+        - text: Analysis scope
+        - generic [ref=f7e33]: — one model per symbol drives every number below
+        - generic [ref=f7e34]:
+          - combobox "Timeframe" [ref=f7e35]:
+            - option "1h" [selected]
+            - option "4h"
+            - option "1d"
+          - combobox "Model selection policy" [ref=f7e36]:
+            - 'option "Model: best accuracy" [selected]'
+            - 'option "Model: newest"'
+            - 'option "Model: lstm"'
+            - 'option "Model: mlp"'
+            - 'option "Model: transformer"'
+          - button "Analyse selection" [ref=f7e37] [cursor=pointer]
+      - generic [ref=f7e39]:
+        - heading "Training & backtests — queued against the current selection" [level=2] [ref=f7e40]:
+          - text: Training & backtests
+          - generic [ref=f7e41]: — queued against the current selection
+        - generic [ref=f7e43]:
+          - generic [ref=f7e44]: Architecture
+          - combobox [ref=f7e45]:
+            - option "lstm" [selected]
+            - option "mlp"
+            - option "transformer"
+          - generic [ref=f7e46]: Epochs
+          - spinbutton [ref=f7e47]: "8"
+          - generic [ref=f7e48]: Horizon
+          - spinbutton [ref=f7e49]: "1"
+          - generic [ref=f7e50]: Folds
+          - spinbutton [ref=f7e51]: "3"
+          - button "Train" [ref=f7e52] [cursor=pointer]
+          - button "Backtest" [ref=f7e53] [cursor=pointer]
+  - contentinfo [ref=f7e54]: Probabilities are model outputs, not advice. P(up) presumes the forecaster's Gaussian head is calibrated — the gates test whether it is. Read the quality verdict before the number.

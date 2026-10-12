@@ -1,0 +1,371 @@
+{
+  "preregistration": {
+    "feature": "relative_strength_24h",
+    "definition": "log(close[t]/close[t-24]) - median_over_eligible_universe",
+    "lookback": 24,
+    "horizon": 24,
+    "direction": "long top 3 RS, short bottom 3 RS; no reversal",
+    "top_k": 3,
+    "universe": 25,
+    "oos_fraction": 0.25,
+    "oos_start": "2026-08-22 04:00:00+00:00",
+    "oos_end": "2026-09-29 03:00:00+00:00",
+    "n_oos_timestamps": 912,
+    "n_timestamps_scored": 888,
+    "non_overlap_stride": 24,
+    "winsor": [
+      0.01,
+      0.99
+    ],
+    "seed": 7,
+    "contamination_disclosure": "This OOS window was already inspected during the feature audit and during the preceding sma_fast_slow_spread pre-registered test, whose result is known. No clean holdout exists in the stored panel because it ends at the last available bar. This run is a locked, post-selection diagnostic on a window already known to the analysis, not a pre-registered holdout. Statistical significance here must be discounted accordingly; the design value is the pre-declared shape and robustness battery, not the p-value.",
+    "architecture_note": "production consumes 46 of the 64 originally declared features; sentiment and on-chain columns remain unactivated and were not used here"
+  },
+  "data_availability": {
+    "mean_eligible_coins_per_oos_timestamp": 25.0,
+    "min_eligible_coins_per_oos_timestamp": 25,
+    "timestamps_below_min_cross_section": 0,
+    "silent_deletions": 0,
+    "market_context": {
+      "universe_median_24h_ret_mean_bps": 24.054489572838175,
+      "universe_median_24h_ret_median_bps": 15.277555513140113,
+      "note": "the subtracted term, reported as market drift context only"
+    },
+    "raw_24h_ret_mean_bps": 60.998638693430934,
+    "rs_mean_bps": 36.944149120592755,
+    "rs_median_bps": 0.0,
+    "rs_is_median_centred": true,
+    "why_rs_mean_is_not_zero": "RS is centred on the cross-sectional MEDIAN, not the mean, so E[RS] = mean(ret) - median(ret) is positive whenever the cross-section is right-skewed. This is by construction, not a leak or a defect."
+  },
+  "leakage_checks": {
+    "prefix_invariance": {
+      "probes": 40,
+      "max_abs_difference": 0.0,
+      "passed": true,
+      "method": "recompute the feature from closes physically truncated at t, including truncating the lookback input, then compare the value at t against the full-sample value"
+    },
+    "universe_median_is_same_timestamp_median": {
+      "max_abs_difference": 0.0,
+      "passed": true
+    },
+    "forward_target_independent_recompute": {
+      "formula": "log(close[t+24] / close[t])",
+      "max_abs_difference": 0.0,
+      "passed": true
+    },
+    "median_shift_preserves_rank": {
+      "max_abs_rank_difference": 0.0,
+      "passed": true,
+      "implication": "cross-sectional metrics are invariant to the median subtraction; they equal those of raw 24h return ranked within timestamp"
+    }
+  },
+  "economics": {
+    "convention": "per-leg: each long or short is one 36bps round trip",
+    "cost_per_fill_bps": 18.0,
+    "cost_per_leg_round_trip_bps": 36.0,
+    "safety_margin_per_leg_bps": 24.0,
+    "hurdle_per_leg_bps": 60.0,
+    "hurdle_spread_bps": 120.0,
+    "gross_top_minus_bottom_spread_bps": -39.144417378686114,
+    "per_leg_gross_expectancy_bps": -19.572208689343057,
+    "spread_after_costs_bps": -111.14441737868611,
+    "spread_after_safety_hurdle_bps": -159.14441737868611,
+    "per_leg_net_expectancy_bps": -55.57220868934306,
+    "gross_sharpe": -1.584107461442787,
+    "net_sharpe": -4.497824023385622,
+    "per_leg_net_sharpe": -4.497824023385622,
+    "turnover_per_rebalance": 0.48,
+    "fills_per_rebalance": 6,
+    "fills_per_day": 6.0,
+    "rebalances": 37,
+    "gross_equity": {
+      "total_bps": -1448.3434430113853,
+      "max_drawdown_bps": -2871.982334401725,
+      "cycles": 37,
+      "annualized_bps": -14287.712343220432,
+      "final_equity_bps": -1448.3434430113853
+    },
+    "net_equity": {
+      "total_bps": -4112.343443011387,
+      "max_drawdown_bps": -4599.982334401726,
+      "cycles": 37,
+      "annualized_bps": -40567.712343220424,
+      "final_equity_bps": -4112.343443011387
+    }
+  },
+  "cross_sectional": {
+    "primary_nonoverlap_spread": {
+      "n": 37,
+      "mean": -39.144417378686114,
+      "se": 77.6123375917366,
+      "t": -0.5043581805846011,
+      "ci95_low": -196.38701333954447,
+      "ci95_high": 118.09817858217224
+    },
+    "block_bootstrap_95ci_spread_bps": {
+      "low": -91.16147423244989,
+      "high": 34.955811332288825,
+      "se": 32.023218671397764,
+      "block_days": 7,
+      "n_boot": 2000
+    },
+    "permutation_random_selection": {
+      "p_two_sided": 0.0005,
+      "observed_pctile": 0.05,
+      "null_mean_bps": -0.22512456512766904,
+      "null_sd_bps": 10.90874292620385,
+      "draws": 2000,
+      "method": "random top3/bottom3 per timestamp; values not permuted"
+    },
+    "rank_ic": {
+      "mean": -0.035919092169092164,
+      "median": -0.03230769230769231,
+      "std": 0.28393419703112854,
+      "t_stat": -3.769763736760686,
+      "frac_positive": 0.4583333333333333,
+      "n": 888
+    },
+    "quintiles": [
+      {
+        "bucket": 1,
+        "n_obs": 4440,
+        "coins_per_ts_mean": 5.0,
+        "mean_ret": 0.0042458938719693844,
+        "median_ret": 0.0011500990353525433
+      },
+      {
+        "bucket": 2,
+        "n_obs": 4440,
+        "coins_per_ts_mean": 5.0,
+        "mean_ret": 0.007036921468925842,
+        "median_ret": 0.0015064124257800223
+      },
+      {
+        "bucket": 3,
+        "n_obs": 4440,
+        "coins_per_ts_mean": 5.0,
+        "mean_ret": 0.006568471465047776,
+        "median_ret": 0.0021598941156262515
+      },
+      {
+        "bucket": 4,
+        "n_obs": 4440,
+        "coins_per_ts_mean": 5.0,
+        "mean_ret": 0.006845700737072797,
+        "median_ret": 0.002715488588919694
+      },
+      {
+        "bucket": 5,
+        "n_obs": 4440,
+        "coins_per_ts_mean": 5.0,
+        "mean_ret": 0.002655015559141295,
+        "median_ret": -0.001824720819884667
+      }
+    ],
+    "deciles": [
+      {
+        "bucket": 1,
+        "n_obs": 2664,
+        "coins_per_ts_mean": 3.0,
+        "mean_ret": 0.003195952126387899,
+        "median_ret": 0.0005579050315066192
+      },
+      {
+        "bucket": 2,
+        "n_obs": 2664,
+        "coins_per_ts_mean": 3.0,
+        "mean_ret": 0.006258100462233918,
+        "median_ret": 0.0013404743115458272
+      },
+      {
+        "bucket": 3,
+        "n_obs": 2664,
+        "coins_per_ts_mean": 3.0,
+        "mean_ret": 0.00673575418047271,
+        "median_ret": 0.0016598621351863424
+      },
+      {
+        "bucket": 4,
+        "n_obs": 2664,
+        "coins_per_ts_mean": 3.0,
+        "mean_ret": 0.0071099778207322165,
+        "median_ret": 0.0017012813176798614
+      },
+      {
+        "bucket": 5,
+        "n_obs": 2664,
+        "coins_per_ts_mean": 3.0,
+        "mean_ret": 0.006452360086744931,
+        "median_ret": 0.002226661868481729
+      },
+      {
+        "bucket": 6,
+        "n_obs": 1776,
+        "coins_per_ts_mean": 2.0,
+        "mean_ret": 0.006614092944794349,
+        "median_ret": 0.0008301872212145079
+      },
+      {
+        "bucket": 7,
+        "n_obs": 1776,
+        "coins_per_ts_mean": 2.0,
+        "mean_ret": 0.006931113323471176,
+        "median_ret": 0.0042043382662863595
+      },
+      {
+        "bucket": 8,
+        "n_obs": 1776,
+        "coins_per_ts_mean": 2.0,
+        "mean_ret": 0.00759713746556255,
+        "median_ret": 0.002693077413352475
+      },
+      {
+        "bucket": 9,
+        "n_obs": 1776,
+        "coins_per_ts_mean": 2.0,
+        "mean_ret": 0.0032365715653109263,
+        "median_ret": -0.0002465174996936155
+      },
+      {
+        "bucket": 10,
+        "n_obs": 1776,
+        "coins_per_ts_mean": 2.0,
+        "mean_ret": -0.0006271245586037758,
+        "median_ret": -0.008228689764146207
+      }
+    ],
+    "decile_caveat": "25 coins per timestamp give 2-3 coins per decile, so decile means are not independent observations; quintiles are the primary shape diagnostic",
+    "frac_positive_spread": 0.44144144144144143
+  },
+  "shape_diagnostic": {
+    "quintile_means_bps": [
+      42.45893871969385,
+      70.36921468925843,
+      65.68471465047776,
+      68.45700737072796,
+      26.55015559141295
+    ],
+    "consecutive_diffs_bps": [
+      27.91027596956458,
+      -4.684500038780669,
+      2.7722927202502063,
+      -41.90685177931502
+    ],
+    "spearman_bucket_index_vs_return": -0.3,
+    "peak_bucket_low_is_1": 2,
+    "trough_bucket_low_is_1": 5,
+    "all_diffs_positive": false,
+    "all_diffs_negative": false,
+    "classification": "C_inverted_u_middle_out"
+  },
+  "time_series": {
+    "mean_forward_relative_ret_bps": -14.9536796467873,
+    "median_forward_relative_ret_bps": -31.65741748375801,
+    "hit_rate": 0.46734234234234234,
+    "std_bps": 597.0234985596596,
+    "gross_sharpe": -1.584107461442787,
+    "net_sharpe": -4.497824023385622,
+    "n_legs": 5328,
+    "note": "cross-sectional metrics are primary; time-series is secondary"
+  },
+  "comparison": {
+    "relative_strength_spread_bps": -39.144417378686114,
+    "inverse_rs_spread_bps": 39.144417378686114,
+    "sma_fast_slow_spread_bps_same_timestamps": -40.24902270369132,
+    "equal_weight_universe_bps": 54.70400620431419,
+    "btc_buy_hold_bps": 20.446628980057703,
+    "random_selection_mean_bps": -0.22512456512766904,
+    "identical_timestamps": true
+  },
+  "robustness": {
+    "full_oos_overlapping_mean_bps": -29.907359293574594,
+    "first_half_bps": -139.23597401169675,
+    "second_half_bps": 55.67916258942923,
+    "by_month_bps": {
+      "2026-08": -14.046844052776585,
+      "2026-09": -35.64828198809658
+    },
+    "raw_mean_bps": -39.144417378686114,
+    "winsorized_mean_bps": -40.418216817106554,
+    "raw_median_bps": -37.61380004488201,
+    "mean_vs_median_ratio": 1.0406929725786207,
+    "by_symbol_mean_leg_bps": {
+      "AAVE_USDT": -196.8383758928464,
+      "ADA_USDT": -55.10269659688832,
+      "ASTER_USDT": 4.178965812727444,
+      "BNB_USDT": 5.3459122975801305,
+      "BTC_USDT": -101.85037934870002,
+      "DOGE_USDT": -182.74132636152717,
+      "ENA_USDT": -41.26809226213162,
+      "ETH_USDT": 57.21602362399149,
+      "FARTCOIN_USDT": 123.86128084435884,
+      "HYPE_USDT": -43.06213208877725,
+      "H_USDT": 39.828088731320946,
+      "LINK_USDT": 1.8801969964214356,
+      "LTC_USDT": 129.1614683499084,
+      "NEAR_USDT": -7.405214756994352,
+      "PEPE_USDT": -108.08417458997948,
+      "PUMP_USDT": -52.39586566415664,
+      "SOL_USDT": -138.6774029945002,
+      "SUI_USDT": 63.824144822371586,
+      "TAO_USDT": -82.33027971642126,
+      "TRX_USDT": 1.11854389099735,
+      "UNI_USDT": 57.787242442401904,
+      "WLD_USDT": 2.501676429914613,
+      "XPL_USDT": -8.120537911147098,
+      "XRP_USDT": -289.14219867158437,
+      "ZEC_USDT": -70.224978561257
+    },
+    "top2_symbol_share_pct": 26.072657779864322,
+    "leave_one_out_per_leg_bps": {
+      "AAVE_USDT": -10.44067218078583,
+      "ADA_USDT": -14.442373025297702,
+      "ASTER_USDT": -15.711519066939777,
+      "BNB_USDT": -15.247428502037094,
+      "BTC_USDT": -13.59540107729495,
+      "DOGE_USDT": -14.574926493932361,
+      "ENA_USDT": -12.777299656044532,
+      "ETH_USDT": -15.472100955726734,
+      "FARTCOIN_USDT": -23.764689115087588,
+      "HYPE_USDT": -14.405064616346618,
+      "H_USDT": -22.233842359166132,
+      "LINK_USDT": -15.11637203049085,
+      "LTC_USDT": -19.01404468104387,
+      "NEAR_USDT": -15.518634352075411,
+      "PEPE_USDT": -11.603661843075342,
+      "PUMP_USDT": -11.641633365782006,
+      "SOL_USDT": -13.449439849246716,
+      "SUI_USDT": -16.768836892620453,
+      "TAO_USDT": -12.35317929322248,
+      "TRX_USDT": -15.675495530323811,
+      "UNI_USDT": -20.0055381459562,
+      "WLD_USDT": -15.741190807564355,
+      "XPL_USDT": -15.4576961472396,
+      "XRP_USDT": -9.387999252948067,
+      "ZEC_USDT": -10.174921339337226
+    },
+    "loso_min": -23.764689115087588,
+    "loso_max": -9.387999252948067
+  },
+  "decision": {
+    "verdict": "FAIL",
+    "gates": {
+      "net_spread_after_costs_positive": false,
+      "clears_safety_hurdle": false,
+      "beats_random_ranking": true,
+      "sensible_monotonic_ordering": false,
+      "not_symbol_concentrated": true,
+      "no_sign_reversal_across_halves": false,
+      "not_regime_collapsed": false,
+      "positive_primary_ci": false
+    },
+    "failed_gates": [
+      "net_spread_after_costs_positive",
+      "clears_safety_hurdle",
+      "sensible_monotonic_ordering",
+      "no_sign_reversal_across_halves",
+      "not_regime_collapsed",
+      "positive_primary_ci"
+    ]
+  }
+}
